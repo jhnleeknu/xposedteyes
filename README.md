@@ -15,8 +15,12 @@ Define your prefered ratio for the split screen, for e.g. 0.5 for half, 0.33 for
 If checked the smaller split screen (in case for e.g. if you set screen ratio to 0.33) will be on the right side instead of the left.
 6. Launcher.
 Two separate shortcuts to launch your specified applications (in settings for e.g. "com.spotify.music" and "com.waze" and "video.player.videoplayer") in split screen mode. For e.g. one for Audio / Navigation and one for Navigation / Videos (in case long road and children bored).
-7. Fixes.
-Some fixes for apps like hide Waze floating car type button, color fixes for Audials and auto launch the now playing screen, possibility to define DPI for Mini Desktop launcher.
+7. Bluetooth Launcher.
+Launch an app when bluetooth connects, for e.g. by default it launches the carlink and automatically launches startup application on disconnect
+8. Ad Blocker.
+Try to hide ads from applications. Raw method taken from [AdBlocker-Reborn](https://github.com/AdBlocker-Reborn/AdBlocker_Reborn/blob/master/app/src/main/assets/blocklist/av_aggressive)
+9. Fixes.
+Some fixes for apps like hide Waze floating car type button, color fixes for Audials and auto launch the now playing screen, possibility to define DPI for Mini Desktop launcher, rounded buttons for phone on screen layout, rounded corners for on screen volume slider, new car images for reversing and radar.
 
 ## Reverse Camera
 
@@ -25,6 +29,7 @@ Some fixes for apps like hide Waze floating car type button, color fixes for Aud
 3. Show warning message
 4. Enhance preview so it doesn't look so pixelated on analog (original) car camera sources
 5. Rounded corners around the preview so it matches android auto look
+6. Keep SystemUI on screen so you will be able to interact with the statusbar
 
 ## CarLink
 
@@ -32,6 +37,7 @@ Some fixes for apps like hide Waze floating car type button, color fixes for Aud
 2. Width and Height margin for the stream so you can move the streamed screen around (supports even negative numbers like -10 so that the small black borders are removed from the stream and the whole display is used)
 3. Custom DPI so you can change the look of the Android Auto layout
 4. Developer Mode (which is automatically turned on by this app) so Android Auto will support all unofficial apps.
+5. Keep SystemUI on screen so you will be able to interact with the statusbar without having to swipe, for e.g. change volume (also looks better IMO) 
 
 # Install
 Install instructions
@@ -40,7 +46,7 @@ Install instructions
 2. Install LSPosed Zygisk module
 3. Install latest XposedTeyes released apk
 4. Activate XposedTeyes module in your LSPosed > Modules section
-5, Select "Android Framework", "SystemUI", "CarLink" and "UI Server" to be used for XposedTeyes module
+5, Check "Android Framework", "SystemUI", "CarLink", "UI Server", "Mini Desktop", "Waze", "MainServer", "Audials" and any other app to be used on
 
 # Notes
 Tested on Teyes CC3 2k and vanila Android 10 so think should work on other headunits too.
