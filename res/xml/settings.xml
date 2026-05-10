@@ -57,6 +57,13 @@
 			android:title="@string/pref_left_screen_position"
 			android:key="leftScreenPosition" />
 
+		<CheckBoxPreference
+			android:name="@string/pref_use_ad_blocking"
+			android:summary="@string/pref_use_ad_blocking_sum"
+			android:defaultValue="false"
+			android:title="@string/pref_use_ad_blocking"
+			android:key="useAdBlocking" />
+
 	</PreferenceCategory>
 
 	<PreferenceCategory
@@ -65,28 +72,28 @@
 		<EditTextPreference
 			android:name="@string/pref_camera_width"
 			android:summary="@string/pref_camera_width_sum"
-			android:defaultValue="1600"
+			android:defaultValue="1570"
 			android:title="@string/pref_camera_width"
 			android:key="cameraWidth" />
 
 		<EditTextPreference
 			android:name="@string/pref_camera_height"
 			android:summary="@string/pref_camera_height_sum"
-			android:defaultValue="1000"
+			android:defaultValue="1070"
 			android:title="@string/pref_camera_height"
 			android:key="cameraHeight" />
 
 		<EditTextPreference
 			android:name="@string/pref_camera_x"
 			android:summary="@string/pref_camera_x_sum"
-			android:defaultValue="400"
+			android:defaultValue="430"
 			android:title="@string/pref_camera_x"
 			android:key="cameraX" />
 
 		<EditTextPreference
 			android:name="@string/pref_camera_y"
 			android:summary="@string/pref_camera_y_sum"
-			android:defaultValue="100"
+			android:defaultValue="0"
 			android:title="@string/pref_camera_y"
 			android:key="cameraY" />
 
@@ -110,6 +117,13 @@
 			android:defaultValue="true"
 			android:title="@string/pref_camera_round"
 			android:key="cameraRound" />
+
+		<CheckBoxPreference
+			android:name="@string/pref_camera_keep_systemui"
+			android:summary="@string/pref_camera_keep_systemui_sum"
+			android:defaultValue="true"
+			android:title="@string/pref_camera_keep_systemui"
+			android:key="cameraKeepSystemUI" />
 
 	</PreferenceCategory>
 
@@ -145,6 +159,13 @@
 			android:title="@string/pref_carlink_dpi"
 			android:key="carlinkDPI" />
 
+		<CheckBoxPreference
+			android:name="@string/pref_carlink_keep_systemui"
+			android:summary="@string/pref_carlink_keep_systemui_sum"
+			android:defaultValue="true"
+			android:title="@string/pref_carlink_keep_systemui"
+			android:key="carlinkKeepSystemUI" />
+
 	</PreferenceCategory>
 
 	<PreferenceCategory
@@ -156,6 +177,13 @@
 			android:defaultValue="false"
 			android:title="@string/pref_launch_on_startup"
 			android:key="launchOnStartup" />
+
+		<CheckBoxPreference 
+			android:name="@string/pref_launch_on_bluetooth"
+			android:summary="@string/pref_launch_on_bluetooth_sum"
+			android:defaultValue="false"
+			android:title="@string/pref_launch_on_bluetooth"
+			android:key="launchOnBluetooth" />
 
 		<EditTextPreference
 			android:name="@string/pref_music_app"
@@ -177,6 +205,13 @@
 			android:defaultValue="video.player.videoplayer"
 			android:title="@string/pref_videos_app"
 			android:key="launcherVideosApp" />
+
+		<EditTextPreference
+			android:name="@string/pref_bluetooth_app"
+			android:summary="@string/pref_bluetooth_app_sum"
+			android:defaultValue="com.syu.carlink"
+			android:title="@string/pref_bluetooth_app"
+			android:key="launcherBluetoothApp" />
 
 		<EditTextPreference
 			android:name="@string/pref_mini_desktop_dpi"

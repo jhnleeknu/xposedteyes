@@ -17,9 +17,11 @@ public class LauncherService extends AccessibilityService {
 	String musicApp;
 	String navigationApp;
 	String videosApp;
+	String bluetoothApp;
 	String firstApp;
 	String secondApp;
 	String packageName;
+	String runningApp;
 
 	@Override
 	public void onCreate() {
@@ -75,7 +77,12 @@ public class LauncherService extends AccessibilityService {
 
 	@Override
 	public void onAccessibilityEvent(AccessibilityEvent event) {
+		String eventPackageName = (String)event.getPackageName();
+
 		if ((event.getEventType() & AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) != 0) {
+			if (!eventPackageName.equals(runningApp) && !"com.android.systemui".equals(eventPackageName))
+				runningApp = eventPackageName;
+
 			if (inSplitScreenMode(getWindows())) {
 				inSplitScreen = true;
 			} else {
@@ -108,7 +115,7 @@ public class LauncherService extends AccessibilityService {
 			return;
 		}
 
-		if (state == 1 && firstApp.equals(event.getPackageName())) {
+		if (state == 1 && firstApp.equals(eventPackageName)) {
 			state = 2;
 
 			if (!inSplitScreen)
@@ -136,7 +143,8 @@ public class LauncherService extends AccessibilityService {
 				new Runnable() {
 					@Override
 					public void run() {
-						startActivity(second);
+						if (!bluetoothApp.equals(runningApp))
+							startActivity(second);
 					}
 				}
 			, (inSplitScreen?300:1000));
@@ -153,6 +161,7 @@ public class LauncherService extends AccessibilityService {
 		musicApp = preferences.getString("launcherMusicApp", "");
 		navigationApp = preferences.getString("launcherNavigationApp", "");
 		videosApp = preferences.getString("launcherVideosApp", "");
+		bluetoothApp = preferences.getString("launcherBluetoothApp", "");
 	}
 
 	private boolean inSplitScreenMode(List<AccessibilityWindowInfo> windows) {

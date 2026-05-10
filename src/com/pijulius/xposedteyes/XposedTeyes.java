@@ -28,7 +28,10 @@ import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -46,6 +49,9 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHookLoadPackage, IXposedHookZygoteInit {
 	private static String modulePath = null;
 	private static Object carlinkLogoFragment = null;
+	private static boolean startupLaunched = false;
+	private static boolean connectedBluetooth = false;
+
 	private static final float[] negativeColorMatrix = {
 		-1.0f,     0,     0,    0, 255, // red
 			0, -1.0f,     0,    0, 255, // green
@@ -70,11 +76,34 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 	@Override
 	public void initZygote(StartupParam startupParam) throws Throwable {
 		modulePath = startupParam.modulePath;
+		XposedBridge.log(getClass().getName()+" v3.22");
 	}
 
 	@Override
 	public void handleLoadPackage(final LoadPackageParam lpparam) throws Throwable {
 		final XSharedPreferences settings = new XSharedPreferences("com.pijulius.xposedteyes");
+
+		if (settings.getBoolean("useAdBlocking", false)) {
+			XposedHelpers.findAndHookMethod(View.class, "setVisibility", int.class, new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(MethodHookParam param) {
+					if ((Integer)param.args[0] != 8)
+						hideAdView((View)param.thisObject, lpparam.packageName);
+				}
+			});
+			XposedBridge.hookAllConstructors(View.class, new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(MethodHookParam param) {
+					hideAdView((View)param.thisObject, lpparam.packageName);
+				}
+			});
+			XposedBridge.hookAllConstructors(ViewGroup.class, new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(MethodHookParam param) {
+					hideAdView((View)param.thisObject, lpparam.packageName);
+				}
+			});
+		}
 
 		if (lpparam.packageName.equals("com.pijulius.xposedteyes")) {
 			final Class<?> hookClassSelf = XposedHelpers.findClass(
@@ -91,64 +120,25 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 		}
 
 		if (lpparam.packageName.equals("com.audials")) {
-			final Class<?> hookClassPlaybackFooter = XposedHelpers.findClass(
-					"com.audials.controls.PlaybackFooterInfo", lpparam.classLoader);
-
-			XposedBridge.hookAllMethods(hookClassPlaybackFooter, "onPlayingTrackChanged", new XC_MethodHook() {
-				@Override
-				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-					XposedHelpers.callMethod(param.thisObject, "onExpandItem");
-				}
-			});
-
 			final Class<?> baseActivity = XposedHelpers.findClass(
-					"com.audials.main.SplashScreenActivity", lpparam.classLoader);
+					"com.audials.main.AudialsActivity", lpparam.classLoader);
 
-			XposedBridge.hookAllMethods(baseActivity, "onPause", new XC_MethodHook() {
+			XposedBridge.hookAllMethods(baseActivity, "onCreate", new XC_MethodHook() {
 				@Override
 				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 					final Activity activity = (Activity)param.thisObject;
-					new android.os.Handler().postDelayed(
-						new Runnable() {
-							@Override
-							public void run() {
-								Intent intent = new Intent();
-								intent.setClassName("com.audials", "com.audials.playback.PlaybackActivity");
-								activity.startActivity(intent);
-							}
-						}, 1000);
+					Intent intent = new Intent();
+					intent.setClassName("com.audials", "com.audials.playback.PlaybackActivity");
+					activity.startActivity(intent);
 				}
 			});
-
-			return;
-		}
-
-		if (lpparam.packageName.equals("com.spotify.music") || lpparam.packageName.equals("com.spotify.lite")) {
-			final Class<?> hookClassSelf = XposedHelpers.findClass(
-					"com.spotify.connectivity.productstate.ProductStateUtil", lpparam.classLoader);
-
-			XposedBridge.hookAllMethods(hookClassSelf, "isPremium", new XC_MethodHook() {
+			XposedBridge.hookAllMethods(baseActivity, "onNewIntent", new XC_MethodHook() {
 				@Override
-				protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-					param.setResult(true);
-				}
-			});
-
-			return;
-		}
-
-		if (lpparam.packageName.equals("video.player.videoplayer")) {
-			final Class<?> hookClassSelf = XposedHelpers.findClass(
-					"android.app.SharedPreferencesImpl", lpparam.classLoader);
-
-			XposedBridge.hookAllMethods(hookClassSelf, "getBoolean", new XC_MethodHook() {
-				@Override
-				protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-					if (param.args[0] == "adRemoved" || param.args[0] == "hasRated" ||
-						param.args[0] == "SB08XyFV" || param.args[0] == "aeAfFfti")
-					{
-						param.setResult(true);
-					}
+				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+					final Activity activity = (Activity)param.thisObject;
+					Intent intent = new Intent();
+					intent.setClassName("com.audials", "com.audials.playback.PlaybackActivity");
+					activity.startActivity(intent);
 				}
 			});
 
@@ -156,16 +146,6 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 		}
 
 		if (lpparam.packageName.equals("tunein.player")) {
-			final Class<?> hookClassTunein = XposedHelpers.findClass(
-					"tunein.settings.SubscriptionSettings", lpparam.classLoader);
-
-			XposedBridge.hookAllMethods(hookClassTunein, "isSubscribed", new XC_MethodHook() {
-				@Override
-				protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-					param.setResult(true);
-				}
-			});
-
 			final Class<?> hookClassNowPlaying = XposedHelpers.findClass(
 					"tunein.nowplayinglite.NowPlayingDelegate", lpparam.classLoader);
 
@@ -260,6 +240,31 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 				}
 			});
 
+			if (settings.getBoolean("carlinkKeepSystemUI", true)) {
+				XposedBridge.hookAllMethods(Activity.class, "onCreate", new XC_MethodHook() {
+					@Override
+					protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+						Window window = ((Activity)param.thisObject).getWindow();
+
+						window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+						window.addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+
+						window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+						window.setStatusBarColor(Color.BLACK);
+					}
+				});
+
+				final Class<?> hookUiHider = XposedHelpers.findClass(
+						"com.google.android.projection.sink.ui.SystemUiHider", lpparam.classLoader);
+
+				XposedBridge.hookAllMethods(hookUiHider, "setup", new XC_MethodHook() {
+					@Override
+					protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+						param.setResult(true);
+					}
+				});
+			}
+
 			return;
 		}
 
@@ -267,14 +272,12 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 			final Class<?> hookClassPageBack = XposedHelpers.findClass(
 					"com.syu.page.PageBack", lpparam.classLoader);
 
-			int cameraWidth = Integer.valueOf(settings.getString("cameraWidth", "1600"));
-			int cameraHeight = Integer.valueOf(settings.getString("cameraHeight", "1000"));
-			int cameraX = Integer.valueOf(settings.getString("cameraX", "400"));
-			int cameraY = Integer.valueOf(settings.getString("cameraY", "100"));
+			int cameraWidth = Integer.valueOf(settings.getString("cameraWidth", "1570"));
+			int cameraHeight = Integer.valueOf(settings.getString("cameraHeight", "1070"));
+			int cameraX = Integer.valueOf(settings.getString("cameraX", "430"));
+			int cameraY = Integer.valueOf(settings.getString("cameraY", "0"));
 
 			boolean cameraRound = settings.getBoolean("cameraRound", true);
-			boolean cameraEnhance = settings.getBoolean("cameraEnhance", true);
-			boolean cameraWarning = settings.getBoolean("cameraWarning", true);
 
 			if (cameraWidth != 0 || cameraHeight != 0 || cameraX != 0 || cameraY != 0) {
 				if (cameraX != 0) {
@@ -298,7 +301,6 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 				XposedBridge.hookAllMethods(hookClassPageBack, "show", new XC_MethodHook() {
 					@Override
 					protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-						XposedBridge.log("show");
 						View texture = (View)XposedHelpers.getObjectField(param.thisObject, "mTexture");
 
 						if (texture == null)
@@ -307,12 +309,12 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 						RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)texture.getLayoutParams();
 
 						if (cameraWidth != 0)
-							layoutParams.width = cameraWidth;
+							layoutParams.width = cameraWidth-(cameraRound?40:0);
 						if (cameraHeight != 0)
 							layoutParams.height = cameraHeight-(cameraRound?40:0);
 
 						if (cameraX != 0)
-							texture.setX(cameraX);
+							texture.setX(cameraX+(cameraRound?20:0));
 						if (cameraY != 0 || cameraRound)
 							texture.setY(cameraY+(cameraRound?20:0));
 
@@ -323,14 +325,14 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 							RelativeLayout.LayoutParams backTrackLineParams = (RelativeLayout.LayoutParams)backTrackLine.getLayoutParams();
 
 							if (cameraWidth != 0)
-								backTrackLineParams.width = cameraWidth;
+								backTrackLineParams.width = cameraWidth+2;
 							if (cameraHeight != 0)
-								backTrackLineParams.height = cameraHeight;
+								backTrackLineParams.height = cameraHeight+2;
 
 							if (cameraX != 0)
-								backTrackLine.setX(cameraX);
+								backTrackLine.setX(cameraX-2);
 							if (cameraY != 0)
-								backTrackLine.setY(cameraY);
+								backTrackLine.setY(cameraY-2);
 
 							backTrackLine.setLayoutParams(backTrackLineParams);
 							backTrackLine.setVisibility(View.VISIBLE);
@@ -339,27 +341,24 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 				});
 			}
 
-			if (cameraEnhance) {
+			if (settings.getBoolean("cameraEnhance", true)) {
 				XposedBridge.hookAllMethods(hookClassPageBack, "initBaseView", new XC_MethodHook() {
 					@Override
 					protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-						XposedBridge.log("initBaseView");
 						View texture = (View)XposedHelpers.getObjectField(param.thisObject, "mTexture");
+						if (texture != null) {
+							Paint paint = new Paint();
+							paint.setAntiAlias(true);
+							paint.setFilterBitmap(true);
+							paint.setDither(true);
 
-						if (texture == null)
-							return;
-
-						Paint paint = new Paint();
-						paint.setAntiAlias(true);
-						paint.setFilterBitmap(true);
-						paint.setDither(true);
-
-						texture.setLayerPaint(paint);
+							texture.setLayerPaint(paint);
+						}
 					}
 				});
 			}
 
-			if (cameraWarning) {
+			if (settings.getBoolean("cameraWarning", true)) {
 				final Class<?> hookClassPlatform = XposedHelpers.findClass(
 						"com.syu.util.PlatForm", lpparam.classLoader);
 
@@ -371,15 +370,78 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 				});
 			}
 
+			if (settings.getBoolean("cameraKeepSystemUI", true)) {
+				final Class<?> hookClassApp = XposedHelpers.findClass(
+						"app.App", lpparam.classLoader);
+				final Class<?> hookClassUtils = XposedHelpers.findClass(
+						"com.lsec.core.util.FuncUtils", lpparam.classLoader);
+
+				XposedBridge.hookAllMethods(hookClassApp, "getFullWindowParams", new XC_MethodHook() {
+					@Override
+					protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+						Context app = (Context)XposedHelpers.callStaticMethod(hookClassApp, "getApp");
+						int margin = (int)XposedHelpers.callStaticMethod(hookClassUtils, "getStatusHeight", app);
+						int height = (int)XposedHelpers.callMethod(app, "getScreenHeight");
+
+						WindowManager.LayoutParams params = new WindowManager.LayoutParams();
+						params.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+						params.flags = WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS;
+						params.y = -margin;
+						params.height = height + margin;
+						param.setResult(params);
+					}
+				});
+
+				XposedBridge.hookAllMethods(hookClassPageBack, "getWindowParams", new XC_MethodHook() {
+					@Override
+					protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+						Context app = (Context)XposedHelpers.callStaticMethod(hookClassApp, "getApp");
+						int margin = (int)XposedHelpers.callStaticMethod(hookClassUtils, "getStatusHeight", app);
+						int height = (int)XposedHelpers.callMethod(app, "getScreenHeight");
+
+						WindowManager.LayoutParams params = new WindowManager.LayoutParams();
+						params.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+						params.y = margin;
+						params.height = height - margin;
+						param.setResult(params);
+					}
+				});
+			}
+
 			return;
 		}
 
-		XposedBridge.hookAllMethods(ContextWrapper.class, "attachBaseContext", new XC_MethodHook() {
-			@Override
-			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-				if (lpparam.packageName.equals("com.atomicadd.tinylauncher") &&
-					param.args[0] != null && (param.args[0] instanceof Context))
-				{
+		if (lpparam.packageName.equals("com.syu.ms")) {
+			final Class<?> hookClassAssetManager = XposedHelpers.findClass(
+					"android.content.res.AssetManager", lpparam.classLoader);
+
+			XposedBridge.hookAllMethods(hookClassAssetManager, "open", new XC_MethodHook() {
+				@Override
+				protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+					String asset = (String)param.args[0];
+					if (asset == null)
+						return;
+
+					XposedBridge.log("AssetManager -> "+asset);
+
+					if (asset.matches(".*vol.*bar_p.png")) {
+						param.setResult(XModuleResources.createInstance(modulePath, null).getAssets().open("bar_p.png"));
+					} else if (asset.matches(".*vol.*bar.png")) {
+						param.setResult(XModuleResources.createInstance(modulePath, null).getAssets().open("bar.png"));
+					}
+				}
+			});
+
+			return;
+		}
+
+		if (lpparam.packageName.equals("com.atomicadd.tinylauncher")) {
+			XposedBridge.hookAllMethods(ContextWrapper.class, "attachBaseContext", new XC_MethodHook() {
+				@Override
+				protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+					if (param.args[0] == null || !(param.args[0] instanceof Context))
+						return;
+
 					Context context = (Context) param.args[0];
 					Resources res = context.getResources();
 					Configuration config = new Configuration(res.getConfiguration());
@@ -401,10 +463,77 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 					context = context.createConfigurationContext(config);
 					param.args[0] = context;
 				}
-			}
-		});
+			});
+
+			return;
+		}
 
 		if (lpparam.packageName.equals("com.android.systemui")) {
+			final Class<?> hookSystemUIApp = XposedHelpers.findClass(
+					"com.android.systemui.SystemUIApplication", lpparam.classLoader);
+
+			XposedBridge.hookAllMethods(hookSystemUIApp, "onCreate", new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+					final Application application = (Application)param.thisObject;
+					final Handler handler = new android.os.Handler();
+
+					final Intent launcherIntent = new Intent();
+					launcherIntent.setClassName(
+						"com.pijulius.xposedteyes", "com.pijulius.xposedteyes.LauncherActivity");
+					launcherIntent.setAction("AccessibilityService");
+					launcherIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+					launcherIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+					final Runnable runnable = new Runnable() {
+							@Override
+							public void run() {
+								if (connectedBluetooth)
+									return;
+
+								final Intent activityIntent = new Intent();
+								activityIntent.setClassName(
+									"com.pijulius.xposedteyes", "com.pijulius.xposedteyes.MusicNavigationActivity");
+								activityIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+								activityIntent.setFlags(
+									Intent.FLAG_ACTIVITY_NEW_TASK |
+									Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+
+								application.startActivity(activityIntent);
+							}
+						};
+
+					IntentFilter intentFilter = new IntentFilter(Intent.ACTION_BOOT_COMPLETED);
+					intentFilter.addAction("com.fyt.boot.ACCON"); //ACCOFF
+					intentFilter.addAction("com.glsx.boot.ACCON"); //ACCOFF
+					intentFilter.addAction("com.fyt.boot.ACCOFF"); //ACCOFF
+					intentFilter.addAction("com.glsx.boot.ACCOFF"); //ACCOFF
+
+					application.registerReceiver(new BroadcastReceiver() {
+						@Override
+						public void onReceive(Context context, Intent intent) {
+							String action = intent.getAction();
+
+							if (action == null || action.isEmpty())
+								return;
+
+							if (action.contains(".ACCON") && !startupLaunched) {
+								startupLaunched = true;
+								application.startActivity(launcherIntent);
+
+								if (settings.getBoolean("launchOnStartup", false)) {
+									handler.removeCallbacks(runnable);
+									handler.postDelayed(runnable, 1000);
+								}
+
+							} else if (action.contains(".ACCOFF")) {
+								startupLaunched = false;
+							}
+						}
+					}, intentFilter);
+				}
+			});
+
 			if (settings.getBoolean("dontExitSplitScreen", true)) {
 				final Class<?> hookClassHome = XposedHelpers.findClass(
 						"com.android.systemui.statusbar.policy.KeyButtonView", lpparam.classLoader);
@@ -444,24 +573,39 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 				});
 			}
 
-			if (settings.getBoolean("launchOnStartup", false)) {
-				final Class<?> hookSystemUIApp = XposedHelpers.findClass(
-						"com.android.systemui.SystemUIApplication", lpparam.classLoader);
+			if (settings.getBoolean("launchOnBluetooth", true)) {
+				final Class<?> hookClassBluetooth = XposedHelpers.findClass(
+						"com.syu.view.LolcalStateControl", lpparam.classLoader);
 
-				XposedBridge.hookAllMethods(hookSystemUIApp, "onCreate", new XC_MethodHook() {
+				XposedBridge.hookAllMethods(hookClassBluetooth, "handleBt", new XC_MethodHook() {
 					@Override
 					protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-						final Application application = (Application)param.thisObject;
-						final Handler handler = new android.os.Handler();
+						int state = XposedHelpers.getIntField(param.thisObject, "mBtPhoneState");
 
-						final Intent launcherIntent = new Intent();
-						launcherIntent.setClassName(
-							"com.pijulius.xposedteyes", "com.pijulius.xposedteyes.LauncherActivity");
-						launcherIntent.setAction("AccessibilityService");
-						launcherIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-						launcherIntent.setFlags(
-							Intent.FLAG_ACTIVITY_NEW_TASK |
-							Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+						if ((state == 2 && connectedBluetooth) ||
+							(state != 2 && !connectedBluetooth))
+						{
+							return;
+						}
+
+						connectedBluetooth = (state == 2);
+						Context context = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+
+						if (connectedBluetooth) {
+							Intent bluetoothIntent = context.getPackageManager().getLaunchIntentForPackage(
+									settings.getString("launcherBluetoothApp", ""));
+
+							if (bluetoothIntent == null)
+								return;
+
+							bluetoothIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+							bluetoothIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+							context.startActivity(bluetoothIntent);
+							return;
+						}
+
+						if (!settings.getBoolean("launchOnStartup", false))
+							return;
 
 						final Intent activityIntent = new Intent();
 						activityIntent.setClassName(
@@ -470,26 +614,7 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 						activityIntent.setFlags(
 							Intent.FLAG_ACTIVITY_NEW_TASK |
 							Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-
-						final Runnable runnable = new Runnable() {
-								@Override
-								public void run() {
-									application.startActivity(activityIntent);
-								}
-							};
-
-						IntentFilter intentFilter = new IntentFilter(Intent.ACTION_BOOT_COMPLETED);
-						intentFilter.addAction("com.fyt.boot.ACCON"); //ACCOFF
-						intentFilter.addAction("com.glsx.boot.ACCON"); //ACCOFF
-						application.registerReceiver(new BroadcastReceiver() {
-							@Override
-							public void onReceive(Context context, Intent intent) {
-								application.startActivity(launcherIntent);
-
-								handler.removeCallbacks(runnable);
-								handler.postDelayed(runnable, 3000);
-							}
-						}, intentFilter);
+						context.startActivity(activityIntent);
 					}
 				});
 			}
@@ -627,22 +752,23 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 		final XSharedPreferences settings = new XSharedPreferences("com.pijulius.xposedteyes");
 
 		if (resparam.packageName.equals("com.audials")) {
-			resparam.res.setReplacement("com.audials", "color", "bottom_navbar_background_color_dark", 0x90000000);
+			resparam.res.setReplacement("com.audials", "color", "bottom_navbar_background_color_dark", 0xff000000);
 			resparam.res.setReplacement("com.audials", "color", "playback_footer_background_gradient0_color_dark", 0x90000000);
 			resparam.res.setReplacement("com.audials", "color", "playback_footer_background_gradient1_color_dark", 0x10000000);
 			resparam.res.setReplacement("com.audials", "color", "streamview_header_background_gradient0_color_dark", 0x90000000);
 			resparam.res.setReplacement("com.audials", "color", "streamview_header_background_gradient1_color_dark", 0x10000000);
-			resparam.res.setReplacement("com.audials", "color", "top_appbar_background_color_dark", 0x90000000);
+			resparam.res.setReplacement("com.audials", "color", "top_appbar_background_color_dark", 0xff000000);
+			resparam.res.setReplacement("com.audials", "color", "mediaPlayer_background_overlay_color_dark", 0xff000000);
 
 			return;
 		}
 
 		if (resparam.packageName.equals("com.waze")) {
-			resparam.res.hookLayout("com.waze", "layout", "floating_buttons_view", new XC_LayoutInflated() {
+			resparam.res.hookLayout("com.waze", "layout", "bottom_pill_view", new XC_LayoutInflated() {
 				@Override
 				public void handleLayoutInflated(XC_LayoutInflated.LayoutInflatedParam liparam) throws Throwable {
 					View view = (View)liparam.view.findViewById(liparam.res.getIdentifier(
-						"vehicleTypeView", "id", "com.waze"));
+						"pillViewContainer", "id", "com.waze"));
 					view.setAlpha(0);
 				}
 			});
@@ -670,6 +796,56 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 					view.setTextSize(TypedValue.COMPLEX_UNIT_SP, 9);
 				}
 			});
+
+			return;
+		}
+
+		if (resparam.packageName.equals("com.syu.bt")) {
+			XModuleResources modRes = XModuleResources.createInstance(modulePath, resparam.res);
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt2000_keyboardshow", modRes.fwd(R.drawable.bt2000_keyboardshow));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt2000_keyboardshow_p", modRes.fwd(R.drawable.bt2000_keyboardshow_p));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt2000_navi0", modRes.fwd(R.drawable.bt2000_navi0));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt2000_navi0_p", modRes.fwd(R.drawable.bt2000_navi0_p));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt2000_navi1", modRes.fwd(R.drawable.bt2000_navi1));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt2000_navi1_p", modRes.fwd(R.drawable.bt2000_navi1_p));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt2000_navi2", modRes.fwd(R.drawable.bt2000_navi2));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt2000_navi2_p", modRes.fwd(R.drawable.bt2000_navi2_p));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt2000_navi3", modRes.fwd(R.drawable.bt2000_navi3));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt2000_navi3_p", modRes.fwd(R.drawable.bt2000_navi3_p));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt2000_navi4", modRes.fwd(R.drawable.bt2000_navi4));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt2000_navi4_p", modRes.fwd(R.drawable.bt2000_navi4_p));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt2000_navi5", modRes.fwd(R.drawable.bt2000_navi5));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt2000_navi5_p", modRes.fwd(R.drawable.bt2000_navi5_p));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt2000_navi6", modRes.fwd(R.drawable.bt2000_navi6));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt2000_navi6_p", modRes.fwd(R.drawable.bt2000_navi6_p));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt2000_navi7", modRes.fwd(R.drawable.bt2000_navi7));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt2000_navi7_p", modRes.fwd(R.drawable.bt2000_navi7_p));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt2000_navi8", modRes.fwd(R.drawable.bt2000_navi8));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt2000_navi8_p", modRes.fwd(R.drawable.bt2000_navi8_p));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt2000_navi9", modRes.fwd(R.drawable.bt2000_navi9));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt2000_navi9_p", modRes.fwd(R.drawable.bt2000_navi9_p));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt2000_navidial", modRes.fwd(R.drawable.bt2000_navidial));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt2000_navidial_p", modRes.fwd(R.drawable.bt2000_navidial_p));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt2000_navihang", modRes.fwd(R.drawable.bt2000_navihang));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt2000_navihang_p", modRes.fwd(R.drawable.bt2000_navihang_p));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt2000_navihide", modRes.fwd(R.drawable.bt2000_navihide));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt2000_navihide_p", modRes.fwd(R.drawable.bt2000_navihide_p));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt2000_navij", modRes.fwd(R.drawable.bt2000_navij));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt2000_navij_p", modRes.fwd(R.drawable.bt2000_navij_p));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt2000_navikeyhide_bk", modRes.fwd(R.drawable.bt2000_navikeyhide_bk));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt2000_navikeyshow_bk", modRes.fwd(R.drawable.bt2000_navikeyshow_bk));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt2000_navimute", modRes.fwd(R.drawable.bt2000_navimute));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt2000_navimute_p", modRes.fwd(R.drawable.bt2000_navimute_p));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt2000_navisound", modRes.fwd(R.drawable.bt2000_navisound));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt2000_navisound_p", modRes.fwd(R.drawable.bt2000_navisound_p));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt2000_navix", modRes.fwd(R.drawable.bt2000_navix));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt2000_navix_p", modRes.fwd(R.drawable.bt2000_navix_p));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt_bk", modRes.fwd(R.drawable.bt_bk));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt_navikeyhide_bk", modRes.fwd(R.drawable.bt_navikeyhide_bk));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt_navikeyshow_bk", modRes.fwd(R.drawable.bt_navikeyshow_bk));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt_popdel_bk", modRes.fwd(R.drawable.bt_popdel_bk));
+			resparam.res.setReplacement("com.syu.bt", "drawable", "bt_icon", modRes.fwd(R.drawable.bt_icon));
+			resparam.res.setReplacement("com.syu.bt", "string", "app_name", "Phone");
 
 			return;
 		}
@@ -763,6 +939,38 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 		if (dividerWidth > 0) {
 			XResources.setSystemWideReplacement("android", "dimen", "docked_stack_divider_thickness", new XResources.DimensionReplacement(dividerWidth, TypedValue.COMPLEX_UNIT_DIP));
 			XResources.setSystemWideReplacement("android", "dimen", "docked_stack_divider_insets", new XResources.DimensionReplacement(dividerInsetPosition, TypedValue.COMPLEX_UNIT_DIP));
+		}
+	}
+
+	public void hideAdView(View view, String packageName) {
+		// Taken from AdBlocker_Reborn
+		// https://github.com/AdBlocker-Reborn/AdBlocker_Reborn/blob/master/app/src/main/assets/blocklist/av_aggressive
+
+		String[] adViews = {
+			".ADActivity",
+			".AdActivity",
+			".AdBanner",
+			".AdsBanner",
+			".AdBrowserView",
+			".AdsActivity",
+			".FullActivity",
+			".FullScreenAdActivity",
+			".SplashAdActivity",
+			".ads.",
+			".adsdk.",
+			"AdView",
+			"adview"};
+
+		String viewName = view.getClass().getName();
+		for (String adView : adViews) {
+			if (!viewName.contains(adView))
+				continue;
+
+			view.clearAnimation();
+			view.setVisibility(View.GONE);
+
+			XposedBridge.log("View Block Success: " + packageName + "/" + viewName);
+			return;
 		}
 	}
 }

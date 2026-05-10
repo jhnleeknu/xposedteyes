@@ -21,6 +21,8 @@
 	<string name="pref_screen_ratio_sum">The rate by which the Screen should be Split</string>
 	<string name="pref_left_screen_position">Left Screen Position</string>
 	<string name="pref_left_screen_position_sum">If checked the smaller screen will be on Right instead of Left</string>
+	<string name="pref_use_ad_blocking">Use Ad Blocking</string>
+	<string name="pref_use_ad_blocking_sum">Try to prevent ads from showing up in applications.</string>
 
 	<string name="pref_camera">Camera</string>
 	<string name="pref_camera_width">Preview Width</string>
@@ -37,6 +39,8 @@
 	<string name="pref_camera_enhance_sum">Add antialias, dithering to the camera preview.</string>
 	<string name="pref_camera_round">Rounded Corners</string>
 	<string name="pref_camera_round_sum">Use rounded corners for the preview image.</string>
+	<string name="pref_camera_keep_systemui">Keep SystemUI</string>
+	<string name="pref_camera_keep_systemui_sum">Will not hide systemui on backup camera.</string>
 
 	<string name="pref_carlink">CarLink</string>
 	<string name="pref_carlink_resolution">Video Resolution</string>
@@ -47,16 +51,22 @@
 	<string name="pref_carlink_resolution_height_margin_sum">Margin for the height of the video resolution.</string>
 	<string name="pref_carlink_dpi">Custom DPI</string>
 	<string name="pref_carlink_dpi_sum">Set custom DPI for changing Android Auto layout.</string>
+	<string name="pref_carlink_keep_systemui">Keep SystemUI</string>
+	<string name="pref_carlink_keep_systemui_sum">Will not hide systemui on Android Auto.</string>
 
 	<string name="pref_launcher">Launcher</string>
 	<string name="pref_launch_on_startup">Launch Music &amp; Nav on Startup</string>
 	<string name="pref_launch_on_startup_sum">Launch the Music and Navigation application automatically in splitscreen.</string>
+	<string name="pref_launch_on_bluetooth">Launch App on Bluetooth Connected</string>
+	<string name="pref_launch_on_bluetooth_sum">Launch for e.g. Android Auto automatically when Bluetooth is connected.</string>
 	<string name="pref_music_app">Music App</string>
 	<string name="pref_music_app_sum">Music application to launch in Split Screen on Left.</string>
 	<string name="pref_navigation_app">Navigation App</string>
 	<string name="pref_navigation_app_sum">Navigation application to launch in Split Screen on Right/Left</string>
 	<string name="pref_videos_app">Videos App</string>
 	<string name="pref_videos_app_sum">Videos application to launch in Split Screen on Right</string>
+	<string name="pref_bluetooth_app">Bluetooth App</string>
+	<string name="pref_bluetooth_app_sum">Application to launch when Bluetooth is connected, for e.g. com.syu.carlink</string>
 	<string name="pref_mini_desktop_dpi">Mini Desktop DPI</string>
 	<string name="pref_mini_desktop_dpi_sum">DPI for the Mini Desktop Launcher.</string>
 
