@@ -80,8 +80,11 @@ public class LauncherService extends AccessibilityService {
 		String eventPackageName = (String)event.getPackageName();
 
 		if ((event.getEventType() & AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) != 0) {
-			if (!eventPackageName.equals(runningApp) && !"com.android.systemui".equals(eventPackageName))
+			if (eventPackageName != null && !eventPackageName.equals(runningApp) &&
+				!"com.android.systemui".equals(eventPackageName))
+			{
 				runningApp = eventPackageName;
+			}
 
 			if (inSplitScreenMode(getWindows())) {
 				inSplitScreen = true;

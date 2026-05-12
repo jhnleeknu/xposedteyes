@@ -76,7 +76,7 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 	@Override
 	public void initZygote(StartupParam startupParam) throws Throwable {
 		modulePath = startupParam.modulePath;
-		XposedBridge.log(getClass().getName()+" v3.22");
+		XposedBridge.log(getClass().getName()+" v3.24");
 	}
 
 	@Override
@@ -145,7 +145,49 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 			return;
 		}
 
+		if (lpparam.packageName.equals("com.spotify.music") || lpparam.packageName.equals("com.spotify.lite")) {
+			final Class<?> hookClassSelf = XposedHelpers.findClass(
+					"com.spotify.connectivity.productstate.ProductStateUtil", lpparam.classLoader);
+
+			XposedBridge.hookAllMethods(hookClassSelf, "isPremium", new XC_MethodHook() {
+				@Override
+				protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+					param.setResult(true);
+				}
+			});
+
+			return;
+		}
+
+		if (lpparam.packageName.equals("video.player.videoplayer")) {
+			final Class<?> hookClassSelf = XposedHelpers.findClass(
+					"android.app.SharedPreferencesImpl", lpparam.classLoader);
+
+			XposedBridge.hookAllMethods(hookClassSelf, "getBoolean", new XC_MethodHook() {
+				@Override
+				protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+					if (param.args[0] == "adRemoved" || param.args[0] == "hasRated" ||
+						param.args[0] == "SB08XyFV" || param.args[0] == "aeAfFfti")
+					{
+						param.setResult(true);
+					}
+				}
+			});
+
+			return;
+		}
+
 		if (lpparam.packageName.equals("tunein.player")) {
+			final Class<?> hookClassTunein = XposedHelpers.findClass(
+					"tunein.settings.SubscriptionSettings", lpparam.classLoader);
+
+			XposedBridge.hookAllMethods(hookClassTunein, "isSubscribed", new XC_MethodHook() {
+				@Override
+				protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+					param.setResult(true);
+				}
+			});
+
 			final Class<?> hookClassNowPlaying = XposedHelpers.findClass(
 					"tunein.nowplayinglite.NowPlayingDelegate", lpparam.classLoader);
 
@@ -581,14 +623,15 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 					@Override
 					protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 						int state = XposedHelpers.getIntField(param.thisObject, "mBtPhoneState");
+						XposedBridge.log("handleBt state: " + String.valueOf(state));
 
-						if ((state == 2 && connectedBluetooth) ||
-							(state != 2 && !connectedBluetooth))
+						if ((state != 0 && connectedBluetooth) ||
+							(state == 0 && !connectedBluetooth))
 						{
 							return;
 						}
 
-						connectedBluetooth = (state == 2);
+						connectedBluetooth = (state != 0);
 						Context context = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
 
 						if (connectedBluetooth) {
