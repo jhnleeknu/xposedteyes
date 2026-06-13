@@ -50,7 +50,9 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 	private static String modulePath = null;
 	private static Object carlinkLogoFragment = null;
 	private static boolean startupLaunched = false;
+	private static boolean audialsNowPlaying = false;
 	private static boolean connectedBluetooth = false;
+	private static Context contextBluetooth = null;
 
 	private static final float[] negativeColorMatrix = {
 		-1.0f,     0,     0,    0, 255, // red
@@ -76,7 +78,7 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 	@Override
 	public void initZygote(StartupParam startupParam) throws Throwable {
 		modulePath = startupParam.modulePath;
-		XposedBridge.log(getClass().getName()+" v3.24");
+		XposedBridge.log(getClass().getName()+" v3.40");
 	}
 
 	@Override
@@ -105,6 +107,22 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 			});
 		}
 
+		if (settings.getBoolean("forceSystemUI", false) && !"com.android.systemui".equals(lpparam.packageName)) {
+			XposedHelpers.findAndHookMethod(View.class, "setSystemUiVisibility", int.class, new XC_MethodHook() {
+				@Override
+				protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+					int currentFlags = (int)param.args[0];
+					int disableFlags =
+						View.SYSTEM_UI_FLAG_FULLSCREEN
+						| View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+						| View.SYSTEM_UI_FLAG_LOW_PROFILE
+						| View.SYSTEM_UI_FLAG_IMMERSIVE
+						| View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+					param.args[0] = currentFlags & ~disableFlags;
+				}
+			});
+		}
+
 		if (lpparam.packageName.equals("com.pijulius.xposedteyes")) {
 			final Class<?> hookClassSelf = XposedHelpers.findClass(
 					"com.pijulius.xposedteyes.SettingsActivity", lpparam.classLoader);
@@ -120,25 +138,70 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 		}
 
 		if (lpparam.packageName.equals("com.audials")) {
+			final Class<?> licenseActivity = XposedHelpers.findClass(
+					"com.audials.api.GrantedLicense", lpparam.classLoader);
+
+			XposedBridge.hookAllMethods(licenseActivity, "premiumAvailable", new XC_MethodHook() {
+				@Override
+				protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+					param.setResult(false);
+				}
+			});
+
+			final Class<?> textUtils = XposedHelpers.findClass(
+					"android.text.TextUtils", lpparam.classLoader);
+
+			XposedBridge.hookAllMethods(textUtils, "equals", new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+					if ("com.audials.paid".equals(param.args[0]) || "com.audials.paid".equals(param.args[1]))
+						param.setResult(true);
+				}
+			});
+
 			final Class<?> baseActivity = XposedHelpers.findClass(
 					"com.audials.main.AudialsActivity", lpparam.classLoader);
 
 			XposedBridge.hookAllMethods(baseActivity, "onCreate", new XC_MethodHook() {
 				@Override
 				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-					final Activity activity = (Activity)param.thisObject;
-					Intent intent = new Intent();
-					intent.setClassName("com.audials", "com.audials.playback.PlaybackActivity");
-					activity.startActivity(intent);
+					audialsNowPlaying = true;
 				}
 			});
 			XposedBridge.hookAllMethods(baseActivity, "onNewIntent", new XC_MethodHook() {
 				@Override
 				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-					final Activity activity = (Activity)param.thisObject;
-					Intent intent = new Intent();
-					intent.setClassName("com.audials", "com.audials.playback.PlaybackActivity");
-					activity.startActivity(intent);
+					audialsNowPlaying = true;
+				}
+			});
+			XposedBridge.hookAllMethods(baseActivity, "onPause", new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+					audialsNowPlaying = false;
+				}
+			});
+			XposedBridge.hookAllMethods(baseActivity, "onResume", new XC_MethodHook() {
+				@Override
+				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+					if (!audialsNowPlaying)
+						return;
+
+					final Handler handler = new android.os.Handler();
+					final Runnable runnable = new Runnable() {
+							@Override
+							public void run() {
+								if (!audialsNowPlaying)
+									return;
+
+								final Activity activity = (Activity)param.thisObject;
+								Intent intent = new Intent();
+								intent.setClassName("com.audials", "com.audials.playback.PlaybackActivity");
+								activity.startActivity(intent);
+							}
+						};
+
+					handler.removeCallbacks(runnable);
+					handler.postDelayed(runnable, 1000);
 				}
 			});
 
@@ -290,9 +353,6 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 
 						window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 						window.addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-
-						window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-						window.setStatusBarColor(Color.BLACK);
 					}
 				});
 
@@ -570,6 +630,7 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 
 							} else if (action.contains(".ACCOFF")) {
 								startupLaunched = false;
+								connectedBluetooth = false;
 							}
 						}
 					}, intentFilter);
@@ -617,25 +678,33 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 
 			if (settings.getBoolean("launchOnBluetooth", true)) {
 				final Class<?> hookClassBluetooth = XposedHelpers.findClass(
-						"com.syu.view.LolcalStateControl", lpparam.classLoader);
+						"com.syu.view.BluetoothControl", lpparam.classLoader);
 
-				XposedBridge.hookAllMethods(hookClassBluetooth, "handleBt", new XC_MethodHook() {
+				XposedBridge.hookAllConstructors(hookClassBluetooth, new XC_MethodHook() {
 					@Override
-					protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-						int state = XposedHelpers.getIntField(param.thisObject, "mBtPhoneState");
-						XposedBridge.log("handleBt state: " + String.valueOf(state));
+					protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+						contextBluetooth = (Context)param.args[0];
+					}
+				});
 
-						if ((state != 0 && connectedBluetooth) ||
-							(state == 0 && !connectedBluetooth))
+				XposedBridge.hookAllMethods(hookClassBluetooth, "updata", new XC_MethodHook() {
+					@Override
+					protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+						int state = (int)param.args[0];
+						final Handler handler = (Handler)XposedHelpers.getObjectField(param.thisObject, "setVisib_Bluetooth");
+						XposedBridge.log("BluetoothControl updata: " + String.valueOf(state) + " context: " + String.valueOf(contextBluetooth));
+
+						if (contextBluetooth == null ||
+							(state == 2 && connectedBluetooth) ||
+							(state != 2 && !connectedBluetooth))
 						{
 							return;
 						}
 
-						connectedBluetooth = (state != 0);
-						Context context = (Context)XposedHelpers.getObjectField(param.thisObject, "mContext");
+						connectedBluetooth = (state == 2);
 
 						if (connectedBluetooth) {
-							Intent bluetoothIntent = context.getPackageManager().getLaunchIntentForPackage(
+							Intent bluetoothIntent = contextBluetooth.getPackageManager().getLaunchIntentForPackage(
 									settings.getString("launcherBluetoothApp", ""));
 
 							if (bluetoothIntent == null)
@@ -643,7 +712,19 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 
 							bluetoothIntent.addCategory(Intent.CATEGORY_LAUNCHER);
 							bluetoothIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-							context.startActivity(bluetoothIntent);
+
+							final Runnable runnable = new Runnable() {
+								@Override
+								public void run() {
+									if (!connectedBluetooth)
+										return;
+
+									contextBluetooth.startActivity(bluetoothIntent);
+								}
+							};
+
+							handler.removeCallbacks(runnable);
+							handler.postDelayed(runnable, 3000);
 							return;
 						}
 
@@ -657,7 +738,19 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 						activityIntent.setFlags(
 							Intent.FLAG_ACTIVITY_NEW_TASK |
 							Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-						context.startActivity(activityIntent);
+
+						final Runnable runnable = new Runnable() {
+							@Override
+							public void run() {
+								if (connectedBluetooth)
+									return;
+
+								contextBluetooth.startActivity(activityIntent);
+							}
+						};
+
+						handler.removeCallbacks(runnable);
+						handler.postDelayed(runnable, 3000);
 					}
 				});
 			}
@@ -794,14 +887,38 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 	public void handleInitPackageResources(InitPackageResourcesParam resparam) throws Throwable {
 		final XSharedPreferences settings = new XSharedPreferences("com.pijulius.xposedteyes");
 
+		if (settings.getBoolean("forceSystemUI", false) ||
+			(resparam.packageName.equals("com.syu.us") && settings.getBoolean("cameraKeepSystemUI", true)) ||
+			(resparam.packageName.equals("com.syu.carlink") && settings.getBoolean("carlinkKeepSystemUI", true)))
+		{
+			resparam.res.setReplacement("android", "color", "material_grey_850", Color.BLACK);
+		}
+
 		if (resparam.packageName.equals("com.audials")) {
-			resparam.res.setReplacement("com.audials", "color", "bottom_navbar_background_color_dark", 0xff000000);
+			final XSharedPreferences audialsPreferences = new XSharedPreferences("com.audials");
+
+			if (!audialsPreferences.getBoolean("DynamicPlayerBackground", true)) {
+				resparam.res.setReplacement("com.audials", "drawable", "bg_app", new XResources.DrawableLoader() {
+					@Override
+					public Drawable newDrawable(XResources res, int id) throws Throwable {
+						return new ColorDrawable(Color.BLACK);
+					}
+				});
+
+				resparam.res.setReplacement("com.audials", "drawable", "bg_bitmap_app", new XResources.DrawableLoader() {
+					@Override
+					public Drawable newDrawable(XResources res, int id) throws Throwable {
+						return new ColorDrawable(Color.BLACK);
+					}
+				});
+			}
+
+			resparam.res.setReplacement("com.audials", "color", "bottom_navbar_background_color_dark", 0x90000000);
 			resparam.res.setReplacement("com.audials", "color", "playback_footer_background_gradient0_color_dark", 0x90000000);
 			resparam.res.setReplacement("com.audials", "color", "playback_footer_background_gradient1_color_dark", 0x10000000);
 			resparam.res.setReplacement("com.audials", "color", "streamview_header_background_gradient0_color_dark", 0x90000000);
 			resparam.res.setReplacement("com.audials", "color", "streamview_header_background_gradient1_color_dark", 0x10000000);
-			resparam.res.setReplacement("com.audials", "color", "top_appbar_background_color_dark", 0xff000000);
-			resparam.res.setReplacement("com.audials", "color", "mediaPlayer_background_overlay_color_dark", 0xff000000);
+			resparam.res.setReplacement("com.audials", "color", "top_appbar_background_color_dark", 0x90000000);
 
 			return;
 		}
@@ -948,6 +1065,8 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 			resparam.res.setReplacement("com.syu.carlink", "drawable", "bg_tzy", modRes.fwd(R.drawable.bg_tzy));
 			resparam.res.setReplacement("com.syu.carlink", "drawable", "icon_carlink", modRes.fwd(R.drawable.icon_carlink));
 			resparam.res.setReplacement("com.syu.carlink", "string", "app_name", "Android Auto");
+			resparam.res.setReplacement("com.syu.carlink", "color", "colorPrimary", Color.BLACK);
+			resparam.res.setReplacement("com.syu.carlink", "color", "colorPrimaryDark", Color.BLACK);
 
 			return;
 		}
@@ -999,8 +1118,8 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 			".FullActivity",
 			".FullScreenAdActivity",
 			".SplashAdActivity",
-			".ads.",
-			".adsdk.",
+			//".ads.",
+			//".adsdk.",
 			"AdView",
 			"adview"};
 
