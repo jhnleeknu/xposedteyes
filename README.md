@@ -19,7 +19,8 @@ Two separate shortcuts to launch your specified applications (in settings for e.
 Launch an app when bluetooth connects, for e.g. by default it launches the carlink and automatically launches startup application on disconnect
 8. Ad Blocker.
 Try to hide ads from applications. Raw method taken from [AdBlocker-Reborn](https://github.com/AdBlocker-Reborn/AdBlocker_Reborn/blob/master/app/src/main/assets/blocklist/av_aggressive)
-9. Fixes.
+9. Possibility to force SystemUI visibility globally.
+10. Fixes.
 Some fixes for apps like hide Waze floating car type button, color fixes for Audials and auto launch the now playing screen, possibility to define DPI for Mini Desktop launcher, rounded buttons for phone on screen layout, rounded corners for on screen volume slider, new car images for reversing and radar.
 
 ## Reverse Camera
