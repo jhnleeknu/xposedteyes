@@ -21,6 +21,8 @@
 	<string name="pref_screen_ratio_sum">The rate by which the Screen should be Split</string>
 	<string name="pref_left_screen_position">Left Screen Position</string>
 	<string name="pref_left_screen_position_sum">If checked the smaller screen will be on Right instead of Left</string>
+	<string name="pref_force_systemui">Force SystemUI</string>
+	<string name="pref_force_systemui_sum">Will try to force SystemUI to never dissapear.</string>
 	<string name="pref_use_ad_blocking">Use Ad Blocking</string>
 	<string name="pref_use_ad_blocking_sum">Try to prevent ads from showing up in applications.</string>
 

@@ -58,6 +58,13 @@
 			android:key="leftScreenPosition" />
 
 		<CheckBoxPreference
+			android:name="@string/pref_force_systemui"
+			android:summary="@string/pref_force_systemui_sum"
+			android:defaultValue="false"
+			android:title="@string/pref_force_systemui"
+			android:key="forceSystemUI" />
+
+		<CheckBoxPreference
 			android:name="@string/pref_use_ad_blocking"
 			android:summary="@string/pref_use_ad_blocking_sum"
 			android:defaultValue="false"
