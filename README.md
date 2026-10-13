@@ -40,6 +40,28 @@ Some fixes for apps like hide Waze floating car type button, color fixes for Aud
 4. Developer Mode (which is automatically turned on by this app) so Android Auto will support all unofficial apps.
 5. Keep SystemUI on screen so you will be able to interact with the statusbar without having to swipe, for e.g. change volume (also looks better IMO) 
 
+## Startup app manager (settings driven)
+
+Settings > Startup app. Everything is chosen in the app, no package names to type:
+
+1. Launch automatically on/off (default off), after a full boot, on ACC ON / wake, or both (default: full boot only).
+2. Single app or two apps in split screen, picked from a searchable list of installed apps.
+3. Delay 0-60 s (default 5 s), retries 0-3 (default 1) with interval, "only when the home screen is shown" option.
+4. Separate bluetooth launch (app, delay, conflict policy, optional relaunch after disconnect; default off).
+5. Launch now, last result, restore defaults, export/import settings, "turn off all new features".
+
+The reverse camera and calls keep their system priority: the app is started with a normal request only.
+CarPlay screen and BT call microphone sections are read-only diagnostics for now (BLOCKED, see docs/research).
+Status of every feature: docs/COMPATIBILITY.md. Recovery: docs/RECOVERY.md.
+
+# Build
+
+    ./gradlew :core:test :app:lintDebug :app:assembleDebug     # needs JDK 17 and the Android SDK
+    ./gradlew -PcoreOnly :core:test                            # logic tests only, no Android SDK needed
+
+CI (GitHub Actions) builds a debug APK on every push and records its SHA-256. CI APKs are signed with a
+per-runner debug key and cannot update an installed release (see docs/RECOVERY.md).
+
 # Install
 Install instructions
 
