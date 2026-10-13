@@ -20,7 +20,16 @@ public class LauncherActivity extends Activity {
 		super.onCreate(bundle);
 
 		if ("AccessibilityService".equals(getIntent().getAction())) {
-			SettingsActivity.activateAccessibilityService();
+			// Only with the user's explicit consent (Startup app > Accessibility).
+			if (ModulePrefs.settings(this).rootAccessibilityAssist) {
+				final Context appContext = getApplicationContext();
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						RootAccessibility.enable(appContext);
+					}
+				}, "XposedTeyesRootA11y").start();
+			}
 
 			finish();
 			return;

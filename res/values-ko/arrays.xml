@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="pref_carlink_resolutions">
+        <item>기본값</item>
+        <item>800x480</item>
+        <item>1280x720</item>
+        <item>1920x1080</item>
+        <item>2560x1440</item>
+        <item>3840x2160</item>
+        <item>720x1280</item>
+        <item>1080x1920</item>
+        <item>1440x2560</item>
+        <item>2160x3840</item>
+    </string-array>
+    <string-array name="startup_trigger_entries">
+        <item>완전 부팅 후</item>
+        <item>ACC ON·절전 복귀 시</item>
+        <item>둘 다</item>
+    </string-array>
+    <string-array name="startup_mode_entries">
+        <item>단일 앱</item>
+        <item>앱 2개 분할화면</item>
+    </string-array>
+    <string-array name="startup_foreground_entries">
+        <item>지정 앱을 전면 실행</item>
+        <item>홈 화면일 때만 실행</item>
+    </string-array>
+    <string-array name="post_launch_entries">
+        <item>재실행 없음</item>
+        <item>확인된 비정상 종료만 제한 복구</item>
+        <item>사용자 선택 제한 유지 모드</item>
+    </string-array>
+    <string-array name="bt_conflict_entries">
+        <item>시작 정책 우선</item>
+        <item>BT 정책 우선</item>
+        <item>마지막 이벤트 우선</item>
+    </string-array>
+</resources>

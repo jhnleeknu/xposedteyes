@@ -1,0 +1,9 @@
+.gradle/
+build/
+local.properties
+*.iml
+.idea/
+captures/
+# Signing material must never be committed.
+*.jks
+*.keystore

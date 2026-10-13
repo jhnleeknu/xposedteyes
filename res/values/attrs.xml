@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<declare-styleable name="AppPickerPreference">
+		<!-- Store only the package name (for the legacy split screen shortcut keys). -->
+		<attr name="storePackageOnly" format="boolean" />
+	</declare-styleable>
+
+	<declare-styleable name="IntPickerPreference">
+		<!-- Range in display units (the stored value is display value * scale). -->
+		<attr name="minValue" format="integer" />
+		<attr name="maxValue" format="integer" />
+		<attr name="scale" format="integer" />
+		<attr name="presets" format="string" />
+		<attr name="unitLabel" format="string" />
+	</declare-styleable>
+</resources>

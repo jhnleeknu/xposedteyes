@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.pijulius.xposedteyes"
-    android:versionCode="30"
-    android:versionName="3.0" >
+<!-- package, versionCode/Name and SDK levels are set in app/build.gradle
+     (namespace com.pijulius.xposedteyes, minSdk 28, targetSdk 28, unchanged). -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-sdk
-        android:minSdkVersion="28"
-        android:targetSdkVersion="28" />
+    <!-- Lets only this app (same signature) tell the SystemUI hook that settings changed. -->
+    <permission
+        android:name="com.pijulius.xposedteyes.permission.SETTINGS_SYNC"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="com.pijulius.xposedteyes.permission.SETTINGS_SYNC" />
 
     <application
         android:allowBackup="true"
@@ -68,6 +69,37 @@
             <meta-data android:name="android.app.shortcuts"
                  android:resource="@xml/shortcuts" /> 
         </activity>
+
+        <!-- Started by the SystemUI hook. Exported but input free: it only ever launches
+             the split screen pair selected in the settings. -->
+        <activity
+            android:name="com.pijulius.xposedteyes.StartupSplitActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:taskAffinity=""
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <activity
+            android:name="com.pijulius.xposedteyes.settings.AppPickerActivity"
+            android:exported="false"
+            android:label="@string/app_picker_title" />
+
+        <activity
+            android:name="com.pijulius.xposedteyes.diag.DiagnosticsActivity"
+            android:exported="false"
+            android:label="@string/pref_advanced_screen" />
+
+        <!-- Launch status from SystemUI. STATUS_BAR_SERVICE is held by SystemUI and cannot be
+             obtained by ordinary apps, so other apps cannot feed this receiver. -->
+        <receiver
+            android:name="com.pijulius.xposedteyes.diag.StatusReceiver"
+            android:exported="true"
+            android:permission="android.permission.STATUS_BAR_SERVICE">
+            <intent-filter>
+                <action android:name="com.pijulius.xposedteyes.action.LAUNCH_STATUS" />
+            </intent-filter>
+        </receiver>
 
         <service
                 android:name="com.pijulius.xposedteyes.LauncherService"

@@ -1,0 +1,29 @@
+pluginManagement {
+	repositories {
+		google()
+		mavenCentral()
+		gradlePluginPortal()
+	}
+	plugins {
+		id 'com.android.application' version '8.7.3'
+	}
+}
+
+dependencyResolutionManagement {
+	repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+	repositories {
+		google()
+		mavenCentral()
+	}
+}
+
+rootProject.name = 'xposedteyes'
+
+// Pure Java logic (settings model, startup coordinator) with JVM unit tests.
+include ':core'
+
+// The Android module needs the Android SDK and Google's Maven repository. It can be
+// left out (-PcoreOnly) to run the core tests on machines without them.
+if (!providers.gradleProperty('coreOnly').isPresent()) {
+	include ':app'
+}

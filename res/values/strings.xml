@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<string name="app_name">Xposed Teyes</string>
-	<string name="app_name_settings">Xposed Teyes Settings</string>
+	<string name="app_name" translatable="false">Xposed Teyes</string>
 	<string name="app_description">Xposed Teyes Headunit</string>
-	<string name="app_not_found">App not found</string>
 
 	<string name="pref_teyes">Teyes</string>
 	<string name="pref_resizable_splitscreen">Resizable Split Screen</string>
@@ -44,31 +42,22 @@
 	<string name="pref_camera_keep_systemui">Keep SystemUI</string>
 	<string name="pref_camera_keep_systemui_sum">Will not hide systemui on backup camera.</string>
 
-	<string name="pref_carlink">CarLink</string>
+	<string name="pref_carlink">CarLink (Android Auto)</string>
 	<string name="pref_carlink_resolution">Video Resolution</string>
 	<string name="pref_carlink_resolution_sum">Prefered video resolution for Android Auto.</string>
 	<string name="pref_carlink_resolution_width_margin">Width Margin</string>
 	<string name="pref_carlink_resolution_width_margin_sum">Margin for the width of the video resolution.</string>
 	<string name="pref_carlink_resolution_height_margin">Height Margin</string>
 	<string name="pref_carlink_resolution_height_margin_sum">Margin for the height of the video resolution.</string>
-	<string name="pref_carlink_dpi">Custom DPI</string>
-	<string name="pref_carlink_dpi_sum">Set custom DPI for changing Android Auto layout.</string>
+	<string name="pref_carlink_dpi">Android Auto DPI</string>
+	<string name="pref_carlink_dpi_sum">Density sent to Android Auto (not CarPlay). 0 keeps the default.</string>
 	<string name="pref_carlink_keep_systemui">Keep SystemUI</string>
 	<string name="pref_carlink_keep_systemui_sum">Will not hide systemui on Android Auto.</string>
 
-	<string name="pref_launcher">Launcher</string>
-	<string name="pref_launch_on_startup">Launch Music &amp; Nav on Startup</string>
-	<string name="pref_launch_on_startup_sum">Launch the Music and Navigation application automatically in splitscreen.</string>
-	<string name="pref_launch_on_bluetooth">Launch App on Bluetooth Connected</string>
-	<string name="pref_launch_on_bluetooth_sum">Launch for e.g. Android Auto automatically when Bluetooth is connected.</string>
+	<string name="pref_launcher">Split screen shortcuts</string>
 	<string name="pref_music_app">Music App</string>
-	<string name="pref_music_app_sum">Music application to launch in Split Screen on Left.</string>
 	<string name="pref_navigation_app">Navigation App</string>
-	<string name="pref_navigation_app_sum">Navigation application to launch in Split Screen on Right/Left</string>
 	<string name="pref_videos_app">Videos App</string>
-	<string name="pref_videos_app_sum">Videos application to launch in Split Screen on Right</string>
-	<string name="pref_bluetooth_app">Bluetooth App</string>
-	<string name="pref_bluetooth_app_sum">Application to launch when Bluetooth is connected, for e.g. com.syu.carlink</string>
 	<string name="pref_mini_desktop_dpi">Mini Desktop DPI</string>
 	<string name="pref_mini_desktop_dpi_sum">DPI for the Mini Desktop Launcher.</string>
 
@@ -77,18 +66,156 @@
 	<string name="launcher_description">You can use this to automatically launch defined applications
 	    in split screen on boot. Please define the apps in the settings for this to work.</string>
 
-	<string name="activate_launcher_service">Activate Launcher Services</string>
-	<string name="activate_launcher_service_sum">* Only needed if you want to launch applications in split screen 
-		mode automatically. If you use FYTStarter you can activate service there otherwise please give root
-		access to this app so it can active the service automatially by itself.</string>
 
 	<string name="launcher_musicandnav">Music &amp; Nav</string>
 	<string name="launcher_navandvideos">Nav &amp; Videos</string>
 
-	<string name="toast_accessibility_service_request">Activating service requires root. Please grant access.</string>
-	<string name="toast_accessibility_service_failed">Activation failed.</string>
-	<string name="toast_accessibility_service_succeeded">Activation succeeded.</string>
 	<string name="toast_app_not_found">Application not found. Please set Music, Navigation and Videos applications 
 		correctly in settings.</string>
+
+	<!-- Startup app -->
+	<string name="pref_startup_screen">Startup app</string>
+	<string name="pref_startup_screen_sum">Open an app automatically after boot or ACC ON, bluetooth app launch</string>
+	<string name="pref_kill_switch_active">All new features are switched off (Advanced)</string>
+	<string name="pref_migration_notice">Settings carried over from the previous version</string>
+	<string name="notice_startup_migrated">Your previous autostart (split screen, every ACC ON, 1 s delay) was moved here.</string>
+	<string name="notice_bluetooth_migrated">Your previous bluetooth app launch was moved here.</string>
+	<string name="notice_root_assist_off">Root based re-enabling of the accessibility service now needs your consent (Accessibility section).</string>
+	<string name="notice_unresolved">%1$s is not installed or has no launcher entry: shown as \"cannot launch\".</string>
+	<string name="notice_tap_to_dismiss">Tap to dismiss.</string>
+	<string name="pref_startup_category">Automatic launch</string>
+	<string name="pref_startup_enabled">Launch automatically</string>
+	<string name="pref_startup_enabled_sum">Changes apply from the next matching event; changing settings never opens the app.</string>
+	<string name="pref_startup_trigger">When</string>
+	<string name="pref_startup_mode">How</string>
+	<string name="pref_startup_primary">App</string>
+	<string name="pref_startup_secondary">Second app (split screen)</string>
+	<string name="pref_startup_secondary_single">Only used in split screen mode</string>
+	<string name="pref_startup_delay">Delay</string>
+	<string name="pref_startup_retry_count">Retries after a failed request</string>
+	<string name="pref_startup_retry_delay">Retry interval</string>
+	<string name="pref_startup_foreground">When another app is in front</string>
+	<string name="pref_startup_safety">Reverse camera and calls</string>
+	<string name="pref_startup_safety_sum">The system keeps priority. The app is started with a normal request: nothing is closed, covered or forced to stay in front.</string>
+	<string name="pref_post_launch_category">After the app was started</string>
+	<string name="pref_post_launch_policy">If the app closes</string>
+	<string name="pref_post_launch_blocked">Never relaunched. Recovery options are unavailable (BLOCKED): an abnormal exit cannot yet be told apart reliably from a normal exit or the home button.</string>
+	<string name="pref_recovery_limit">Recovery limit</string>
+	<string name="pref_recovery_delay">Recovery delay</string>
+	<string name="pref_bt_category">Bluetooth</string>
+	<string name="pref_bt_enabled">Launch an app when the phone connects</string>
+	<string name="pref_bt_enabled_sum">Only on a real disconnected → connected change; repeated reports are ignored.</string>
+	<string name="pref_bt_target">Bluetooth app</string>
+	<string name="pref_bt_delay">Bluetooth delay</string>
+	<string name="pref_bt_conflict">If startup and bluetooth launches overlap</string>
+	<string name="pref_bt_disconnect">Relaunch the startup app after a disconnect</string>
+	<string name="pref_bt_disconnect_sum">Previous version behaviour. Off by default.</string>
+	<string name="pref_accessibility_category">Accessibility (split screen only)</string>
+	<string name="pref_accessibility_status">Launcher service</string>
+	<string name="pref_accessibility_enabled">Enabled. Tap to open the system accessibility settings.</string>
+	<string name="pref_accessibility_disabled">Disabled. Split screen needs it: tap to enable it in the system accessibility settings. Without it only the first app is opened.</string>
+	<string name="pref_accessibility_single_note">Not needed for single app mode.</string>
+	<string name="pref_root_assist">Re-enable with root when needed</string>
+	<string name="pref_root_assist_sum">Before a split screen launch, if the service is off, add it through su while keeping all other enabled services.</string>
+	<string name="dialog_root_assist">XposedTeyes will run su to add its launcher service to the enabled accessibility services, keeping every other service. It only runs before a split screen launch while the service is off, and gives up after 10 seconds. Allow?</string>
+	<string name="dialog_agree">Allow</string>
+	<string name="pref_startup_actions">Actions</string>
+	<string name="pref_launch_now">Launch now</string>
+	<string name="pref_launch_now_sum">Opens the selected app(s) once. Does not count as an automatic launch.</string>
+	<string name="pref_last_result">Last automatic launch</string>
+	<string name="pref_last_result_none">No report from SystemUI yet</string>
+	<string name="pref_last_result_value" translatable="false">%1$s · %2$s · %3$s%4$s</string>
+	<string name="pref_restore_startup">Restore startup defaults</string>
+	<string name="pref_restore_startup_sum">Turns automatic launches off and clears the selection; pending launches are cancelled.</string>
+	<string name="dialog_restore_startup">Reset all startup and bluetooth launch settings to their defaults? The current values are kept in a private backup.</string>
+
+	<!-- CarPlay -->
+	<string name="pref_carplay_screen">CarPlay screen</string>
+	<string name="pref_carplay_screen_sum">BLOCKED: analysis pending, no control available</string>
+	<string name="pref_feature_status">Status</string>
+	<string name="pref_carplay_status_sum">BLOCKED. The CarPlay video, display negotiation and touch path inside CarLink has not been identified yet, so nothing is changed. The existing DPI setting applies to Android Auto only. See docs/research/carplay.md.</string>
+	<string name="pref_carlink_info">CarLink information (read only)</string>
+	<string name="pref_carlink_info_sum">Version, APK hash, native libraries and CarPlay related class names, for the analysis. Export is optional.</string>
+	<string name="pref_controls_unavailable">Controls (not available yet)</string>
+	<string name="pref_carplay_density">Real display density / layout</string>
+	<string name="pref_carplay_scale">Video scale · margins · position</string>
+	<string name="pref_carplay_trial">Trial apply · confirm · restore</string>
+	<string name="status_not_confirmed">Not confirmed: no verified backend</string>
+
+	<!-- BT microphone -->
+	<string name="pref_btmic_screen">BT call microphone</string>
+	<string name="pref_btmic_screen_sum">BLOCKED: path analysis pending, read-only diagnostics</string>
+	<string name="pref_btmic_status_sum">BLOCKED. The bluetooth call (HFP) uplink path and a control that really affects it have not been identified, so no gain or processing value is written. See docs/research/bt-mic.md.</string>
+	<string name="pref_btmic_diag">Path diagnostics (read only)</string>
+	<string name="pref_btmic_diag_sum">Shows candidate properties, audio state and effect availability. Records nothing.</string>
+	<string name="pref_btmic_gain">Input gain</string>
+	<string name="pref_btmic_agc">Automatic gain control</string>
+	<string name="pref_btmic_ns">Noise suppression</string>
+	<string name="pref_btmic_aec">Echo cancellation</string>
+
+	<!-- Advanced -->
+	<string name="pref_advanced_screen">Advanced / diagnostics</string>
+	<string name="pref_advanced_screen_sum">Compatibility, local log, backup and restore</string>
+	<string name="pref_kill_switch">Turn off all new features</string>
+	<string name="pref_kill_switch_sum">Stops startup / bluetooth launching (pending launches are cancelled) and any future CarPlay / microphone change. Existing features are not affected.</string>
+	<string name="pref_compatibility">Feature compatibility</string>
+	<string name="pref_compatibility_sum">Implemented / verified / blocked status and runtime checks</string>
+	<string name="pref_local_log">Local log</string>
+	<string name="pref_local_log_sum">At most 1 MiB, stays on the device unless you export it</string>
+	<string name="pref_export">Export settings</string>
+	<string name="pref_export_sum">Save the settings to a file you choose (settings only, no device identifiers)</string>
+	<string name="pref_import">Import settings</string>
+	<string name="pref_import_sum">Every value is checked; unknown or invalid entries are ignored</string>
+	<string name="pref_restore_all">Restore all defaults</string>
+	<string name="pref_restore_all_sum">All settings of this app back to their defaults</string>
+	<string name="dialog_restore_all">Reset every setting of this app to its default? The current values are kept in a private backup. Hook based features may need a reboot.</string>
+	<string name="dialog_save">Save</string>
+	<string name="dialog_apply">Apply</string>
+	<string name="dialog_import_invalid">This file is not an XposedTeyes settings backup of a supported version. Nothing was changed.</string>
+	<string name="dialog_import_summary">%1$d values will be applied, %2$d ignored.</string>
+	<string name="dialog_import_rejected">Ignored: %1$s</string>
+
+	<!-- Pickers -->
+	<string name="app_picker_title">Select app</string>
+	<string name="app_picker_search">Search apps</string>
+	<string name="app_picker_loading">Loading apps…</string>
+	<string name="app_picker_empty">No matching app</string>
+	<string name="app_picker_none">None</string>
+	<string name="app_picker_none_sum">Clear the selection</string>
+	<string name="app_kind_system">System</string>
+	<string name="app_kind_user">User</string>
+	<string name="app_not_selected">Not selected</string>
+	<string name="app_selected" translatable="false">%1$s (%2$s)</string>
+	<string name="app_cannot_launch">Cannot launch: %1$s is uninstalled, disabled or has no single launcher entry</string>
+	<string name="app_invalid_value">Invalid value: %1$s</string>
+	<string name="int_value_range">%1$d%2$s (range %3$d–%4$d)</string>
+	<string name="int_range_hint">Allowed: %1$d–%2$d%3$s</string>
+	<string name="unit_seconds">s</string>
+	<string name="unit_times">×</string>
+
+	<!-- Diagnostics -->
+	<string name="diag_export">Export…</string>
+	<string name="diag_clear">Clear</string>
+	<string name="diag_loading">Collecting…</string>
+	<string name="diag_log_empty">The log is empty.</string>
+	<string name="diag_feature_header">Feature status (code / device). NOT_TESTED does not mean supported.</string>
+	<string name="diag_runtime_header">Runtime checks</string>
+	<string name="diag_compat_note">DEVICE_VERIFIED is only set after a test on a named device and app version. See docs/COMPATIBILITY.md.</string>
+	<string name="diag_carlink_intro">Read-only CarLink inventory for the CarPlay analysis. CarLink is not modified. Export only if you want to share it.</string>
+	<string name="diag_carlink_classes">Class names matching CarPlay related keywords (names only):</string>
+	<string name="diag_btmic_intro">Read-only. Nothing is recorded and no value is written. Effect availability below applies to this app\'s own capture sessions and says nothing about the bluetooth call uplink.</string>
+	<string name="diag_btmic_props">Candidate properties (meaning unverified):</string>
+	<string name="diag_btmic_audio">Audio state:</string>
+	<string name="diag_btmic_effects">Android audio effects for app capture sessions:</string>
+	<string name="diag_btmic_hfp">HFP uplink path: not observable from this app (BLOCKED, see docs/research/bt-mic.md).</string>
+
+	<!-- Toasts -->
+	<string name="toast_split_needs_accessibility">Split screen needs the XposedTeyes accessibility service. Opening the first app only.</string>
+	<string name="toast_root_accessibility_failed">Could not enable the accessibility service with root. Opening the first app only.</string>
+	<string name="toast_target_not_launchable">The selected app cannot be launched. Please select it again.</string>
+	<string name="toast_no_accessibility_settings">Accessibility settings are not available on this device.</string>
+	<string name="toast_no_file_picker">No file picker available.</string>
+	<string name="toast_export_done">Saved.</string>
+	<string name="toast_export_failed">Saving failed.</string>
 
 </resources>

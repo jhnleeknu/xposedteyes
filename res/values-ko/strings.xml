@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string name="app_description">Xposed Teyes 헤드유닛</string>
+
+	<string name="pref_teyes">Teyes</string>
+	<string name="pref_resizable_splitscreen">분할화면 크기 조절</string>
+	<string name="pref_resizable_splitscreen_sum">Android Framework와 SystemUI에 모듈을 활성화해야 합니다</string>
+	<string name="pref_dont_exit_splitscreen">분할화면 유지</string>
+	<string name="pref_dont_exit_splitscreen_sum">홈 키를 눌러도 분할화면을 유지합니다.</string>
+	<string name="pref_hide_divider">구분선 숨기기</string>
+	<string name="pref_hide_divider_sum">분할화면 구분선을 표시하거나 숨깁니다</string>
+	<string name="pref_divider_width">구분선 너비</string>
+	<string name="pref_divider_width_sum">분할된 두 앱 사이의 간격(0이면 기본값).</string>
+	<string name="pref_divider_inset_position">구분선 인셋 위치</string>
+	<string name="pref_divider_inset_position_sum">구분선 너비 기준 인셋 위치.</string>
+	<string name="pref_screen_ratio">화면 비율</string>
+	<string name="pref_screen_ratio_sum">화면을 나누는 비율</string>
+	<string name="pref_left_screen_position">작은 화면 위치</string>
+	<string name="pref_left_screen_position_sum">선택하면 작은 화면이 왼쪽 대신 오른쪽에 표시됩니다</string>
+	<string name="pref_force_systemui">SystemUI 강제 표시</string>
+	<string name="pref_force_systemui_sum">SystemUI가 사라지지 않도록 시도합니다.</string>
+	<string name="pref_use_ad_blocking">광고 차단 사용</string>
+	<string name="pref_use_ad_blocking_sum">앱의 광고 표시를 막으려고 시도합니다.</string>
+
+	<string name="pref_camera">카메라</string>
+	<string name="pref_camera_width">미리보기 너비</string>
+	<string name="pref_camera_width_sum">카메라 미리보기 이미지의 너비.</string>
+	<string name="pref_camera_height">미리보기 높이</string>
+	<string name="pref_camera_height_sum">카메라 미리보기 이미지의 높이.</string>
+	<string name="pref_camera_x">미리보기 X 위치</string>
+	<string name="pref_camera_x_sum">카메라 미리보기 이미지의 X 위치.</string>
+	<string name="pref_camera_y">미리보기 Y 위치</string>
+	<string name="pref_camera_y_sum">카메라 미리보기 이미지의 Y 위치.</string>
+	<string name="pref_camera_warning">경고 표시</string>
+	<string name="pref_camera_warning_sum">카메라 미리보기에 경고 문구를 표시합니다.</string>
+	<string name="pref_camera_enhance">미리보기 개선</string>
+	<string name="pref_camera_enhance_sum">카메라 미리보기에 안티앨리어싱·디더링을 적용합니다.</string>
+	<string name="pref_camera_round">둥근 모서리</string>
+	<string name="pref_camera_round_sum">미리보기 이미지에 둥근 모서리를 사용합니다.</string>
+	<string name="pref_camera_keep_systemui">SystemUI 유지</string>
+	<string name="pref_camera_keep_systemui_sum">후방카메라 화면에서 SystemUI를 숨기지 않습니다.</string>
+
+	<string name="pref_carlink">CarLink (Android Auto)</string>
+	<string name="pref_carlink_resolution">영상 해상도</string>
+	<string name="pref_carlink_resolution_sum">Android Auto에 요청할 영상 해상도.</string>
+	<string name="pref_carlink_resolution_width_margin">너비 여백</string>
+	<string name="pref_carlink_resolution_width_margin_sum">영상 해상도의 너비 여백.</string>
+	<string name="pref_carlink_resolution_height_margin">높이 여백</string>
+	<string name="pref_carlink_resolution_height_margin_sum">영상 해상도의 높이 여백.</string>
+	<string name="pref_carlink_dpi">Android Auto DPI</string>
+	<string name="pref_carlink_dpi_sum">Android Auto에 보내는 밀도값(CarPlay 아님). 0이면 기본값 유지.</string>
+	<string name="pref_carlink_keep_systemui">SystemUI 유지</string>
+	<string name="pref_carlink_keep_systemui_sum">Android Auto 화면에서 SystemUI를 숨기지 않습니다.</string>
+
+	<string name="pref_launcher">분할화면 바로가기</string>
+	<string name="pref_music_app">음악 앱</string>
+	<string name="pref_navigation_app">내비게이션 앱</string>
+	<string name="pref_videos_app">동영상 앱</string>
+	<string name="pref_mini_desktop_dpi">Mini Desktop DPI</string>
+	<string name="pref_mini_desktop_dpi_sum">Mini Desktop 런처의 DPI.</string>
+
+	<string name="settings">설정</string>
+	<string name="accessibility_description">분할화면으로 앱을 실행하는 데 사용됩니다</string>
+	<string name="launcher_description">지정한 앱을 분할화면으로 실행할 수 있습니다. 설정에서 앱을 먼저 선택하세요.</string>
+	<string name="launcher_musicandnav">음악 &amp; 내비</string>
+	<string name="launcher_navandvideos">내비 &amp; 동영상</string>
+	<string name="toast_app_not_found">앱을 찾을 수 없습니다. 설정에서 앱을 다시 선택하세요.</string>
+
+	<!-- 시작 앱 -->
+	<string name="pref_startup_screen">시작 앱 관리</string>
+	<string name="pref_startup_screen_sum">부팅·ACC ON 후 앱 자동 실행, 블루투스 연결 시 앱 실행</string>
+	<string name="pref_kill_switch_active">신규 기능이 모두 꺼져 있습니다(고급/진단)</string>
+	<string name="pref_migration_notice">이전 버전 설정을 옮겨 왔습니다</string>
+	<string name="notice_startup_migrated">기존 자동 실행(분할화면, 매 ACC ON, 1초 지연)을 이 화면으로 옮겼습니다.</string>
+	<string name="notice_bluetooth_migrated">기존 블루투스 연결 시 앱 실행 설정을 이 화면으로 옮겼습니다.</string>
+	<string name="notice_root_assist_off">루트로 접근성 서비스를 다시 켜는 동작은 이제 사용자 동의가 필요합니다(접근성 항목).</string>
+	<string name="notice_unresolved">%1$s 앱이 설치되어 있지 않거나 실행 항목이 없어 \"실행 불가\"로 표시합니다.</string>
+	<string name="notice_tap_to_dismiss">눌러서 닫기.</string>
+	<string name="pref_startup_category">자동 실행</string>
+	<string name="pref_startup_enabled">자동 실행</string>
+	<string name="pref_startup_enabled_sum">다음 해당 이벤트부터 적용됩니다. 설정을 바꾸는 것만으로 앱이 열리지 않습니다.</string>
+	<string name="pref_startup_trigger">실행 시점</string>
+	<string name="pref_startup_mode">실행 방식</string>
+	<string name="pref_startup_primary">시작 앱</string>
+	<string name="pref_startup_secondary">두 번째 앱(분할화면)</string>
+	<string name="pref_startup_secondary_single">분할화면 모드에서만 사용됩니다</string>
+	<string name="pref_startup_delay">실행 지연</string>
+	<string name="pref_startup_retry_count">실패 재시도 횟수</string>
+	<string name="pref_startup_retry_delay">재시도 간격</string>
+	<string name="pref_startup_foreground">다른 앱이 표시 중일 때</string>
+	<string name="pref_startup_safety">후방카메라·통화</string>
+	<string name="pref_startup_safety_sum">시스템 기본 우선순위를 유지합니다. 일반 실행 요청만 보내며 다른 앱 종료·화면 덮기·전면 강제 유지를 하지 않습니다.</string>
+	<string name="pref_post_launch_category">실행 후 종료 정책</string>
+	<string name="pref_post_launch_policy">앱이 종료되면</string>
+	<string name="pref_post_launch_blocked">재실행하지 않습니다. 복구 옵션은 사용할 수 없습니다(BLOCKED): 비정상 종료를 정상 종료·홈 버튼과 신뢰성 있게 구분하는 경로가 아직 확인되지 않았습니다.</string>
+	<string name="pref_recovery_limit">종료 후 복구 한도</string>
+	<string name="pref_recovery_delay">종료 후 복구 대기</string>
+	<string name="pref_bt_category">블루투스</string>
+	<string name="pref_bt_enabled">블루투스 연결 시 앱 실행</string>
+	<string name="pref_bt_enabled_sum">실제 연결 해제 → 연결 전환에서만 실행합니다. 같은 상태의 반복 보고는 무시합니다.</string>
+	<string name="pref_bt_target">블루투스 연결 시 앱</string>
+	<string name="pref_bt_delay">블루투스 실행 지연</string>
+	<string name="pref_bt_conflict">시작 이벤트와 BT 이벤트 충돌 시</string>
+	<string name="pref_bt_disconnect">연결 해제 후 시작 앱 다시 실행</string>
+	<string name="pref_bt_disconnect_sum">이전 버전 동작. 기본값은 꺼짐.</string>
+	<string name="pref_accessibility_category">접근성(분할화면 전용)</string>
+	<string name="pref_accessibility_status">런처 서비스</string>
+	<string name="pref_accessibility_enabled">켜짐. 누르면 시스템 접근성 설정을 엽니다.</string>
+	<string name="pref_accessibility_disabled">꺼짐. 분할화면 실행에 필요합니다. 누르면 시스템 접근성 설정에서 켤 수 있습니다. 꺼져 있으면 첫 번째 앱만 실행합니다.</string>
+	<string name="pref_accessibility_single_note">단일 앱 모드에는 필요하지 않습니다.</string>
+	<string name="pref_root_assist">필요 시 루트로 다시 켜기</string>
+	<string name="pref_root_assist_sum">분할화면 실행 전에 서비스가 꺼져 있으면 su로 추가합니다. 이미 켜진 다른 서비스는 그대로 유지합니다.</string>
+	<string name="dialog_root_assist">XposedTeyes가 su를 실행해 활성화된 접근성 서비스 목록에 런처 서비스를 추가합니다. 다른 서비스는 모두 유지합니다. 분할화면 실행 전 서비스가 꺼져 있을 때만 실행하며 10초 후 포기합니다. 허용할까요?</string>
+	<string name="dialog_agree">허용</string>
+	<string name="pref_startup_actions">동작</string>
+	<string name="pref_launch_now">지금 실행</string>
+	<string name="pref_launch_now_sum">선택한 앱을 한 번 엽니다. 자동 실행 횟수에 포함되지 않습니다.</string>
+	<string name="pref_last_result">최근 자동 실행 결과</string>
+	<string name="pref_last_result_none">SystemUI의 보고가 아직 없습니다</string>
+	<string name="pref_restore_startup">시작 앱 기본값 복원</string>
+	<string name="pref_restore_startup_sum">자동 실행을 끄고 선택을 지웁니다. 대기 중인 실행은 취소됩니다.</string>
+	<string name="dialog_restore_startup">시작 앱·블루투스 실행 설정을 모두 기본값으로 되돌릴까요? 현재 값은 앱 내부 백업에 보관됩니다.</string>
+
+	<!-- CarPlay -->
+	<string name="pref_carplay_screen">CarPlay 화면</string>
+	<string name="pref_carplay_screen_sum">BLOCKED: 분석 진행 중, 사용할 수 있는 조절 없음</string>
+	<string name="pref_feature_status">지원 상태</string>
+	<string name="pref_carplay_status_sum">BLOCKED. CarLink 내부의 CarPlay 영상·디스플레이 협상·터치 경로를 아직 확인하지 못해 아무것도 변경하지 않습니다. 기존 DPI 설정은 Android Auto 전용입니다. docs/research/carplay.md 참고.</string>
+	<string name="pref_carlink_info">CarLink 정보(읽기 전용)</string>
+	<string name="pref_carlink_info_sum">분석용 버전·APK 해시·네이티브 라이브러리·CarPlay 관련 클래스 이름. 내보내기는 선택 사항입니다.</string>
+	<string name="pref_controls_unavailable">조절 항목(아직 사용 불가)</string>
+	<string name="pref_carplay_density">실제 표시 밀도/레이아웃</string>
+	<string name="pref_carplay_scale">영상 배율 · 여백 · 위치</string>
+	<string name="pref_carplay_trial">시험 적용 · 확정 · 원래 값 복원</string>
+	<string name="status_not_confirmed">미확인: 검증된 제어 경로 없음</string>
+
+	<!-- BT 마이크 -->
+	<string name="pref_btmic_screen">BT 통화 마이크</string>
+	<string name="pref_btmic_screen_sum">BLOCKED: 경로 분석 진행 중, 읽기 전용 진단</string>
+	<string name="pref_btmic_status_sum">BLOCKED. 블루투스 통화(HFP) 송신 경로와 그 경로에 실제로 영향을 주는 제어를 확인하지 못해 이득·음성 처리 값을 쓰지 않습니다. docs/research/bt-mic.md 참고.</string>
+	<string name="pref_btmic_diag">경로 진단(읽기 전용)</string>
+	<string name="pref_btmic_diag_sum">후보 속성, 오디오 상태, 효과 지원 여부를 표시합니다. 녹음하지 않습니다.</string>
+	<string name="pref_btmic_gain">입력 이득</string>
+	<string name="pref_btmic_agc">AGC(자동 이득 조절)</string>
+	<string name="pref_btmic_ns">잡음 억제</string>
+	<string name="pref_btmic_aec">에코 제거</string>
+
+	<!-- 고급 -->
+	<string name="pref_advanced_screen">고급/진단</string>
+	<string name="pref_advanced_screen_sum">호환성, 로컬 로그, 설정 백업·복원</string>
+	<string name="pref_kill_switch">신규 기능 전체 끄기</string>
+	<string name="pref_kill_switch_sum">시작 앱·블루투스 자동 실행을 멈추고(대기 중인 실행 취소) 이후 CarPlay·마이크 변경도 막습니다. 기존 기능에는 영향이 없습니다.</string>
+	<string name="pref_compatibility">기능별 호환성</string>
+	<string name="pref_compatibility_sum">구현·검증·차단 상태와 실행 중 확인 결과</string>
+	<string name="pref_local_log">로컬 로그</string>
+	<string name="pref_local_log_sum">최대 1MiB, 직접 내보내지 않으면 기기 밖으로 나가지 않습니다</string>
+	<string name="pref_export">설정 내보내기</string>
+	<string name="pref_export_sum">선택한 파일에 설정을 저장합니다(설정값만, 기기 식별정보 없음)</string>
+	<string name="pref_import">설정 가져오기</string>
+	<string name="pref_import_sum">모든 값을 검증하며 알 수 없거나 잘못된 항목은 무시합니다</string>
+	<string name="pref_restore_all">모든 설정 기본값 복원</string>
+	<string name="pref_restore_all_sum">이 앱의 모든 설정을 기본값으로 되돌립니다</string>
+	<string name="dialog_restore_all">이 앱의 모든 설정을 기본값으로 되돌릴까요? 현재 값은 앱 내부 백업에 보관됩니다. 후킹 기반 기능은 재부팅이 필요할 수 있습니다.</string>
+	<string name="dialog_save">저장</string>
+	<string name="dialog_apply">적용</string>
+	<string name="dialog_import_invalid">지원되는 버전의 XposedTeyes 설정 백업 파일이 아닙니다. 아무것도 변경하지 않았습니다.</string>
+	<string name="dialog_import_summary">%1$d개 값을 적용하고 %2$d개는 무시합니다.</string>
+	<string name="dialog_import_rejected">무시됨: %1$s</string>
+
+	<!-- 선택기 -->
+	<string name="app_picker_title">앱 선택</string>
+	<string name="app_picker_search">앱 검색</string>
+	<string name="app_picker_loading">앱 목록을 불러오는 중…</string>
+	<string name="app_picker_empty">일치하는 앱이 없습니다</string>
+	<string name="app_picker_none">선택 안 함</string>
+	<string name="app_picker_none_sum">선택을 지웁니다</string>
+	<string name="app_kind_system">시스템</string>
+	<string name="app_kind_user">사용자</string>
+	<string name="app_not_selected">선택 안 됨</string>
+	<string name="app_cannot_launch">실행 불가: %1$s 앱이 삭제·비활성화되었거나 실행 항목이 하나로 정해지지 않습니다</string>
+	<string name="app_invalid_value">잘못된 값: %1$s</string>
+	<string name="int_value_range">%1$d%2$s (범위 %3$d–%4$d)</string>
+	<string name="int_range_hint">허용 범위: %1$d–%2$d%3$s</string>
+	<string name="unit_seconds">초</string>
+	<string name="unit_times">회</string>
+
+	<!-- 진단 -->
+	<string name="diag_export">내보내기…</string>
+	<string name="diag_clear">지우기</string>
+	<string name="diag_loading">수집 중…</string>
+	<string name="diag_log_empty">로그가 비어 있습니다.</string>
+	<string name="diag_feature_header">기능 상태(코드 / 기기). NOT_TESTED는 지원됨을 뜻하지 않습니다.</string>
+	<string name="diag_runtime_header">실행 중 확인</string>
+	<string name="diag_compat_note">DEVICE_VERIFIED는 지정한 기기·앱 버전에서 시험한 뒤에만 표시합니다. docs/COMPATIBILITY.md 참고.</string>
+	<string name="diag_carlink_intro">CarPlay 분석을 위한 CarLink 읽기 전용 목록입니다. CarLink를 변경하지 않습니다. 공유하려는 경우에만 내보내세요.</string>
+	<string name="diag_carlink_classes">CarPlay 관련 키워드와 일치하는 클래스 이름(이름만):</string>
+	<string name="diag_btmic_intro">읽기 전용. 녹음하지 않고 어떤 값도 쓰지 않습니다. 아래 효과 지원 여부는 이 앱 자체 캡처 세션 기준이며 블루투스 통화 송신 경로와는 별개입니다.</string>
+	<string name="diag_btmic_props">후보 속성(의미 미검증):</string>
+	<string name="diag_btmic_audio">오디오 상태:</string>
+	<string name="diag_btmic_effects">앱 캡처 세션용 Android 오디오 효과:</string>
+	<string name="diag_btmic_hfp">HFP 송신 경로: 이 앱에서 관찰 불가(BLOCKED, docs/research/bt-mic.md 참고).</string>
+
+	<!-- 알림 -->
+	<string name="toast_split_needs_accessibility">분할화면에는 XposedTeyes 접근성 서비스가 필요합니다. 첫 번째 앱만 엽니다.</string>
+	<string name="toast_root_accessibility_failed">루트로 접근성 서비스를 켜지 못했습니다. 첫 번째 앱만 엽니다.</string>
+	<string name="toast_target_not_launchable">선택한 앱을 실행할 수 없습니다. 다시 선택하세요.</string>
+	<string name="toast_no_accessibility_settings">이 기기에서는 접근성 설정을 열 수 없습니다.</string>
+	<string name="toast_no_file_picker">파일 선택기를 사용할 수 없습니다.</string>
+	<string name="toast_export_done">저장했습니다.</string>
+	<string name="toast_export_failed">저장하지 못했습니다.</string>
+</resources>

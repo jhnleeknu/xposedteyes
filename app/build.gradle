@@ -1,0 +1,83 @@
+plugins {
+	id 'com.android.application'
+}
+
+def gitSha = providers.exec {
+	commandLine 'git', 'rev-parse', '--short=12', 'HEAD'
+	ignoreExitValue = true
+}.standardOutput.asText.map { it.trim() }.getOrElse('unknown')
+
+android {
+	namespace 'com.pijulius.xposedteyes'
+	compileSdk 28
+
+	defaultConfig {
+		applicationId 'com.pijulius.xposedteyes'
+		// Unchanged from the original AndroidManifest.xml; see docs/IMPLEMENTATION_PLAN.md.
+		minSdk 28
+		targetSdk 28
+		versionCode 31
+		versionName '3.1'
+		buildConfigField 'String', 'GIT_SHA', "\"${gitSha}\""
+	}
+
+	buildFeatures {
+		buildConfig true
+	}
+
+	// Keep the historical Eclipse style layout instead of moving every file.
+	sourceSets {
+		main {
+			manifest.srcFile '../AndroidManifest.xml'
+			java.srcDirs = ['../src']
+			res.srcDirs = ['../res']
+			assets.srcDirs = ['../assets']
+		}
+	}
+
+	compileOptions {
+		sourceCompatibility JavaVersion.VERSION_1_8
+		targetCompatibility JavaVersion.VERSION_1_8
+	}
+
+	signingConfigs {
+		// Optional stable test key provided through CI secrets / local environment.
+		// Without it the build falls back to the per-machine debug key, whose APKs
+		// cannot update each other (see docs/RECOVERY.md).
+		testKey {
+			def storePath = System.getenv('XT_KEYSTORE_PATH')
+			if (storePath) {
+				storeFile file(storePath)
+				storePassword System.getenv('XT_KEYSTORE_PASSWORD')
+				keyAlias System.getenv('XT_KEY_ALIAS')
+				keyPassword System.getenv('XT_KEY_PASSWORD')
+			}
+		}
+	}
+
+	buildTypes {
+		debug {
+			if (System.getenv('XT_KEYSTORE_PATH'))
+				signingConfig signingConfigs.testKey
+		}
+		release {
+			minifyEnabled false
+			if (System.getenv('XT_KEYSTORE_PATH'))
+				signingConfig signingConfigs.testKey
+		}
+	}
+
+	lint {
+		abortOnError true
+		checkReleaseBuilds false
+		lintConfig file('../lint.xml')
+		// The module hooks other packages and intentionally targets API 28.
+		disable += ['OldTargetApi', 'ExpiredTargetSdkVersion']
+	}
+}
+
+dependencies {
+	implementation project(':core')
+	// Provided by LSPosed/Xposed at runtime; must not be packaged into the APK.
+	compileOnly files('../lib/api-82.jar')
+}

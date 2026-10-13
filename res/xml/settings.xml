@@ -1,7 +1,320 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
-	xmlns:android="http://schemas.android.com/apk/res/android">
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:xt="http://schemas.android.com/apk/res-auto">
 
+	<!-- ============================ Startup app ============================ -->
+	<PreferenceScreen
+		android:key="screenStartup"
+		android:title="@string/pref_startup_screen"
+		android:summary="@string/pref_startup_screen_sum">
+
+		<Preference
+			android:key="migrationNoticeView"
+			android:title="@string/pref_migration_notice"
+			android:persistent="false" />
+
+		<PreferenceCategory android:title="@string/pref_startup_category">
+
+			<CheckBoxPreference
+				android:key="startupEnabled"
+				android:title="@string/pref_startup_enabled"
+				android:summary="@string/pref_startup_enabled_sum"
+				android:defaultValue="false" />
+
+			<ListPreference
+				android:key="startupTrigger"
+				android:title="@string/pref_startup_trigger"
+				android:summary="%s"
+				android:entries="@array/startup_trigger_entries"
+				android:entryValues="@array/startup_trigger_values"
+				android:defaultValue="COLD_BOOT" />
+
+			<ListPreference
+				android:key="startupMode"
+				android:title="@string/pref_startup_mode"
+				android:summary="%s"
+				android:entries="@array/startup_mode_entries"
+				android:entryValues="@array/startup_mode_values"
+				android:defaultValue="SINGLE" />
+
+			<com.pijulius.xposedteyes.settings.AppPickerPreference
+				android:key="startupPrimary"
+				android:title="@string/pref_startup_primary" />
+
+			<com.pijulius.xposedteyes.settings.AppPickerPreference
+				android:key="startupSecondary"
+				android:title="@string/pref_startup_secondary" />
+
+			<com.pijulius.xposedteyes.settings.IntPickerPreference
+				android:key="startupDelayMs"
+				android:title="@string/pref_startup_delay"
+				android:defaultValue="5000"
+				xt:minValue="0"
+				xt:maxValue="60"
+				xt:scale="1000"
+				xt:presets="0,3,5,10,15"
+				xt:unitLabel="@string/unit_seconds" />
+
+			<com.pijulius.xposedteyes.settings.IntPickerPreference
+				android:key="startupRetryCount"
+				android:title="@string/pref_startup_retry_count"
+				android:defaultValue="1"
+				xt:minValue="0"
+				xt:maxValue="3"
+				xt:scale="1"
+				xt:presets="0,1,2,3"
+				xt:unitLabel="@string/unit_times" />
+
+			<com.pijulius.xposedteyes.settings.IntPickerPreference
+				android:key="startupRetryDelayMs"
+				android:title="@string/pref_startup_retry_delay"
+				android:defaultValue="5000"
+				xt:minValue="1"
+				xt:maxValue="30"
+				xt:scale="1000"
+				xt:presets="1,3,5,10"
+				xt:unitLabel="@string/unit_seconds" />
+
+			<ListPreference
+				android:key="startupForegroundPolicy"
+				android:title="@string/pref_startup_foreground"
+				android:summary="%s"
+				android:entries="@array/startup_foreground_entries"
+				android:entryValues="@array/startup_foreground_values"
+				android:defaultValue="ALWAYS" />
+
+			<Preference
+				android:key="startupSafetyNote"
+				android:title="@string/pref_startup_safety"
+				android:summary="@string/pref_startup_safety_sum"
+				android:selectable="false"
+				android:persistent="false" />
+		</PreferenceCategory>
+
+		<PreferenceCategory android:title="@string/pref_post_launch_category">
+			<ListPreference
+				android:key="startupPostLaunchPolicy"
+				android:title="@string/pref_post_launch_policy"
+				android:entries="@array/post_launch_entries"
+				android:entryValues="@array/post_launch_values"
+				android:defaultValue="NONE" />
+
+			<com.pijulius.xposedteyes.settings.IntPickerPreference
+				android:key="startupRecoveryLimit"
+				android:title="@string/pref_recovery_limit"
+				android:defaultValue="1"
+				xt:minValue="1"
+				xt:maxValue="3"
+				xt:scale="1"
+				xt:presets="1,2,3"
+				xt:unitLabel="@string/unit_times" />
+
+			<com.pijulius.xposedteyes.settings.IntPickerPreference
+				android:key="startupRecoveryDelayMs"
+				android:title="@string/pref_recovery_delay"
+				android:defaultValue="5000"
+				xt:minValue="5"
+				xt:maxValue="60"
+				xt:scale="1000"
+				xt:presets="5,10,30,60"
+				xt:unitLabel="@string/unit_seconds" />
+		</PreferenceCategory>
+
+		<PreferenceCategory android:title="@string/pref_bt_category">
+			<CheckBoxPreference
+				android:key="btLaunchEnabled"
+				android:title="@string/pref_bt_enabled"
+				android:summary="@string/pref_bt_enabled_sum"
+				android:defaultValue="false" />
+
+			<com.pijulius.xposedteyes.settings.AppPickerPreference
+				android:key="btLaunchTarget"
+				android:title="@string/pref_bt_target" />
+
+			<com.pijulius.xposedteyes.settings.IntPickerPreference
+				android:key="btLaunchDelayMs"
+				android:title="@string/pref_bt_delay"
+				android:defaultValue="3000"
+				xt:minValue="0"
+				xt:maxValue="60"
+				xt:scale="1000"
+				xt:presets="0,3,5,10"
+				xt:unitLabel="@string/unit_seconds" />
+
+			<ListPreference
+				android:key="btConflictPolicy"
+				android:title="@string/pref_bt_conflict"
+				android:summary="%s"
+				android:entries="@array/bt_conflict_entries"
+				android:entryValues="@array/bt_conflict_values"
+				android:defaultValue="STARTUP_FIRST" />
+
+			<CheckBoxPreference
+				android:key="btLaunchOnDisconnect"
+				android:title="@string/pref_bt_disconnect"
+				android:summary="@string/pref_bt_disconnect_sum"
+				android:defaultValue="false" />
+		</PreferenceCategory>
+
+		<PreferenceCategory android:title="@string/pref_accessibility_category">
+			<Preference
+				android:key="accessibilityStatus"
+				android:title="@string/pref_accessibility_status"
+				android:persistent="false" />
+
+			<CheckBoxPreference
+				android:key="rootAccessibilityAssist"
+				android:title="@string/pref_root_assist"
+				android:summary="@string/pref_root_assist_sum"
+				android:defaultValue="false" />
+		</PreferenceCategory>
+
+		<PreferenceCategory android:title="@string/pref_startup_actions">
+			<Preference
+				android:key="startupLaunchNow"
+				android:title="@string/pref_launch_now"
+				android:summary="@string/pref_launch_now_sum"
+				android:persistent="false" />
+
+			<Preference
+				android:key="startupLastResult"
+				android:title="@string/pref_last_result"
+				android:persistent="false" />
+
+			<Preference
+				android:key="startupRestoreDefaults"
+				android:title="@string/pref_restore_startup"
+				android:summary="@string/pref_restore_startup_sum"
+				android:persistent="false" />
+		</PreferenceCategory>
+	</PreferenceScreen>
+
+	<!-- ============================ CarPlay ============================ -->
+	<PreferenceScreen
+		android:key="screenCarplay"
+		android:title="@string/pref_carplay_screen"
+		android:summary="@string/pref_carplay_screen_sum">
+
+		<Preference
+			android:key="carplayStatus"
+			android:title="@string/pref_feature_status"
+			android:summary="@string/pref_carplay_status_sum"
+			android:selectable="false"
+			android:persistent="false" />
+
+		<Preference
+			android:key="carlinkInfo"
+			android:title="@string/pref_carlink_info"
+			android:summary="@string/pref_carlink_info_sum"
+			android:persistent="false" />
+
+		<PreferenceCategory android:title="@string/pref_controls_unavailable">
+			<Preference
+				android:title="@string/pref_carplay_density"
+				android:summary="@string/status_not_confirmed"
+				android:enabled="false"
+				android:persistent="false" />
+			<Preference
+				android:title="@string/pref_carplay_scale"
+				android:summary="@string/status_not_confirmed"
+				android:enabled="false"
+				android:persistent="false" />
+			<Preference
+				android:title="@string/pref_carplay_trial"
+				android:summary="@string/status_not_confirmed"
+				android:enabled="false"
+				android:persistent="false" />
+		</PreferenceCategory>
+	</PreferenceScreen>
+
+	<!-- ============================ BT call microphone ============================ -->
+	<PreferenceScreen
+		android:key="screenBtMic"
+		android:title="@string/pref_btmic_screen"
+		android:summary="@string/pref_btmic_screen_sum">
+
+		<Preference
+			android:key="btmicStatus"
+			android:title="@string/pref_feature_status"
+			android:summary="@string/pref_btmic_status_sum"
+			android:selectable="false"
+			android:persistent="false" />
+
+		<Preference
+			android:key="btmicDiagnostics"
+			android:title="@string/pref_btmic_diag"
+			android:summary="@string/pref_btmic_diag_sum"
+			android:persistent="false" />
+
+		<PreferenceCategory android:title="@string/pref_controls_unavailable">
+			<Preference
+				android:title="@string/pref_btmic_gain"
+				android:summary="@string/status_not_confirmed"
+				android:enabled="false"
+				android:persistent="false" />
+			<Preference
+				android:title="@string/pref_btmic_agc"
+				android:summary="@string/status_not_confirmed"
+				android:enabled="false"
+				android:persistent="false" />
+			<Preference
+				android:title="@string/pref_btmic_ns"
+				android:summary="@string/status_not_confirmed"
+				android:enabled="false"
+				android:persistent="false" />
+			<Preference
+				android:title="@string/pref_btmic_aec"
+				android:summary="@string/status_not_confirmed"
+				android:enabled="false"
+				android:persistent="false" />
+		</PreferenceCategory>
+	</PreferenceScreen>
+
+	<!-- ============================ Advanced / diagnostics ============================ -->
+	<PreferenceScreen
+		android:key="screenAdvanced"
+		android:title="@string/pref_advanced_screen"
+		android:summary="@string/pref_advanced_screen_sum">
+
+		<CheckBoxPreference
+			android:key="newFeaturesDisabled"
+			android:title="@string/pref_kill_switch"
+			android:summary="@string/pref_kill_switch_sum"
+			android:defaultValue="false" />
+
+		<Preference
+			android:key="compatibility"
+			android:title="@string/pref_compatibility"
+			android:summary="@string/pref_compatibility_sum"
+			android:persistent="false" />
+
+		<Preference
+			android:key="localLog"
+			android:title="@string/pref_local_log"
+			android:summary="@string/pref_local_log_sum"
+			android:persistent="false" />
+
+		<Preference
+			android:key="exportSettings"
+			android:title="@string/pref_export"
+			android:summary="@string/pref_export_sum"
+			android:persistent="false" />
+
+		<Preference
+			android:key="importSettings"
+			android:title="@string/pref_import"
+			android:summary="@string/pref_import_sum"
+			android:persistent="false" />
+
+		<Preference
+			android:key="restoreAllDefaults"
+			android:title="@string/pref_restore_all"
+			android:summary="@string/pref_restore_all_sum"
+			android:persistent="false" />
+	</PreferenceScreen>
+
+	<!-- ============================ Existing features ============================ -->
 	<PreferenceCategory
 		android:title="@string/pref_teyes">
 
@@ -178,47 +491,20 @@
 	<PreferenceCategory
 		android:title="@string/pref_launcher">
 
-		<CheckBoxPreference 
-			android:name="@string/pref_launch_on_startup"
-			android:summary="@string/pref_launch_on_startup_sum"
-			android:defaultValue="false"
-			android:title="@string/pref_launch_on_startup"
-			android:key="launchOnStartup" />
-
-		<CheckBoxPreference 
-			android:name="@string/pref_launch_on_bluetooth"
-			android:summary="@string/pref_launch_on_bluetooth_sum"
-			android:defaultValue="false"
-			android:title="@string/pref_launch_on_bluetooth"
-			android:key="launchOnBluetooth" />
-
-		<EditTextPreference
-			android:name="@string/pref_music_app"
-			android:summary="@string/pref_music_app_sum"
-			android:defaultValue="com.audials"
+		<com.pijulius.xposedteyes.settings.AppPickerPreference
 			android:title="@string/pref_music_app"
-			android:key="launcherMusicApp" />
+			android:key="launcherMusicApp"
+			xt:storePackageOnly="true" />
 
-		<EditTextPreference
-			android:name="@string/pref_navigation_app"
-			android:summary="@string/pref_navigation_app_sum"
-			android:defaultValue="com.waze"
+		<com.pijulius.xposedteyes.settings.AppPickerPreference
 			android:title="@string/pref_navigation_app"
-			android:key="launcherNavigationApp" />
+			android:key="launcherNavigationApp"
+			xt:storePackageOnly="true" />
 
-		<EditTextPreference
-			android:name="@string/pref_videos_app"
-			android:summary="@string/pref_videos_app_sum"
-			android:defaultValue="video.player.videoplayer"
+		<com.pijulius.xposedteyes.settings.AppPickerPreference
 			android:title="@string/pref_videos_app"
-			android:key="launcherVideosApp" />
-
-		<EditTextPreference
-			android:name="@string/pref_bluetooth_app"
-			android:summary="@string/pref_bluetooth_app_sum"
-			android:defaultValue="com.syu.carlink"
-			android:title="@string/pref_bluetooth_app"
-			android:key="launcherBluetoothApp" />
+			android:key="launcherVideosApp"
+			xt:storePackageOnly="true" />
 
 		<EditTextPreference
 			android:name="@string/pref_mini_desktop_dpi"

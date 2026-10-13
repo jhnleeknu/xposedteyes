@@ -1,0 +1,26 @@
+plugins {
+	id 'java-library'
+}
+
+java {
+	// The classes run inside the Android app and in SystemUI (Android 10 / API 29,
+	// minSdk 28), so keep the language level at Java 8.
+	sourceCompatibility = JavaVersion.VERSION_1_8
+	targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+tasks.withType(JavaCompile).configureEach {
+	options.encoding = 'UTF-8'
+	options.compilerArgs += ['-Xlint:all,-options', '-Werror']
+}
+
+dependencies {
+	testImplementation 'junit:junit:4.13.2'
+}
+
+test {
+	testLogging {
+		events 'failed'
+		exceptionFormat 'full'
+	}
+}

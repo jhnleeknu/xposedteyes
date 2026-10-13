@@ -4,11 +4,9 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.Application;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.XModuleResources;
@@ -39,6 +37,7 @@ import de.robv.android.xposed.IXposedHookInitPackageResources;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.IXposedHookZygoteInit;
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
@@ -46,13 +45,12 @@ import de.robv.android.xposed.callbacks.XC_InitPackageResources.InitPackageResou
 import de.robv.android.xposed.callbacks.XC_LayoutInflated;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
+import com.pijulius.xposedteyes.startup.StartupRuntime;
+
 public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHookLoadPackage, IXposedHookZygoteInit {
 	private static String modulePath = null;
 	private static Object carlinkLogoFragment = null;
-	private static boolean startupLaunched = false;
 	private static boolean audialsNowPlaying = false;
-	private static boolean connectedBluetooth = false;
-	private static Context contextBluetooth = null;
 
 	private static final float[] negativeColorMatrix = {
 		-1.0f,     0,     0,    0, 255, // red
@@ -78,7 +76,7 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 	@Override
 	public void initZygote(StartupParam startupParam) throws Throwable {
 		modulePath = startupParam.modulePath;
-		XposedBridge.log(getClass().getName()+" v3.40");
+		XposedBridge.log(getClass().getName()+" v3.41");
 	}
 
 	@Override
@@ -133,6 +131,13 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 					param.setResult(settings.getFile().toString());
 				}
 			});
+
+			try {
+				XposedHelpers.findAndHookMethod("com.pijulius.xposedteyes.ModuleStatus", lpparam.classLoader,
+					"isHookedInOwnProcess", XC_MethodReplacement.returnConstant(true));
+			} catch (Throwable t) {
+				XposedBridge.log("XposedTeyes: module status hook failed: " + t);
+			}
 
 			return;
 		}
@@ -577,63 +582,8 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 			XposedBridge.hookAllMethods(hookSystemUIApp, "onCreate", new XC_MethodHook() {
 				@Override
 				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-					final Application application = (Application)param.thisObject;
-					final Handler handler = new android.os.Handler();
-
-					final Intent launcherIntent = new Intent();
-					launcherIntent.setClassName(
-						"com.pijulius.xposedteyes", "com.pijulius.xposedteyes.LauncherActivity");
-					launcherIntent.setAction("AccessibilityService");
-					launcherIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-					launcherIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-					final Runnable runnable = new Runnable() {
-							@Override
-							public void run() {
-								if (connectedBluetooth)
-									return;
-
-								final Intent activityIntent = new Intent();
-								activityIntent.setClassName(
-									"com.pijulius.xposedteyes", "com.pijulius.xposedteyes.MusicNavigationActivity");
-								activityIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-								activityIntent.setFlags(
-									Intent.FLAG_ACTIVITY_NEW_TASK |
-									Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-
-								application.startActivity(activityIntent);
-							}
-						};
-
-					IntentFilter intentFilter = new IntentFilter(Intent.ACTION_BOOT_COMPLETED);
-					intentFilter.addAction("com.fyt.boot.ACCON"); //ACCOFF
-					intentFilter.addAction("com.glsx.boot.ACCON"); //ACCOFF
-					intentFilter.addAction("com.fyt.boot.ACCOFF"); //ACCOFF
-					intentFilter.addAction("com.glsx.boot.ACCOFF"); //ACCOFF
-
-					application.registerReceiver(new BroadcastReceiver() {
-						@Override
-						public void onReceive(Context context, Intent intent) {
-							String action = intent.getAction();
-
-							if (action == null || action.isEmpty())
-								return;
-
-							if (action.contains(".ACCON") && !startupLaunched) {
-								startupLaunched = true;
-								application.startActivity(launcherIntent);
-
-								if (settings.getBoolean("launchOnStartup", false)) {
-									handler.removeCallbacks(runnable);
-									handler.postDelayed(runnable, 1000);
-								}
-
-							} else if (action.contains(".ACCOFF")) {
-								startupLaunched = false;
-								connectedBluetooth = false;
-							}
-						}
-					}, intentFilter);
+					// Startup / ACC / bluetooth app launching (settings: "Startup app").
+					StartupRuntime.install((Application)param.thisObject);
 				}
 			});
 
@@ -676,83 +626,21 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 				});
 			}
 
-			if (settings.getBoolean("launchOnBluetooth", true)) {
+			// Registered unconditionally: whether a state change launches anything is
+			// decided per event from the current settings, so toggling needs no reboot.
+			try {
 				final Class<?> hookClassBluetooth = XposedHelpers.findClass(
 						"com.syu.view.BluetoothControl", lpparam.classLoader);
-
-				XposedBridge.hookAllConstructors(hookClassBluetooth, new XC_MethodHook() {
-					@Override
-					protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-						contextBluetooth = (Context)param.args[0];
-					}
-				});
 
 				XposedBridge.hookAllMethods(hookClassBluetooth, "updata", new XC_MethodHook() {
 					@Override
 					protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-						int state = (int)param.args[0];
-						final Handler handler = (Handler)XposedHelpers.getObjectField(param.thisObject, "setVisib_Bluetooth");
-						XposedBridge.log("BluetoothControl updata: " + String.valueOf(state) + " context: " + String.valueOf(contextBluetooth));
-
-						if (contextBluetooth == null ||
-							(state == 2 && connectedBluetooth) ||
-							(state != 2 && !connectedBluetooth))
-						{
-							return;
-						}
-
-						connectedBluetooth = (state == 2);
-
-						if (connectedBluetooth) {
-							Intent bluetoothIntent = contextBluetooth.getPackageManager().getLaunchIntentForPackage(
-									settings.getString("launcherBluetoothApp", ""));
-
-							if (bluetoothIntent == null)
-								return;
-
-							bluetoothIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-							bluetoothIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-							final Runnable runnable = new Runnable() {
-								@Override
-								public void run() {
-									if (!connectedBluetooth)
-										return;
-
-									contextBluetooth.startActivity(bluetoothIntent);
-								}
-							};
-
-							handler.removeCallbacks(runnable);
-							handler.postDelayed(runnable, 3000);
-							return;
-						}
-
-						if (!settings.getBoolean("launchOnStartup", false))
-							return;
-
-						final Intent activityIntent = new Intent();
-						activityIntent.setClassName(
-							"com.pijulius.xposedteyes", "com.pijulius.xposedteyes.MusicNavigationActivity");
-						activityIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-						activityIntent.setFlags(
-							Intent.FLAG_ACTIVITY_NEW_TASK |
-							Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-
-						final Runnable runnable = new Runnable() {
-							@Override
-							public void run() {
-								if (connectedBluetooth)
-									return;
-
-								contextBluetooth.startActivity(activityIntent);
-							}
-						};
-
-						handler.removeCallbacks(runnable);
-						handler.postDelayed(runnable, 3000);
+						if (param.args.length > 0 && param.args[0] instanceof Integer)
+							StartupRuntime.onBluetoothState((Integer)param.args[0]);
 					}
 				});
+			} catch (Throwable t) {
+				XposedBridge.log("XposedTeyes: bluetooth launch unavailable, BluetoothControl not found: " + t);
 			}
 		}
 

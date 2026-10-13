@@ -10,7 +10,13 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityWindowInfo;
 import android.widget.Toast;
 
+import com.pijulius.xposedteyes.core.settings.AppSettings;
+import com.pijulius.xposedteyes.startup.Targets;
+
 public class LauncherService extends AccessibilityService {
+	/** Split screen pair from the startup settings (see StartupSplitActivity). */
+	public static final String ACTION_STARTUP_SPLIT = "com.pijulius.xposedteyes.action.STARTUP_SPLIT";
+
 	int state = 0;
 	boolean inSplitScreen = false;
 
@@ -20,6 +26,8 @@ public class LauncherService extends AccessibilityService {
 	String bluetoothApp;
 	String firstApp;
 	String secondApp;
+	Intent firstIntent;
+	Intent secondIntent;
 	String packageName;
 	String runningApp;
 
@@ -45,22 +53,35 @@ public class LauncherService extends AccessibilityService {
 		String action = intent.getAction();
 
 		if (!(packageName+".MusicNavigationActivity").equals(action) &&
-			!(packageName+".NavigationVideosActivity").equals(action))
+			!(packageName+".NavigationVideosActivity").equals(action) &&
+			!ACTION_STARTUP_SPLIT.equals(action))
 		{
 			return result;
 		}
 
 		loadPreferences();
 
-		firstApp = musicApp;
-		secondApp = navigationApp;
+		if (ACTION_STARTUP_SPLIT.equals(action)) {
+			AppSettings settings = ModulePrefs.settings(this);
+			firstIntent = Targets.launchIntent(this, settings.startup.primary);
+			secondIntent = Targets.launchIntent(this, settings.startup.secondary);
+		} else {
+			firstApp = musicApp;
+			secondApp = navigationApp;
 
-		if ((packageName+".NavigationVideosActivity").equals(action)) {
-			firstApp = navigationApp;
-			secondApp = videosApp;
+			if ((packageName+".NavigationVideosActivity").equals(action)) {
+				firstApp = navigationApp;
+				secondApp = videosApp;
+			}
+
+			firstIntent = firstApp.isEmpty() ? null : getPackageManager().getLaunchIntentForPackage(firstApp);
+			secondIntent = secondApp.isEmpty() ? null : getPackageManager().getLaunchIntentForPackage(secondApp);
 		}
 
-		if (firstApp == null || secondApp == null || firstApp.isEmpty() || secondApp.isEmpty()) {
+		firstApp = firstIntent == null ? null : firstIntent.getComponent().getPackageName();
+		secondApp = secondIntent == null ? null : secondIntent.getComponent().getPackageName();
+
+		if (firstApp == null || secondApp == null) {
 			Toast.makeText(
 					getBaseContext(), getString(R.string.toast_app_not_found), Toast.LENGTH_SHORT)
 				.show();
@@ -99,7 +120,7 @@ public class LauncherService extends AccessibilityService {
 		if (state == -1 && event.getEventType() == AccessibilityEvent.TYPE_WINDOWS_CHANGED) {
 			state = 1;
 
-			Intent first = getPackageManager().getLaunchIntentForPackage(firstApp);
+			Intent first = firstIntent == null ? null : new Intent(firstIntent);
 
 			if (first == null) {
 				Toast.makeText(
@@ -127,7 +148,7 @@ public class LauncherService extends AccessibilityService {
 		} else if (state == 2 || (state == 1 && inSplitScreen)) {
 			state = 0;
 
-			final Intent second = getPackageManager().getLaunchIntentForPackage(secondApp);
+			final Intent second = secondIntent == null ? null : new Intent(secondIntent);
 
 			if (second == null) {
 				Toast.makeText(
@@ -146,7 +167,7 @@ public class LauncherService extends AccessibilityService {
 				new Runnable() {
 					@Override
 					public void run() {
-						if (!bluetoothApp.equals(runningApp))
+						if (bluetoothApp == null || !bluetoothApp.equals(runningApp))
 							startActivity(second);
 					}
 				}
@@ -164,7 +185,10 @@ public class LauncherService extends AccessibilityService {
 		musicApp = preferences.getString("launcherMusicApp", "");
 		navigationApp = preferences.getString("launcherNavigationApp", "");
 		videosApp = preferences.getString("launcherVideosApp", "");
-		bluetoothApp = preferences.getString("launcherBluetoothApp", "");
+
+		AppSettings settings = AppSettings.read(preferences.getAll());
+		bluetoothApp = settings.bluetooth.enabled && settings.bluetooth.target != null
+			? settings.bluetooth.target.packageName : null;
 	}
 
 	private boolean inSplitScreenMode(List<AccessibilityWindowInfo> windows) {

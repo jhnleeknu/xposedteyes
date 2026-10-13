@@ -13,7 +13,7 @@
         <item>2160x3840</item>
     </string-array>
 
-    <string-array name="pref_carlink_resolution_values">
+    <string-array name="pref_carlink_resolution_values" translatable="false">
         <item></item>
         <item>800x480</item>
         <item>1280x720</item>
@@ -24,5 +24,57 @@
         <item>1080x1920</item>
         <item>1440x2560</item>
         <item>2160x3840</item>
+    </string-array>
+
+    <!-- Entry values are stored in the preferences: never translate. -->
+    <string-array name="startup_trigger_values" translatable="false">
+        <item>COLD_BOOT</item>
+        <item>ACC_ON</item>
+        <item>BOTH</item>
+    </string-array>
+    <string-array name="startup_trigger_entries">
+        <item>After a full boot</item>
+        <item>On ACC ON / wake from sleep</item>
+        <item>Both</item>
+    </string-array>
+
+    <string-array name="startup_mode_values" translatable="false">
+        <item>SINGLE</item>
+        <item>SPLIT</item>
+    </string-array>
+    <string-array name="startup_mode_entries">
+        <item>Single app</item>
+        <item>Two apps in split screen</item>
+    </string-array>
+
+    <string-array name="startup_foreground_values" translatable="false">
+        <item>ALWAYS</item>
+        <item>HOME_ONLY</item>
+    </string-array>
+    <string-array name="startup_foreground_entries">
+        <item>Bring the selected app to the front</item>
+        <item>Only when the home screen is shown</item>
+    </string-array>
+
+    <string-array name="post_launch_values" translatable="false">
+        <item>NONE</item>
+        <item>RECOVER_ABNORMAL_EXIT</item>
+        <item>LIMITED_KEEP_ALIVE</item>
+    </string-array>
+    <string-array name="post_launch_entries">
+        <item>Never relaunch</item>
+        <item>Limited recovery after a verified abnormal exit</item>
+        <item>Limited keep-alive</item>
+    </string-array>
+
+    <string-array name="bt_conflict_values" translatable="false">
+        <item>STARTUP_FIRST</item>
+        <item>BLUETOOTH_FIRST</item>
+        <item>LAST_EVENT</item>
+    </string-array>
+    <string-array name="bt_conflict_entries">
+        <item>Startup app wins</item>
+        <item>Bluetooth app wins</item>
+        <item>Latest event wins</item>
     </string-array>
 </resources>
