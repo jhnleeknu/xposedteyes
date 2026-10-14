@@ -79,6 +79,47 @@
 		</PreferenceCategory>
 	</PreferenceScreen>
 
+	<!-- CarPlay (CarLink 2.22 - 2.25) -->
+	<PreferenceScreen
+		android:key="screen_carplay"
+		android:title="@string/screen_carplay"
+		android:summary="@string/screen_carplay_sum">
+
+		<PreferenceCategory android:title="@string/carplay_cat_screen">
+			<ListPreference
+				android:key="carplayUiScale"
+				android:title="@string/carplay_ui_scale"
+				android:entries="@array/carplay_ui_scale_entries"
+				android:entryValues="@array/carplay_ui_scale_values"
+				android:defaultValue="100" />
+		</PreferenceCategory>
+
+		<PreferenceCategory android:title="@string/carplay_cat_mic">
+			<Preference
+				android:key="carplay_mic_current"
+				android:title="@string/carplay_mic_current"
+				android:selectable="false" />
+			<ListPreference
+				android:key="carplayMicGain"
+				android:title="@string/carplay_mic_gain"
+				android:entries="@array/carplay_mic_gain_entries"
+				android:entryValues="@array/carplay_mic_gain_values"
+				android:defaultValue="5"
+				android:persistent="false" />
+			<ListPreference
+				android:key="carplayDenoise"
+				android:title="@string/carplay_denoise"
+				android:entries="@array/carplay_denoise_entries"
+				android:entryValues="@array/carplay_denoise_values"
+				android:defaultValue="1"
+				android:persistent="false" />
+			<Preference
+				android:key="carplay_mic_reset"
+				android:title="@string/carplay_mic_reset"
+				android:summary="@string/carplay_mic_reset_sum" />
+		</PreferenceCategory>
+	</PreferenceScreen>
+
 	<!-- Bluetooth call microphone (analysis only) -->
 	<PreferenceScreen
 		android:key="screen_btmic"
@@ -258,13 +299,6 @@
 			android:defaultValue="0"
 			android:title="@string/pref_carlink_dpi"
 			android:key="carlinkDPI" />
-
-		<ListPreference
-			android:key="carplayUiScale"
-			android:title="@string/carplay_ui_scale"
-			android:entries="@array/carplay_ui_scale_entries"
-			android:entryValues="@array/carplay_ui_scale_values"
-			android:defaultValue="100" />
 
 		<CheckBoxPreference
 			android:key="diagCarlinkVideo"

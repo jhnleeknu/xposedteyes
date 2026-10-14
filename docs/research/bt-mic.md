@@ -24,6 +24,16 @@ CarPlay 통화가 선명한 이유는 CarLink 가 자체적으로 WebRTC·blink 
 
 **일반 BT 통화(com.syu.bt, BT 모듈)는 이 APK 들에 없다.** 위 값들이 일반 BT 통화에 영향을 준다는 근거는 없다. 일반 BT 통화 마이크를 다루려면 `com.syu.bt` APK(기기에서 `adb shell pm path com.syu.bt`)나 BT 모듈 쪽 분석이 필요하고, 그 전에 아래 2번(`grep`)으로 `btmic` 를 읽는 다른 프로그램이 있는지 먼저 확인한다.
 
+## 앱의 CarPlay 설정 (CarPlay 통화 전용)
+
+*CarPlay > 통화 마이크* 에서 루트로 아래 속성을 바꾼다. 적용 후 루트 `getprop` 으로 다시 읽어 확인하고, 다음 CarPlay 통화부터 반영된다.
+
+- 마이크 음량: `persist.btmic.gain` 3~8 (CarLink 기본 5, 2단계 작게 ~ 3단계 크게).
+- 잡음 제거: `persist.lsec.cp.noise` 첫 칸만 1/0 으로 바꾸고 나머지 두 칸은 유지.
+- *CarLink 기본값으로 되돌리기*: 5 와 잡음 제거 켜짐.
+
+단계 하나가 몇 dB 인지는 확인하지 못했다. 소리가 깨지면 한 단계 내린다.
+
 ## 1. 값이 있는지 (adb, 루트 불필요)
 
 ```sh

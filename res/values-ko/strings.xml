@@ -157,4 +157,25 @@
 	<string name="carplay_ui_110" formatted="false">110% (크게)</string>
 	<string name="carplay_ui_125" formatted="false">125% (크게)</string>
 	<string name="carplay_ui_150" formatted="false">150% (크게)</string>
+	<string name="screen_carplay">CarPlay</string>
+	<string name="screen_carplay_sum">UI 크기, 통화 마이크 (CarLink 2.22 – 2.25)</string>
+	<string name="carplay_cat_screen">화면</string>
+	<string name="carplay_cat_mic">통화 마이크 (CarPlay 통화 전용, 루트 필요)</string>
+	<string name="carplay_mic_current">현재 값</string>
+	<string name="carplay_mic_current_sum">마이크 음량 %1$s, 잡음 제거 %2$s (%3$s). 다음 CarPlay 통화부터 적용됩니다.</string>
+	<string name="carplay_mic_gain">마이크 음량</string>
+	<string name="carplay_mic_m2">2단계 작게</string>
+	<string name="carplay_mic_m1">1단계 작게</string>
+	<string name="carplay_mic_default">기본값</string>
+	<string name="carplay_mic_p1">1단계 크게</string>
+	<string name="carplay_mic_p2">2단계 크게</string>
+	<string name="carplay_mic_p3">3단계 크게</string>
+	<string name="carplay_denoise">잡음 제거</string>
+	<string name="carplay_denoise_on">켜짐 (기본값)</string>
+	<string name="carplay_denoise_off">꺼짐</string>
+	<string name="carplay_mic_reset">CarLink 기본값으로 되돌리기</string>
+	<string name="carplay_mic_reset_sum">마이크 음량과 잡음 제거를 CarLink 기본값으로</string>
+	<string name="carplay_mic_applying">루트로 적용 중…</string>
+	<string name="carplay_mic_applied">적용했습니다. 다음 CarPlay 통화부터 반영됩니다.</string>
+	<string name="carplay_mic_failed">적용하지 못했습니다 (루트 거부 또는 실패). 아무것도 바뀌지 않았습니다.</string>
 </resources>

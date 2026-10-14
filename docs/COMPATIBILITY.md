@@ -10,7 +10,8 @@
 | CarPlay UI 크기 (CarLink 2.22–2.25, 물리 크기 보고값 조정) | IMPLEMENTED | NOT_TESTED |
 | 기존 Android Auto 해상도·DPI | CarPlay 에는 적용되지 않음 | — |
 | CarLink 영상 진단 로그 (읽기 전용) | IMPLEMENTED | NOT_TESTED |
-| BT 마이크 이득 제어 | BLOCKED (경로 미확인) | — |
+| CarPlay 통화 마이크 음량·잡음 제거 (루트 setprop) | IMPLEMENTED | NOT_TESTED (에뮬레이터 UI만) |
+| 일반 BT 통화 마이크 이득 | BLOCKED (com.syu.bt 미분석) | — |
 | BT 마이크 경로 진단 화면·오디오 경로 진단 로그 (읽기 전용) | IMPLEMENTED | NOT_TESTED |
 
 ## 실기기에서 확인해야 하는 가정

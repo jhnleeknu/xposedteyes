@@ -46,7 +46,8 @@ Some fixes for apps like hide Waze floating car type button, color fixes for Aud
 |---|---|---|
 | Startup app / Bluetooth launch | implemented, unit tested | not yet |
 | CarPlay UI size (smaller / larger than default, CarLink 2.22-2.25) | implemented, unit tested | not yet |
-| Bluetooth call microphone | diagnostics only (docs/research/bt-mic.md) | - |
+| CarPlay call microphone volume / noise suppression (root) | implemented | not yet |
+| Normal Bluetooth call microphone | diagnostics only (docs/research/bt-mic.md) | - |
 
 # Build
 

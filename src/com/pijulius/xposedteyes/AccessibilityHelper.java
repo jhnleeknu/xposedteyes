@@ -1,11 +1,7 @@
 package com.pijulius.xposedteyes;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import android.content.Context;
 import android.provider.Settings;
@@ -29,8 +25,6 @@ public final class AccessibilityHelper {
 	public static final int RESULT_TIMEOUT = -2;
 	public static final int RESULT_ERROR = -1;
 	public static final int RESULT_BAD_STATE = -3;
-
-	static final long ROOT_TIMEOUT_S = 10;
 
 	public static boolean isEnabled(Context context) {
 		try {
@@ -83,8 +77,7 @@ public final class AccessibilityHelper {
 	}
 
 	/**
-	 * Enables the service through su, preserving the enabled list. Blocks up
-	 * to {@link #ROOT_TIMEOUT_S} seconds per command; call off the main thread.
+	 * Enables the service through su, preserving the enabled list. Call off the main thread.
 	 */
 	public static int enableViaRoot() {
 		String current = runRoot("settings get secure enabled_accessibility_services");
@@ -103,32 +96,7 @@ public final class AccessibilityHelper {
 		return out.trim().endsWith("ok") ? RESULT_OK : RESULT_ERROR;
 	}
 
-	/** Runs one command as root; returns stdout or null on failure/timeout. */
 	private static String runRoot(String command) {
-		Process p = null;
-		try {
-			p = Runtime.getRuntime().exec("su");
-			DataOutputStream os = new DataOutputStream(p.getOutputStream());
-			os.writeBytes(command + "\n");
-			os.writeBytes("exit\n");
-			os.flush();
-
-			if (!p.waitFor(ROOT_TIMEOUT_S, TimeUnit.SECONDS))
-				return null;
-			if (p.exitValue() != 0)
-				return null;
-
-			StringBuilder sb = new StringBuilder();
-			BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
-			String line;
-			while ((line = r.readLine()) != null)
-				sb.append(line).append('\n');
-			return sb.toString();
-		} catch (Exception e) {
-			return null;
-		} finally {
-			if (p != null)
-				p.destroy();
-		}
+		return Root.run(command);
 	}
 }

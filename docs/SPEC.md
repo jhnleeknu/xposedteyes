@@ -7,8 +7,8 @@ SPEC v1.0 에서 출발했지만 사용자 결정으로 범위를 줄였다.
 | 분할화면 자동 실행 | 제거. 시작 앱은 단일 앱만. (3.0 의 수동 분할화면 바로가기는 그대로) |
 | 설정 마이그레이션·백업·가져오기/내보내기·신규 기능 전체 끄기·로그 화면·기능 상태 화면 | 제거. 옵션을 고르면 바로 저장된다 |
 | 실행 후 종료 복구 / 마지막 앱 복원 | 제거 |
-| CarPlay 화면 설정 | *CarLink > CarPlay UI 크기* (기본값 대비 %). 기존 Android Auto 설정은 CarPlay 에 적용되지 않는다 (docs/research/carplay.md) |
-| BT 마이크 | 진단(읽기 전용)만. 제어는 경로 확인 후 (docs/research/bt-mic.md) |
+| CarPlay | *CarPlay* 화면: UI 크기(기본값 대비 %), 통화 마이크 음량·잡음 제거(루트). 기존 Android Auto 설정은 CarPlay 에 적용되지 않는다 (docs/research/carplay.md) |
+| 일반 BT 통화 마이크 | 진단(읽기 전용)만. com.syu.bt 분석 필요 (docs/research/bt-mic.md) |
 
 3.0 의 "시작 시 음악·내비 실행"(`launchOnStartup`)과 "블루투스 연결 시 실행"(`launchOnBluetooth`) 설정은 자동으로 옮기지 않는다. 업데이트 후 *시작 앱* 화면에서 다시 고른다.
 

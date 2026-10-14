@@ -90,4 +90,30 @@
         <item>125</item>
         <item>150</item>
     </string-array>
+
+    <string-array name="carplay_mic_gain_entries">
+        <item>@string/carplay_mic_m2</item>
+        <item>@string/carplay_mic_m1</item>
+        <item>@string/carplay_mic_default</item>
+        <item>@string/carplay_mic_p1</item>
+        <item>@string/carplay_mic_p2</item>
+        <item>@string/carplay_mic_p3</item>
+    </string-array>
+    <string-array name="carplay_mic_gain_values" translatable="false">
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+    </string-array>
+
+    <string-array name="carplay_denoise_entries">
+        <item>@string/carplay_denoise_on</item>
+        <item>@string/carplay_denoise_off</item>
+    </string-array>
+    <string-array name="carplay_denoise_values" translatable="false">
+        <item>1</item>
+        <item>0</item>
+    </string-array>
 </resources>

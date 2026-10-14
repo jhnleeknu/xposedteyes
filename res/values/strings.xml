@@ -162,4 +162,25 @@
 	<string name="carplay_ui_110" formatted="false">110% (larger)</string>
 	<string name="carplay_ui_125" formatted="false">125% (larger)</string>
 	<string name="carplay_ui_150" formatted="false">150% (larger)</string>
+	<string name="screen_carplay">CarPlay</string>
+	<string name="screen_carplay_sum">UI size, call microphone (CarLink 2.22 – 2.25)</string>
+	<string name="carplay_cat_screen">Screen</string>
+	<string name="carplay_cat_mic">Call microphone (CarPlay calls only, root required)</string>
+	<string name="carplay_mic_current">Current values</string>
+	<string name="carplay_mic_current_sum">Mic volume %1$s, noise suppression %2$s (%3$s). Applies from the next CarPlay call.</string>
+	<string name="carplay_mic_gain">Microphone volume</string>
+	<string name="carplay_mic_m2">2 steps lower</string>
+	<string name="carplay_mic_m1">1 step lower</string>
+	<string name="carplay_mic_default">Default</string>
+	<string name="carplay_mic_p1">1 step higher</string>
+	<string name="carplay_mic_p2">2 steps higher</string>
+	<string name="carplay_mic_p3">3 steps higher</string>
+	<string name="carplay_denoise">Noise suppression</string>
+	<string name="carplay_denoise_on">On (default)</string>
+	<string name="carplay_denoise_off">Off</string>
+	<string name="carplay_mic_reset">Restore CarLink defaults</string>
+	<string name="carplay_mic_reset_sum">Microphone volume and noise suppression back to the CarLink defaults</string>
+	<string name="carplay_mic_applying">Applying with root…</string>
+	<string name="carplay_mic_applied">Applied. Takes effect from the next CarPlay call.</string>
+	<string name="carplay_mic_failed">Could not apply (root denied or failed). Nothing was changed.</string>
 </resources>

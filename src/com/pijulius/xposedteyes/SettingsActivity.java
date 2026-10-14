@@ -27,6 +27,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.pijulius.xposedteyes.carplay.CarplayMic;
 import com.pijulius.xposedteyes.settings.Keys;
 import com.pijulius.xposedteyes.settings.StartupSettings;
 import com.pijulius.xposedteyes.settings.Target;
@@ -35,6 +36,8 @@ import com.pijulius.xposedteyes.settings.Target;
 public class SettingsActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener {
 	private static final int REQUEST_PICK_STARTUP = 1;
 	private static final int REQUEST_PICK_BT = 2;
+	/** Last CarPlay mic values applied from this app (display fallback only). */
+	private static final String MIC_STATE = "xposedteyes_carplay_mic";
 
 	/** Keys whose change must reach SystemUI (cancel pending launches). */
 	private static final String[] RUNTIME_KEYS = {
@@ -161,6 +164,8 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 			}
 		});
 
+		bindCarplayMic();
+
 		onClick("btmic_diagnose", new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
@@ -168,6 +173,132 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 				return true;
 			}
 		});
+	}
+
+	// --------------------------------------------------- CarPlay microphone
+
+	/**
+	 * The CarPlay call mic values live in system properties read by CarLink,
+	 * not in this app's settings: the screen shows the live values and every
+	 * change is written with root and read back.
+	 */
+	private void bindCarplayMic() {
+		Preference gain = findPreference("carplayMicGain");
+		if (gain != null) {
+			gain.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+				@Override
+				public boolean onPreferenceChange(Preference preference, Object value) {
+					final int g = CarplayMic.parseGain(String.valueOf(value));
+					if (!CarplayMic.isValidGain(g))
+						return false;
+					applyProperties(new String[] { CarplayMic.PROP_GAIN }, new String[] { String.valueOf(g) });
+					return false; // refreshed from the property after applying
+				}
+			});
+		}
+
+		Preference denoise = findPreference("carplayDenoise");
+		if (denoise != null) {
+			denoise.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+				@Override
+				public boolean onPreferenceChange(Preference preference, Object value) {
+					String current = readMicProperty(CarplayMic.PROP_NOISE);
+					applyProperties(new String[] { CarplayMic.PROP_NOISE },
+						new String[] { CarplayMic.withDenoise(current, "1".equals(value)) });
+					return false;
+				}
+			});
+		}
+
+		onClick("carplay_mic_reset", new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				String current = readMicProperty(CarplayMic.PROP_NOISE);
+				applyProperties(new String[] { CarplayMic.PROP_GAIN, CarplayMic.PROP_NOISE },
+					new String[] { String.valueOf(CarplayMic.GAIN_DEFAULT), CarplayMic.withDenoise(current, true) });
+				return true;
+			}
+		});
+	}
+
+	/** Values come only from CarplayMic (digits and commas), never from user text. */
+	private void applyProperties(final String[] keys, final String[] values) {
+		toast(R.string.carplay_mic_applying);
+		final Context app = getApplicationContext();
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				StringBuilder cmd = new StringBuilder();
+				for (int i = 0; i < keys.length; i++) {
+					if (!values[i].matches("[0-9,-]+"))
+						return;
+					if (cmd.length() > 0)
+						cmd.append(" && ");
+					cmd.append("setprop ").append(keys[i]).append(' ').append(values[i]);
+				}
+				for (String key : keys)
+					cmd.append(" && getprop ").append(key);
+
+				// Read back with root too: apps may not be allowed to read these properties.
+				String out = Root.run(cmd.toString());
+				String[] lines = out == null ? new String[0] : out.trim().split("\n");
+				boolean ok = lines.length == keys.length;
+				for (int i = 0; ok && i < keys.length; i++)
+					ok = values[i].equals(lines[i].trim());
+
+				if (ok) {
+					SharedPreferences.Editor e = getSharedPreferences(MIC_STATE, MODE_PRIVATE).edit();
+					for (int i = 0; i < keys.length; i++)
+						e.putString(keys[i], values[i]);
+					e.apply();
+				}
+
+				final boolean applied = ok;
+				handler.post(new Runnable() {
+					@Override
+					public void run() {
+						Toast.makeText(app, applied ? R.string.carplay_mic_applied : R.string.carplay_mic_failed,
+							Toast.LENGTH_LONG).show();
+						if (!isFinishing())
+							refresh();
+					}
+				});
+			}
+		}).start();
+	}
+
+	/** Live property value; if apps cannot read it, the last value applied from here. */
+	private String readMicProperty(String key) {
+		String v = BtMicDiagnostics.readProperty(key);
+		if (v != null && !v.isEmpty())
+			return v;
+		return getSharedPreferences(MIC_STATE, MODE_PRIVATE).getString(key, "");
+	}
+
+	private void refreshCarplayMic() {
+		String gainValue = readMicProperty(CarplayMic.PROP_GAIN);
+		String noiseValue = readMicProperty(CarplayMic.PROP_NOISE);
+		int gain = CarplayMic.parseGain(gainValue == null ? "" : gainValue);
+		boolean denoise = CarplayMic.isDenoiseOn(noiseValue);
+
+		Preference gainPref = findPreference("carplayMicGain");
+		if (gainPref instanceof ListPreference) {
+			ListPreference lp = (ListPreference)gainPref;
+			// Out of the offered range (set elsewhere): show the raw value instead.
+			if (CarplayMic.isValidGain(gain))
+				lp.setValue(String.valueOf(gain));
+			lp.setSummary(listSafe(lp, CarplayMic.isValidGain(gain) ? lp.getEntry() : String.valueOf(gain)));
+		}
+
+		Preference denoisePref = findPreference("carplayDenoise");
+		if (denoisePref instanceof ListPreference) {
+			((ListPreference)denoisePref).setValue(denoise ? "1" : "0");
+			denoisePref.setSummary(listSafe(denoisePref, ((ListPreference)denoisePref).getEntry()));
+		}
+
+		setSummary("carplay_mic_current", getString(R.string.carplay_mic_current_sum,
+			String.valueOf(gain), getString(denoise ? R.string.state_on : R.string.state_off),
+			CarplayMic.normalizeNoise(noiseValue)));
 	}
 
 	private Preference.OnPreferenceClickListener pickApp(final int request, final int title) {
@@ -306,6 +437,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 		setSummary(Keys.STARTUP_FOREGROUND_POLICY, listEntry(Keys.STARTUP_FOREGROUND_POLICY));
 		setSummary(Keys.BT_CONFLICT_POLICY, listEntry(Keys.BT_CONFLICT_POLICY));
 		setSummary(Keys.CARPLAY_UI_SCALE, getString(R.string.carplay_ui_scale_sum, listEntry(Keys.CARPLAY_UI_SCALE)));
+		refreshCarplayMic();
 		setSummary(Keys.STARTUP_DELAY_S, seconds(s.delayMs));
 		setSummary(Keys.STARTUP_RETRY_DELAY_S, seconds(s.retryDelayMs));
 		setSummary(Keys.BT_LAUNCH_DELAY_S, seconds(s.btDelayMs));
@@ -322,7 +454,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 			: getString(R.string.state_off));
 
 		// Nested screens are dialogs; their adapters do not see summary changes.
-		for (String screen : new String[] { "screen_startup", "screen_btmic" }) {
+		for (String screen : new String[] { "screen_startup", "screen_carplay", "screen_btmic" }) {
 			Preference p = findPreference(screen);
 			if (p instanceof PreferenceScreen && ((PreferenceScreen)p).getRootAdapter() instanceof BaseAdapter)
 				((BaseAdapter)((PreferenceScreen)p).getRootAdapter()).notifyDataSetChanged();
@@ -377,7 +509,14 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	private void setSummary(String key, CharSequence summary) {
 		Preference p = findPreference(key);
 		if (p != null)
-			p.setSummary(summary);
+			p.setSummary(listSafe(p, summary));
+	}
+
+	/** ListPreference passes its summary through String.format: escape '%'. */
+	private static CharSequence listSafe(Preference p, CharSequence summary) {
+		if (!(p instanceof ListPreference) || summary == null)
+			return summary;
+		return summary.toString().replace("%", "%%");
 	}
 
 	private void showText(String title, String text) {
