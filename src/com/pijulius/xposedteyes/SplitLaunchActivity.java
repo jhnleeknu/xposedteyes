@@ -41,11 +41,10 @@ public class SplitLaunchActivity extends Activity {
 			return;
 		}
 
-		boolean rootAutoEnable = getSharedPreferences(getPackageName() + "_preferences", MODE_PRIVATE)
-			.getBoolean(Keys.A11Y_ROOT_AUTO_ENABLE, false);
+		boolean rootAutoEnable = Prefs.get(this).getBoolean(Keys.A11Y_ROOT_AUTO_ENABLE, false);
 
 		if (!rootAutoEnable) {
-			fallbackSingle(primary);
+			fallbackSingle(this, primary);
 			finish();
 			return;
 		}
@@ -66,8 +65,11 @@ public class SplitLaunchActivity extends Activity {
 						if (result == AccessibilityHelper.RESULT_OK && AccessibilityHelper.isEnabled(app)) {
 							startSplit(app, primary, secondary);
 						} else {
+							// Same fallback as without root. This activity has already
+							// finished; the system may refuse a start from the
+							// background, which is logged.
 							StatusStore.append(app, "SPLIT a11y_root_failed result=" + result);
-							Toast.makeText(app, R.string.toast_split_service_off, Toast.LENGTH_LONG).show();
+							fallbackSingle(app, primary);
 						}
 					}
 				});
@@ -85,28 +87,28 @@ public class SplitLaunchActivity extends Activity {
 		context.startService(intent);
 	}
 
-	/** Split screen unavailable: launch only the first app (while this activity is in front). */
-	private void fallbackSingle(String primary) {
+	/** Split screen unavailable: launch only the first app. */
+	static void fallbackSingle(Context context, String primary) {
 		Target t = Target.parse(primary);
 		Intent launch;
 		if (t.isPackageOnly()) {
-			launch = getPackageManager().getLaunchIntentForPackage(t.packageName);
+			launch = context.getPackageManager().getLaunchIntentForPackage(t.packageName);
 		} else {
 			launch = new Intent(Intent.ACTION_MAIN);
 			launch.addCategory(Intent.CATEGORY_LAUNCHER);
 			launch.setClassName(t.packageName, t.className);
 		}
 
-		StatusStore.append(this, "SPLIT a11y_off fallback=first_app");
-		Toast.makeText(this, R.string.toast_split_service_off, Toast.LENGTH_LONG).show();
+		StatusStore.append(context, "SPLIT a11y_off fallback=first_app");
+		Toast.makeText(context, R.string.toast_split_service_off, Toast.LENGTH_LONG).show();
 
 		if (launch == null)
 			return;
 		launch.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
 		try {
-			startActivity(launch);
+			context.startActivity(launch);
 		} catch (RuntimeException e) {
-			StatusStore.append(this, "SPLIT fallback_failed " + e.getClass().getSimpleName());
+			StatusStore.append(context, "SPLIT fallback_failed " + e.getClass().getSimpleName());
 		}
 	}
 }

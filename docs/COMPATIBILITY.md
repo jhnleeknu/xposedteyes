@@ -8,7 +8,7 @@
 
 | 기능 | 요구 ID | 코드 | 실기기 | 비고 |
 |---|---|---|---|---|
-| 앱 선택기 (시스템+사용자 앱, 아이콘·검색·정확한 컴포넌트) | ST-01 | IMPLEMENTED | NOT_TESTED | 에뮬레이터(API 28)에서 화면 표시만 확인한 경우 PR 에 별도 기재 |
+| 앱 선택기 (시스템+사용자 앱, 아이콘·검색·정확한 컴포넌트) | ST-01 | IMPLEMENTED | NOT_TESTED | 에뮬레이터(API 28)에서 UI 동작 확인 (실기기 아님) |
 | 부팅/ACC 이벤트 구분, 늦은 등록 처리 | ST-02 | IMPLEMENTED | NOT_TESTED | |
 | 지연·재시도·중복 방지·취소 | ST-03 | IMPLEMENTED | NOT_TESTED | |
 | 결과 상태(STARTED/UNCONFIRMED 등) | ST-04 | IMPLEMENTED | NOT_TESTED | 전면 확인은 `getRunningTasks(1)` |
@@ -30,6 +30,7 @@
 | 조합 | 결과 |
 |---|---|
 | JVM 단위 테스트 (OpenJDK 21) | 통과 (docs/TEST_PLAN.md) |
+| Android 9 에뮬레이터(API 28), LSPosed 없음 | 앱 UI·설정·앱 쪽 실행 경로 스모크 통과. 훅 미실행 |
 | 실제 TEYES CC3 + LSPosed | **확인하지 않음** — 이 작업 환경에 실기기 없음 |
 
 ## 실기기에서 검증해야 하는 가정

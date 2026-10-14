@@ -12,27 +12,38 @@ public final class Prefs {
 
 	public static final String NAME = Keys.PACKAGE + "_preferences";
 
+	/**
+	 * Result of the first world readable attempt in this process. Android
+	 * checks the mode only when it first creates the preferences object, so
+	 * later calls return the cached object and cannot tell.
+	 */
+	private static Boolean worldReadable;
+
 	@SuppressWarnings("deprecation")
 	@SuppressLint("WorldReadableFiles")
 	public static SharedPreferences get(Context context) {
 		try {
 			// LSPosed (xposedsharedprefs) makes MODE_WORLD_READABLE work for modules.
-			return context.getSharedPreferences(NAME, Context.MODE_WORLD_READABLE);
+			SharedPreferences prefs = context.getSharedPreferences(NAME, Context.MODE_WORLD_READABLE);
+			synchronized (Prefs.class) {
+				if (worldReadable == null)
+					worldReadable = true;
+			}
+			return prefs;
 		} catch (SecurityException e) {
+			synchronized (Prefs.class) {
+				worldReadable = false;
+			}
 			// Module not active: settings still editable, hooks will not see them.
 			return context.getSharedPreferences(NAME, Context.MODE_PRIVATE);
 		}
 	}
 
 	/** True when the module framework allows sharing the settings with the hooks. */
-	@SuppressWarnings("deprecation")
-	@SuppressLint("WorldReadableFiles")
 	public static boolean isWorldReadable(Context context) {
-		try {
-			context.getSharedPreferences(NAME, Context.MODE_WORLD_READABLE);
-			return true;
-		} catch (SecurityException e) {
-			return false;
+		get(context);
+		synchronized (Prefs.class) {
+			return Boolean.TRUE.equals(worldReadable);
 		}
 	}
 
