@@ -6,11 +6,23 @@
 
 후보 (사용자 보고 기반, 효과 미확인): `persist.btmic.gain`, `persist.btspk.gain`, `persist.audio.mic.senstivity`
 
-## 새로 확인된 사실 (CarLink 2.25 정적 분석)
+## CarLink 2.25 분석 결과 (네이티브 라이브러리 역어셈블)
 
-`persist.btmic.gain` 문자열은 CarLink 의 **CarPlay 라이브러리**(`libAirPlay.so`, `libcarplayplugin_*.so`) 안에 있다. 같은 곳에 `persist.lsec.cp.micvol`, `persist.lsec.cp.mic_route`, `persist.lsec.cp.noise`, `persist.btaec.switch`, `persist.btaec.delay` 도 있다. CarLink 는 WebRTC 전처리·AEC 라이브러리(`libwebrtc_audio_preprocessing.so`, `libblinkAEC.so`)도 들고 있다.
+`persist.btmic.gain` 은 이름과 달리 **CarPlay 통화** 마이크 설정이다. CarLink 의 `LsecGetConfigs` (`libAirPlay.so`, `libcarplayplugin_*.so`) 가 CarPlay 세션에서 아래 값을 읽는다.
 
-해석 (미확인): CarPlay 통화는 CarLink 가 자체 음성 처리(잡음 억제·에코 제거)를 해서 더 선명할 수 있고, `persist.btmic.gain` 은 적어도 CarPlay 경로에서 읽힌다. **일반 BT 통화(com.syu.bt)에서도 읽히는지는 아래 2번으로 기기에서 확인해야 한다.**
+| 속성 | 기본값 | 로그 표시 / 용도 |
+|---|---|---|
+| `persist.btmic.gain` | 5 | "cpblink volume" — blink 에코 제거기(libblinkAEC) 쪽 마이크 음량 |
+| `persist.lsec.cp.micvol` | 96 | "add mic volume" — 추가 마이크 음량 |
+| `persist.lsec.cp.useblink` | 1 | blink AEC 사용 여부 |
+| `persist.lsec.cp.noise` | `1,0,0` | 잡음 제거(denoise) 설정 |
+| `persist.lsec.cp.paramas` | `10,0,0` | 에코 제거 지연·모드·NS 모드 |
+| `persist.lsec.cp.micLR`, `sys.lsec.cp.telvol` | 2, 120 | 마이크 좌/우 채널, 통화 음량 |
+| `persist.lsec.cp.agc`, `persist.lsec.cp.aec` (liblsaudioprocess) | — | AGC `enable,metrics,dbfs_level,gain_db`, AEC `delay,aec_level,ns_level` |
+
+CarPlay 통화가 선명한 이유는 CarLink 가 자체적으로 WebRTC·blink 기반 잡음 억제·에코 제거·AGC 를 하기 때문일 가능성이 높다.
+
+**일반 BT 통화(com.syu.bt, BT 모듈)는 이 APK 들에 없다.** 위 값들이 일반 BT 통화에 영향을 준다는 근거는 없다. 일반 BT 통화 마이크를 다루려면 `com.syu.bt` APK(기기에서 `adb shell pm path com.syu.bt`)나 BT 모듈 쪽 분석이 필요하고, 그 전에 아래 2번(`grep`)으로 `btmic` 를 읽는 다른 프로그램이 있는지 먼저 확인한다.
 
 ## 1. 값이 있는지 (adb, 루트 불필요)
 
