@@ -6,6 +6,12 @@
 
 후보 (사용자 보고 기반, 효과 미확인): `persist.btmic.gain`, `persist.btspk.gain`, `persist.audio.mic.senstivity`
 
+## 새로 확인된 사실 (CarLink 2.25 정적 분석)
+
+`persist.btmic.gain` 문자열은 CarLink 의 **CarPlay 라이브러리**(`libAirPlay.so`, `libcarplayplugin_*.so`) 안에 있다. 같은 곳에 `persist.lsec.cp.micvol`, `persist.lsec.cp.mic_route`, `persist.lsec.cp.noise`, `persist.btaec.switch`, `persist.btaec.delay` 도 있다. CarLink 는 WebRTC 전처리·AEC 라이브러리(`libwebrtc_audio_preprocessing.so`, `libblinkAEC.so`)도 들고 있다.
+
+해석 (미확인): CarPlay 통화는 CarLink 가 자체 음성 처리(잡음 억제·에코 제거)를 해서 더 선명할 수 있고, `persist.btmic.gain` 은 적어도 CarPlay 경로에서 읽힌다. **일반 BT 통화(com.syu.bt)에서도 읽히는지는 아래 2번으로 기기에서 확인해야 한다.**
+
 ## 1. 값이 있는지 (adb, 루트 불필요)
 
 ```sh
