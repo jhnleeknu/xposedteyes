@@ -37,14 +37,6 @@
         <item>BOTH</item>
     </string-array>
 
-    <string-array name="startup_mode_entries">
-        <item>@string/startup_mode_single</item>
-        <item>@string/startup_mode_split</item>
-    </string-array>
-    <string-array name="startup_mode_values" translatable="false">
-        <item>SINGLE</item>
-        <item>SPLIT</item>
-    </string-array>
 
     <string-array name="startup_retry_count_entries">
         <item>@string/startup_retry_0</item>
@@ -68,16 +60,6 @@
         <item>HOME_ONLY</item>
     </string-array>
 
-    <string-array name="startup_post_launch_entries">
-        <item>@string/startup_post_launch_none</item>
-        <item>@string/startup_post_launch_crash</item>
-        <item>@string/startup_post_launch_keep</item>
-    </string-array>
-    <string-array name="startup_post_launch_values" translatable="false">
-        <item>NONE</item>
-        <item>RECOVER_CRASH</item>
-        <item>KEEP_ALIVE</item>
-    </string-array>
 
     <string-array name="bt_conflict_entries">
         <item>@string/bt_conflict_startup</item>

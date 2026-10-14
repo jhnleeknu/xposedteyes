@@ -5,8 +5,8 @@ Framework modifications for Teyes CC3 2k through Xposed
 
 1. Resizable Split Screen.
 Will allow you to resize the splitscreen. You will need to activate module for Android Framework and also SystemUI.
-2. Startup apps (3.1, replaces "Autolaunch Split Screen")
-Choose in the app (Startup apps): when (full boot / ACC ON & wake up / both), which app(s) (single app or two apps in split screen, picked from a list), delay, retries, what to do if another app is in front, and a separate launch on Bluetooth connection. Reverse camera and calls keep their system priority. Existing 3.0 auto launch settings are converted automatically. See docs/SPEC.md.
+2. Startup app (3.1, replaces "Autolaunch Split Screen")
+Choose in the app (Startup app): when (full boot / ACC ON & wake up / both), which app (picked from a list), delay and retries, whether to launch only while the home screen is shown, and a separate app on Bluetooth connection. Reverse camera and calls keep their system priority. 3.0 auto launch settings are not carried over; set them again after updating. See docs/SPEC.md.
 3. Hide Divider.
 Show or hide the split screen divider. If hidden a simple 1 pixel black line will be shown instead.
 4. Screen Ratio.
@@ -16,7 +16,7 @@ If checked the smaller split screen (in case for e.g. if you set screen ratio to
 6. Launcher.
 Two separate shortcuts to launch your specified applications (in settings for e.g. "com.spotify.music" and "com.waze" and "video.player.videoplayer") in split screen mode. For e.g. one for Audio / Navigation and one for Navigation / Videos (in case long road and children bored).
 7. Bluetooth Launcher.
-Launch an app when bluetooth connects (now under Startup apps; launching the startup apps on disconnect is an option).
+Launch an app when bluetooth connects (now under Startup app).
 8. Ad Blocker.
 Try to hide ads from applications. Raw method taken from [AdBlocker-Reborn](https://github.com/AdBlocker-Reborn/AdBlocker_Reborn/blob/master/app/src/main/assets/blocklist/av_aggressive)
 9. Possibility to force SystemUI visibility globally.
@@ -44,11 +44,9 @@ Some fixes for apps like hide Waze floating car type button, color fixes for Aud
 
 | Feature | Code | Tested on a real CC3 |
 |---|---|---|
-| Startup apps / Bluetooth launch | implemented, unit tested | not yet |
-| CarPlay density / scale | blocked (needs CarLink analysis, docs/research/carplay.md) | - |
-| Bluetooth call microphone | blocked (needs path analysis, docs/research/bt-mic.md); read-only diagnostics only | - |
-
-Details: docs/COMPATIBILITY.md, docs/TEST_PLAN.md, docs/RECOVERY.md.
+| Startup app / Bluetooth launch | implemented, unit tested | not yet |
+| CarPlay resolution / DPI | not available: the Android Auto options do not apply to CarPlay (docs/research/carplay.md) | - |
+| Bluetooth call microphone | diagnostics only (docs/research/bt-mic.md) | - |
 
 # Build
 
@@ -69,5 +67,5 @@ Install instructions
 
 # Notes
 Tested on Teyes CC3 2k and vanila Android 10 so think should work on other headunits too.
-All changes except the Launcher and Startup apps settings will require a restart of the device.
+All changes except the Launcher and Startup app settings will require a restart of the device.
 

@@ -42,8 +42,6 @@ public final class DiagHooks {
 
 	public static void install(LoadPackageParam lpparam, XSharedPreferences settings) {
 		try {
-			if (settings.getBoolean(Keys.NEW_FEATURES_DISABLED, false))
-				return;
 			if (settings.getBoolean(Keys.DIAG_CARLINK_VIDEO, false) && contains(VIDEO_PACKAGES, lpparam.packageName))
 				installVideo(lpparam.packageName);
 			if (settings.getBoolean(Keys.DIAG_AUDIO_PATH, false) && contains(AUDIO_PACKAGES, lpparam.packageName))

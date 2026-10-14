@@ -43,9 +43,6 @@ public final class SystemUiStartupHook {
 	static final String[] ACC_ON = { "com.fyt.boot.ACCON", "com.glsx.boot.ACCON" };
 	static final String[] ACC_OFF = { "com.fyt.boot.ACCOFF", "com.glsx.boot.ACCOFF" };
 
-	public static final String EXTRA_PRIMARY = "primary";
-	public static final String EXTRA_SECONDARY = "secondary";
-
 	private static final String TAG = "XposedTeyes startup: ";
 
 	private static Handler handler;
@@ -292,16 +289,6 @@ public final class SystemUiStartupHook {
 			return start(intent);
 		}
 
-		@Override
-		public LaunchOutcome launchSplit(Target primary, Target secondary) {
-			Intent intent = new Intent();
-			intent.setClassName(Keys.PACKAGE, Keys.PACKAGE + ".SplitLaunchActivity");
-			intent.putExtra(EXTRA_PRIMARY, primary.flatten());
-			intent.putExtra(EXTRA_SECONDARY, secondary.flatten());
-			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			return start(intent);
-		}
-
 		private LaunchOutcome start(Intent intent) {
 			try {
 				app.startActivity(intent);
@@ -346,12 +333,6 @@ public final class SystemUiStartupHook {
 			} catch (RuntimeException e) {
 				return null;
 			}
-		}
-
-		@Override
-		public boolean exitSignalAvailable() {
-			// No verified crash / force-stop signal on CC3 yet (docs/COMPATIBILITY.md).
-			return false;
 		}
 
 		@Override

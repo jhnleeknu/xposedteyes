@@ -5,7 +5,7 @@ public final class StatusReport {
 	public enum Kind { STARTUP, BLUETOOTH }
 
 	public enum Cause {
-		BOOT, BOOT_CATCHUP, ACC_INITIAL, ACC_RESUME, BT_CONNECT, BT_DISCONNECT, RECOVERY, NONE
+		BOOT, BOOT_CATCHUP, ACC_INITIAL, ACC_RESUME, BT_CONNECT, NONE
 	}
 
 	public final Kind kind;

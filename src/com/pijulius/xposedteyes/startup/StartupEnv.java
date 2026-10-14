@@ -18,16 +18,11 @@ public interface StartupEnv {
 
 	LaunchOutcome launchSingle(Target target);
 
-	LaunchOutcome launchSplit(Target primary, Target secondary);
-
 	/** Package of the top activity, or null when it cannot be determined. */
 	String foregroundPackage();
 
 	/** Package of the default home app, or null when unknown/ambiguous. */
 	String homePackage();
-
-	/** True when a reliable app exit signal (crash vs. normal vs. force stop) exists. */
-	boolean exitSignalAvailable();
 
 	void report(StatusReport report);
 }

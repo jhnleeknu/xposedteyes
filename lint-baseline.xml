@@ -167,7 +167,7 @@
         errorLine2="     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/com/pijulius/xposedteyes/SettingsActivity.java"
-            line="89"
+            line="75"
             column="6"/>
     </issue>
 

@@ -35,7 +35,6 @@ public class StatusReceiver extends BroadcastReceiver {
 		String summary = status + (detail.isEmpty() ? "" : " (" + detail + ")") + " · " + cause +
 			(attempt > 0 ? " · #" + attempt : "");
 		StatusStore.saveLast(context, kind, summary);
-		StatusStore.append(context, kind + " " + summary);
 	}
 
 	static String safeToken(String s) {

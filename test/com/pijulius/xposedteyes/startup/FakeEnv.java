@@ -23,14 +23,12 @@ class FakeEnv implements StartupEnv {
 	LaunchOutcome defaultOutcome = LaunchOutcome.ACCEPTED;
 	String foreground = "com.home";
 	String home = "com.home";
-	boolean exitSignal = false;
 	/** When true a successful launch brings the target to the front. */
 	boolean launchBringsToFront = true;
 	FakeScheduler scheduler;
 	int loads = 0;
 
 	FakeEnv() {
-		prefs.put(Keys.SCHEMA_VERSION, Keys.CURRENT_SCHEMA);
 		installed.add("com.music/com.music.Main");
 		installed.add("com.nav/com.nav.Main");
 		installed.add("com.carlink/com.carlink.Main");
@@ -38,7 +36,7 @@ class FakeEnv implements StartupEnv {
 
 	FakeEnv enableSingle(String component) {
 		prefs.put(Keys.STARTUP_ENABLED, true);
-		prefs.put(Keys.STARTUP_PRIMARY, component);
+		prefs.put(Keys.STARTUP_APP, component);
 		return this;
 	}
 
@@ -75,11 +73,6 @@ class FakeEnv implements StartupEnv {
 	}
 
 	@Override
-	public LaunchOutcome launchSplit(Target primary, Target secondary) {
-		return next("split:" + primary.flatten() + "+" + secondary.flatten(), primary);
-	}
-
-	@Override
 	public String foregroundPackage() {
 		return foreground;
 	}
@@ -87,11 +80,6 @@ class FakeEnv implements StartupEnv {
 	@Override
 	public String homePackage() {
 		return home;
-	}
-
-	@Override
-	public boolean exitSignalAvailable() {
-		return exitSignal;
 	}
 
 	@Override

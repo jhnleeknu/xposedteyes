@@ -4,7 +4,7 @@ package com.pijulius.xposedteyes.startup;
 public enum StartupStatus {
 	/** A launch is scheduled after the configured delay. */
 	SCHEDULED,
-	/** Auto launch (or every new feature) is switched off; nothing requested. */
+	/** Auto launch is switched off; nothing requested. */
 	SKIPPED_DISABLED,
 	/** No app selected, or the app was removed/disabled. Nothing requested. */
 	INVALID_TARGET,
@@ -18,12 +18,6 @@ public enum StartupStatus {
 	STARTED,
 	/** Request handed over but the result could not be confirmed. Not retried. */
 	UNCONFIRMED,
-	/** The launched app exited afterwards; default policy does not relaunch. */
-	FINISHED_AFTER_START,
-	/** A post-launch recovery relaunch is scheduled. */
-	RECOVERY_SCHEDULED,
-	/** Post-launch recovery stopped: limit reached. */
-	RECOVERY_LIMIT_REACHED,
 	/** A pending launch was cancelled (ACC OFF, settings change, disconnect...). */
 	CANCELLED,
 	/** Skipped because the other auto launch has priority. */

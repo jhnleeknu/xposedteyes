@@ -90,16 +90,6 @@
             android:exported="false"
             android:label="@string/app_picker_title" />
 
-        <!-- Started by SystemUI for split screen startup launches. Only
-             holders of STATUS_BAR_SERVICE (SystemUI / platform apps) may start it. -->
-        <activity
-            android:name="com.pijulius.xposedteyes.SplitLaunchActivity"
-            android:exported="true"
-            android:excludeFromRecents="true"
-            android:noHistory="true"
-            android:permission="android.permission.STATUS_BAR_SERVICE"
-            android:theme="@android:style/Theme.NoDisplay" />
-
         <!-- Status reports from the SystemUI hook (startup app manager). -->
         <receiver
             android:name="com.pijulius.xposedteyes.StatusReceiver"

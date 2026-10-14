@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.pijulius.xposedteyes.settings.Keys;
-import com.pijulius.xposedteyes.startup.StartupCoordinator.ExitKind;
 
 /** Test IDs refer to docs/TEST_PLAN.md (T-ST-xx). */
 public class StartupCoordinatorTest {
@@ -42,7 +41,7 @@ public class StartupCoordinatorTest {
 
 	@Test
 	public void ST01_disabledByDefault_neverLaunches() {
-		env.prefs.put(Keys.STARTUP_PRIMARY, MUSIC);
+		env.prefs.put(Keys.STARTUP_APP, MUSIC);
 		boot();
 		c.onAccOff();
 		c.onAccOn();
@@ -203,18 +202,6 @@ public class StartupCoordinatorTest {
 	}
 
 	@Test
-	public void ST08_exitAfterStart_defaultPolicyNeverRelaunches() {
-		env.enableSingle(MUSIC);
-		env.exitSignal = true;
-		boot();
-		scheduler.advance(10_000);
-		c.onTargetExited("com.music", ExitKind.CRASH);
-		c.onTargetExited("com.music", ExitKind.NORMAL);
-		scheduler.advance(600_000);
-		assertEquals(1, env.launches.size());
-	}
-
-	@Test
 	public void ST09_otherAppInFront_defaultPolicyLaunchesWithoutKillingIt() {
 		env.enableSingle(MUSIC);
 		env.foreground = "com.other";
@@ -259,20 +246,6 @@ public class StartupCoordinatorTest {
 	}
 
 	@Test
-	public void ST11b_killSwitchCancelsEverything() {
-		env.enableSingle(MUSIC);
-		env.prefs.put(Keys.BT_LAUNCH_ENABLED, true);
-		env.prefs.put(Keys.BT_LAUNCH_TARGET, CARLINK);
-		env.prefs.put(Keys.BT_CONFLICT_POLICY, "LAST_EVENT");
-		boot();
-		c.onBluetoothState(true);
-		env.prefs.put(Keys.NEW_FEATURES_DISABLED, true);
-		c.onSettingsChanged();
-		scheduler.advance(60_000);
-		assertTrue(env.launches.isEmpty());
-	}
-
-	@Test
 	public void ST11c_missedSettingsBroadcast_stillHonouredAtFireTime() {
 		env.enableSingle(MUSIC);
 		boot();
@@ -285,7 +258,7 @@ public class StartupCoordinatorTest {
 	public void ST12_changeTargetWhilePending_cancelsAndDoesNotLaunch() {
 		env.enableSingle(MUSIC);
 		boot();
-		env.prefs.put(Keys.STARTUP_PRIMARY, NAV);
+		env.prefs.put(Keys.STARTUP_APP, NAV);
 		c.onSettingsChanged();
 		scheduler.advance(60_000);
 		assertTrue(env.launches.isEmpty());
@@ -304,7 +277,7 @@ public class StartupCoordinatorTest {
 		env.enableSingle(MUSIC);
 		c.onHookInit("boot-1", false);
 		c.onSettingsChanged();
-		env.prefs.put(Keys.STARTUP_PRIMARY, NAV);
+		env.prefs.put(Keys.STARTUP_APP, NAV);
 		c.onSettingsChanged();
 		scheduler.advance(60_000);
 		assertTrue(env.launches.isEmpty());
@@ -429,27 +402,6 @@ public class StartupCoordinatorTest {
 	}
 
 	@Test
-	public void ST19b_disconnectDoesNotLaunchByDefault() {
-		env.enableSingle(MUSIC);
-		enableBluetooth(null);
-		c.onHookInit("boot-1", false);
-		c.onBluetoothState(true);
-		scheduler.advance(60_000);
-		env.foreground = "com.home";
-		c.onBluetoothState(false);
-		scheduler.advance(60_000);
-		assertEquals(1, env.launches.size());
-
-		env.prefs.put(Keys.BT_LAUNCH_ON_DISCONNECT, true);
-		c.onBluetoothState(true);
-		scheduler.advance(60_000);
-		env.foreground = "com.home";
-		c.onBluetoothState(false);
-		scheduler.advance(60_000);
-		assertEquals(MUSIC, env.launches.get(env.launches.size() - 1));
-	}
-
-	@Test
 	public void ST20_conflict_startupFirst() {
 		env.enableSingle(MUSIC);
 		enableBluetooth("STARTUP_FIRST");
@@ -515,65 +467,6 @@ public class StartupCoordinatorTest {
 	}
 
 	@Test
-	public void ST23_postLaunchRecovery_disabledWithoutExitSignal() {
-		env.enableSingle(MUSIC);
-		env.prefs.put(Keys.STARTUP_POST_LAUNCH_POLICY, "KEEP_ALIVE");
-		env.exitSignal = false;
-		boot();
-		scheduler.advance(10_000);
-		c.onTargetExited("com.music", ExitKind.CRASH);
-		scheduler.advance(600_000);
-		assertEquals(1, env.launches.size());
-	}
-
-	@Test
-	public void postLaunch_recoverCrash_limitedAndIgnoresNormalExitAndForceStop() {
-		env.enableSingle(MUSIC);
-		env.exitSignal = true;
-		env.prefs.put(Keys.STARTUP_POST_LAUNCH_POLICY, "RECOVER_CRASH");
-		env.prefs.put(Keys.STARTUP_RECOVERY_LIMIT, 2);
-		boot();
-		scheduler.advance(10_000);
-
-		c.onTargetExited("com.music", ExitKind.BACKGROUND); // home / app switch is not an exit
-		scheduler.advance(60_000);
-		assertEquals(1, env.launches.size());
-
-		env.foreground = "com.home";
-		c.onTargetExited("com.music", ExitKind.CRASH);
-		scheduler.advance(4_999);
-		assertEquals(1, env.launches.size());
-		scheduler.advance(10_000);
-		assertEquals(2, env.launches.size());
-
-		env.foreground = "com.home";
-		c.onTargetExited("com.music", ExitKind.CRASH);
-		scheduler.advance(60_000);
-		assertEquals(3, env.launches.size());
-
-		env.foreground = "com.home";
-		c.onTargetExited("com.music", ExitKind.CRASH);
-		scheduler.advance(60_000);
-		assertEquals("limit 2", 3, env.launches.size());
-		assertTrue(env.hasStatus(StartupStatus.RECOVERY_LIMIT_REACHED));
-	}
-
-	@Test
-	public void postLaunch_keepAlive_neverRevivesForceStop() {
-		env.enableSingle(MUSIC);
-		env.exitSignal = true;
-		env.prefs.put(Keys.STARTUP_POST_LAUNCH_POLICY, "KEEP_ALIVE");
-		env.prefs.put(Keys.STARTUP_RECOVERY_LIMIT, 3);
-		boot();
-		scheduler.advance(10_000);
-		env.foreground = "com.home";
-		c.onTargetExited("com.music", ExitKind.FORCE_STOP);
-		c.onTargetExited("com.music", ExitKind.CRASH); // no longer tracked
-		scheduler.advance(600_000);
-		assertEquals(1, env.launches.size());
-	}
-
-	@Test
 	public void homeOnlyPolicy() {
 		env.enableSingle(MUSIC);
 		env.prefs.put(Keys.STARTUP_FOREGROUND_POLICY, "HOME_ONLY");
@@ -598,34 +491,6 @@ public class StartupCoordinatorTest {
 		boot();
 		scheduler.advance(60_000);
 		assertEquals(1, env.launches.size());
-	}
-
-	@Test
-	public void splitMode_launchesBothAndValidatesSecondary() {
-		env.enableSingle(MUSIC);
-		env.prefs.put(Keys.STARTUP_MODE, "SPLIT");
-		boot();
-		scheduler.advance(60_000);
-		assertTrue(env.launches.isEmpty());
-		assertEquals(StartupStatus.INVALID_TARGET, env.lastStatus());
-
-		setUp();
-		env.enableSingle(MUSIC);
-		env.prefs.put(Keys.STARTUP_MODE, "SPLIT");
-		env.prefs.put(Keys.STARTUP_SECONDARY, NAV);
-		boot();
-		scheduler.advance(60_000);
-		assertEquals(1, env.launches.size());
-		assertEquals("split:" + MUSIC + "+" + NAV, env.launches.get(0));
-	}
-
-	@Test
-	public void singleMode_ignoresSecondaryApp() {
-		env.enableSingle(MUSIC);
-		env.prefs.put(Keys.STARTUP_SECONDARY, "com.removed/com.removed.Main");
-		boot();
-		scheduler.advance(60_000);
-		assertEquals(MUSIC, env.launches.get(0));
 	}
 
 	@Test
