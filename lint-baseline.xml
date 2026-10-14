@@ -1,0 +1,574 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.11.1" type="baseline" client="gradle" dependencies="false" name="AGP (8.11.1)" variant="all" version="8.11.1">
+
+    <issue
+        id="SuspiciousIndentation"
+        message="The indentation string here is different from on the previous line (`&quot; &quot;` vs `\t`)"
+        errorLine1="           finish();"
+        errorLine2="  ~~~~~~~~~">
+        <location
+            file="src/com/pijulius/xposedteyes/LauncherActivity.java"
+            line="56"
+            column="3"/>
+        <location
+            file="src/com/pijulius/xposedteyes/LauncherActivity.java"
+            line="54"
+            column="3"
+            message="Previous line indentation here"/>
+    </issue>
+
+    <issue
+        id="RedundantLabel"
+        message="Redundant label can be removed"
+        errorLine1="            android:label=&quot;@string/app_name&quot; >"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="AndroidManifest.xml"
+            line="45"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="NonResizeableActivity"
+        message="Expecting `android:resizeableActivity=&quot;true&quot;` for this activity so the user can take advantage of the multi-window environment on all devices. NOTE: beginning with Android 12, all apps run in multi-window mode on large screen devices."
+        errorLine1="            android:resizeableActivity=&quot;false&quot;>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="AndroidManifest.xml"
+            line="64"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="NonResizeableActivity"
+        message="Expecting `android:resizeableActivity=&quot;true&quot;` for this activity so the user can take advantage of the multi-window environment on all devices. NOTE: beginning with Android 12, all apps run in multi-window mode on large screen devices."
+        errorLine1="            android:resizeableActivity=&quot;false&quot;>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="AndroidManifest.xml"
+            line="79"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="DiscouragedApi"
+        message="Setting `resizeableActivity` to `false` will be ignored in most cases, starting from Android 16. Android is moving toward a model where apps are expected to adapt to various orientations, display sizes, and aspect ratios."
+        errorLine1="            android:resizeableActivity=&quot;false&quot;>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="AndroidManifest.xml"
+            line="64"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="DiscouragedApi"
+        message="Setting `resizeableActivity` to `false` will be ignored in most cases, starting from Android 16. Android is moving toward a model where apps are expected to adapt to various orientations, display sizes, and aspect ratios."
+        errorLine1="            android:resizeableActivity=&quot;false&quot;>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="AndroidManifest.xml"
+            line="79"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="DiscouragedApi"
+        message="Use of this function is discouraged because resource reflection makes it harder to perform build optimizations and compile-time verification of code. It is much more efficient to retrieve resources by identifier (e.g. `R.foo.bar`) than by name (e.g. `getIdentifier(&quot;bar&quot;, &quot;foo&quot;, null)`)."
+        errorLine1="     View view = (View)liparam.view.findViewById(liparam.res.getIdentifier("
+        errorLine2="                                                             ~~~~~~~~~~~~~">
+        <location
+            file="src/com/pijulius/xposedteyes/XposedTeyes.java"
+            line="838"
+            column="62"/>
+    </issue>
+
+    <issue
+        id="DiscouragedApi"
+        message="Use of this function is discouraged because resource reflection makes it harder to perform build optimizations and compile-time verification of code. It is much more efficient to retrieve resources by identifier (e.g. `R.foo.bar`) than by name (e.g. `getIdentifier(&quot;bar&quot;, &quot;foo&quot;, null)`)."
+        errorLine1="     TextView view = (TextView)liparam.view.findViewById(liparam.res.getIdentifier("
+        errorLine2="                                                                     ~~~~~~~~~~~~~">
+        <location
+            file="src/com/pijulius/xposedteyes/XposedTeyes.java"
+            line="853"
+            column="70"/>
+    </issue>
+
+    <issue
+        id="DiscouragedApi"
+        message="Use of this function is discouraged because resource reflection makes it harder to perform build optimizations and compile-time verification of code. It is much more efficient to retrieve resources by identifier (e.g. `R.foo.bar`) than by name (e.g. `getIdentifier(&quot;bar&quot;, &quot;foo&quot;, null)`)."
+        errorLine1="     TextView view = (TextView)liparam.view.findViewById(liparam.res.getIdentifier("
+        errorLine2="                                                                     ~~~~~~~~~~~~~">
+        <location
+            file="src/com/pijulius/xposedteyes/XposedTeyes.java"
+            line="862"
+            column="70"/>
+    </issue>
+
+    <issue
+        id="DiscouragedApi"
+        message="Use of this function is discouraged because resource reflection makes it harder to perform build optimizations and compile-time verification of code. It is much more efficient to retrieve resources by identifier (e.g. `R.foo.bar`) than by name (e.g. `getIdentifier(&quot;bar&quot;, &quot;foo&quot;, null)`)."
+        errorLine1="     View view = (View)liparam.view.findViewById(liparam.res.getIdentifier("
+        errorLine2="                                                             ~~~~~~~~~~~~~">
+        <location
+            file="src/com/pijulius/xposedteyes/XposedTeyes.java"
+            line="939"
+            column="62"/>
+    </issue>
+
+    <issue
+        id="DiscouragedApi"
+        message="Use of this function is discouraged because resource reflection makes it harder to perform build optimizations and compile-time verification of code. It is much more efficient to retrieve resources by identifier (e.g. `R.foo.bar`) than by name (e.g. `getIdentifier(&quot;bar&quot;, &quot;foo&quot;, null)`)."
+        errorLine1="     ImageView imageView = (ImageView)liparam.view.findViewById(liparam.res.getIdentifier("
+        errorLine2="                                                                            ~~~~~~~~~~~~~">
+        <location
+            file="src/com/pijulius/xposedteyes/XposedTeyes.java"
+            line="946"
+            column="77"/>
+    </issue>
+
+    <issue
+        id="DiscouragedApi"
+        message="Use of this function is discouraged because resource reflection makes it harder to perform build optimizations and compile-time verification of code. It is much more efficient to retrieve resources by identifier (e.g. `R.foo.bar`) than by name (e.g. `getIdentifier(&quot;bar&quot;, &quot;foo&quot;, null)`)."
+        errorLine1="     imageView = (ImageView)liparam.view.findViewById(liparam.res.getIdentifier("
+        errorLine2="                                                                  ~~~~~~~~~~~~~">
+        <location
+            file="src/com/pijulius/xposedteyes/XposedTeyes.java"
+            line="950"
+            column="67"/>
+    </issue>
+
+    <issue
+        id="DiscouragedApi"
+        message="Use of this function is discouraged because resource reflection makes it harder to perform build optimizations and compile-time verification of code. It is much more efficient to retrieve resources by identifier (e.g. `R.foo.bar`) than by name (e.g. `getIdentifier(&quot;bar&quot;, &quot;foo&quot;, null)`)."
+        errorLine1="     imageView = (ImageView)liparam.view.findViewById(liparam.res.getIdentifier("
+        errorLine2="                                                                  ~~~~~~~~~~~~~">
+        <location
+            file="src/com/pijulius/xposedteyes/XposedTeyes.java"
+            line="954"
+            column="67"/>
+    </issue>
+
+    <issue
+        id="ExportedPreferenceActivity"
+        message="`PreferenceActivity` subclass com.pijulius.xposedteyes.SettingsActivity should not be exported"
+        errorLine1="        &lt;activity"
+        errorLine2="        ^">
+        <location
+            file="AndroidManifest.xml"
+            line="42"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="SetWorldReadable"
+        message="Setting file permissions to world-readable can be risky, review carefully"
+        errorLine1="     sharedPrefsFile.setReadable(true, false);"
+        errorLine2="     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/com/pijulius/xposedteyes/SettingsActivity.java"
+            line="89"
+            column="6"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.app_name_settings` appears to be unused"
+        errorLine1=" &lt;string name=&quot;app_name_settings&quot;>Xposed Teyes Settings&lt;/string>"
+        errorLine2="         ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="res/values/strings.xml"
+            line="5"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.app_not_found` appears to be unused"
+        errorLine1=" &lt;string name=&quot;app_not_found&quot;>App not found&lt;/string>"
+        errorLine2="         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="res/values/strings.xml"
+            line="7"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="IconLauncherShape"
+        message="Launcher icons should not fill every pixel of their square region; see the design guide for details">
+        <location
+            file="res/drawable/logo.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bg_tzy.png` in densityless folder">
+        <location
+            file="res/drawable/bg_tzy.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bg_warning_en.png` in densityless folder">
+        <location
+            file="res/drawable/bg_warning_en.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt2000_keyboardshow.png` in densityless folder">
+        <location
+            file="res/drawable/bt2000_keyboardshow.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt2000_keyboardshow_p.png` in densityless folder">
+        <location
+            file="res/drawable/bt2000_keyboardshow_p.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt2000_navi0.png` in densityless folder">
+        <location
+            file="res/drawable/bt2000_navi0.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt2000_navi0_p.png` in densityless folder">
+        <location
+            file="res/drawable/bt2000_navi0_p.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt2000_navi1.png` in densityless folder">
+        <location
+            file="res/drawable/bt2000_navi1.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt2000_navi1_p.png` in densityless folder">
+        <location
+            file="res/drawable/bt2000_navi1_p.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt2000_navi2.png` in densityless folder">
+        <location
+            file="res/drawable/bt2000_navi2.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt2000_navi2_p.png` in densityless folder">
+        <location
+            file="res/drawable/bt2000_navi2_p.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt2000_navi3.png` in densityless folder">
+        <location
+            file="res/drawable/bt2000_navi3.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt2000_navi3_p.png` in densityless folder">
+        <location
+            file="res/drawable/bt2000_navi3_p.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt2000_navi4.png` in densityless folder">
+        <location
+            file="res/drawable/bt2000_navi4.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt2000_navi4_p.png` in densityless folder">
+        <location
+            file="res/drawable/bt2000_navi4_p.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt2000_navi5.png` in densityless folder">
+        <location
+            file="res/drawable/bt2000_navi5.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt2000_navi5_p.png` in densityless folder">
+        <location
+            file="res/drawable/bt2000_navi5_p.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt2000_navi6.png` in densityless folder">
+        <location
+            file="res/drawable/bt2000_navi6.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt2000_navi6_p.png` in densityless folder">
+        <location
+            file="res/drawable/bt2000_navi6_p.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt2000_navi7.png` in densityless folder">
+        <location
+            file="res/drawable/bt2000_navi7.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt2000_navi7_p.png` in densityless folder">
+        <location
+            file="res/drawable/bt2000_navi7_p.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt2000_navi8.png` in densityless folder">
+        <location
+            file="res/drawable/bt2000_navi8.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt2000_navi8_p.png` in densityless folder">
+        <location
+            file="res/drawable/bt2000_navi8_p.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt2000_navi9.png` in densityless folder">
+        <location
+            file="res/drawable/bt2000_navi9.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt2000_navi9_p.png` in densityless folder">
+        <location
+            file="res/drawable/bt2000_navi9_p.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt2000_navidial.png` in densityless folder">
+        <location
+            file="res/drawable/bt2000_navidial.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt2000_navidial_p.png` in densityless folder">
+        <location
+            file="res/drawable/bt2000_navidial_p.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt2000_navihang.png` in densityless folder">
+        <location
+            file="res/drawable/bt2000_navihang.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt2000_navihang_p.png` in densityless folder">
+        <location
+            file="res/drawable/bt2000_navihang_p.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt2000_navihide.png` in densityless folder">
+        <location
+            file="res/drawable/bt2000_navihide.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt2000_navihide_p.png` in densityless folder">
+        <location
+            file="res/drawable/bt2000_navihide_p.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt2000_navij.png` in densityless folder">
+        <location
+            file="res/drawable/bt2000_navij.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt2000_navij_p.png` in densityless folder">
+        <location
+            file="res/drawable/bt2000_navij_p.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt2000_navikeyhide_bk.png` in densityless folder">
+        <location
+            file="res/drawable/bt2000_navikeyhide_bk.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt2000_navikeyshow_bk.png` in densityless folder">
+        <location
+            file="res/drawable/bt2000_navikeyshow_bk.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt2000_navimute.png` in densityless folder">
+        <location
+            file="res/drawable/bt2000_navimute.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt2000_navimute_p.png` in densityless folder">
+        <location
+            file="res/drawable/bt2000_navimute_p.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt2000_navisound.png` in densityless folder">
+        <location
+            file="res/drawable/bt2000_navisound.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt2000_navisound_p.png` in densityless folder">
+        <location
+            file="res/drawable/bt2000_navisound_p.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt2000_navix.png` in densityless folder">
+        <location
+            file="res/drawable/bt2000_navix.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt2000_navix_p.png` in densityless folder">
+        <location
+            file="res/drawable/bt2000_navix_p.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt_bk.png` in densityless folder">
+        <location
+            file="res/drawable/bt_bk.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt_icon.png` in densityless folder">
+        <location
+            file="res/drawable/bt_icon.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt_navikeyhide_bk.png` in densityless folder">
+        <location
+            file="res/drawable/bt_navikeyhide_bk.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt_navikeyshow_bk.png` in densityless folder">
+        <location
+            file="res/drawable/bt_navikeyshow_bk.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/bt_popdel_bk.png` in densityless folder">
+        <location
+            file="res/drawable/bt_popdel_bk.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/car_modle.png` in densityless folder">
+        <location
+            file="res/drawable/car_modle.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/car_modle_1920.png` in densityless folder">
+        <location
+            file="res/drawable/car_modle_1920.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/car_modle_h.png` in densityless folder">
+        <location
+            file="res/drawable/car_modle_h.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/car_modle_h_1280.png` in densityless folder">
+        <location
+            file="res/drawable/car_modle_h_1280.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/icon_carlink.png` in densityless folder">
+        <location
+            file="res/drawable/icon_carlink.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/logo.png` in densityless folder">
+        <location
+            file="res/drawable/logo.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/logo_musicnavigation.png` in densityless folder">
+        <location
+            file="res/drawable/logo_musicnavigation.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/logo_navigationvideos.png` in densityless folder">
+        <location
+            file="res/drawable/logo_navigationvideos.png"/>
+    </issue>
+
+</issues>
