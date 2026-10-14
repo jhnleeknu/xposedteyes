@@ -3,6 +3,233 @@
 	xmlns:android="http://schemas.android.com/apk/res/android">
 
 	<PreferenceCategory
+		android:key="cat_new"
+		android:title="@string/pref_new_features">
+
+		<Preference
+			android:key="migration_notice"
+			android:title="@string/migration_notice_title" />
+
+		<!-- Startup app management -->
+		<PreferenceScreen
+			android:key="screen_startup"
+			android:title="@string/screen_startup"
+			android:summary="@string/screen_startup_sum">
+
+			<PreferenceCategory android:title="@string/startup_cat_status">
+				<Preference
+					android:key="startup_last"
+					android:title="@string/startup_last"
+					android:selectable="false" />
+				<Preference
+					android:key="startup_launch_now"
+					android:title="@string/startup_launch_now"
+					android:summary="@string/startup_launch_now_sum" />
+			</PreferenceCategory>
+
+			<PreferenceCategory android:title="@string/startup_cat_auto">
+				<CheckBoxPreference
+					android:key="startupEnabled"
+					android:title="@string/startup_enabled"
+					android:summary="@string/startup_enabled_sum"
+					android:defaultValue="false" />
+				<ListPreference
+					android:key="startupTrigger"
+					android:title="@string/startup_trigger"
+					android:entries="@array/startup_trigger_entries"
+					android:entryValues="@array/startup_trigger_values"
+					android:defaultValue="COLD_BOOT" />
+				<ListPreference
+					android:key="startupMode"
+					android:title="@string/startup_mode"
+					android:entries="@array/startup_mode_entries"
+					android:entryValues="@array/startup_mode_values"
+					android:defaultValue="SINGLE" />
+				<Preference
+					android:key="startupPrimary"
+					android:title="@string/startup_primary" />
+				<Preference
+					android:key="startupSecondary"
+					android:title="@string/startup_secondary" />
+				<com.pijulius.xposedteyes.IntPickerPreference
+					android:key="startupDelaySeconds"
+					android:title="@string/startup_delay"
+					android:defaultValue="5" />
+				<ListPreference
+					android:key="startupRetryCount"
+					android:title="@string/startup_retry_count"
+					android:entries="@array/startup_retry_count_entries"
+					android:entryValues="@array/startup_retry_count_values"
+					android:defaultValue="1" />
+				<com.pijulius.xposedteyes.IntPickerPreference
+					android:key="startupRetryDelaySeconds"
+					android:title="@string/startup_retry_delay"
+					android:defaultValue="5" />
+				<ListPreference
+					android:key="startupForegroundPolicy"
+					android:title="@string/startup_foreground_policy"
+					android:entries="@array/startup_foreground_entries"
+					android:entryValues="@array/startup_foreground_values"
+					android:defaultValue="ALWAYS" />
+				<ListPreference
+					android:key="startupPostLaunchPolicy"
+					android:title="@string/startup_post_launch"
+					android:entries="@array/startup_post_launch_entries"
+					android:entryValues="@array/startup_post_launch_values"
+					android:defaultValue="NONE" />
+				<com.pijulius.xposedteyes.IntPickerPreference
+					android:key="startupRecoveryLimit"
+					android:title="@string/startup_recovery_limit"
+					android:defaultValue="1" />
+				<com.pijulius.xposedteyes.IntPickerPreference
+					android:key="startupRecoveryDelaySeconds"
+					android:title="@string/startup_recovery_delay"
+					android:defaultValue="5" />
+				<Preference
+					android:title="@string/startup_camera_call"
+					android:summary="@string/startup_camera_call_sum"
+					android:selectable="false" />
+			</PreferenceCategory>
+
+			<PreferenceCategory android:title="@string/startup_cat_split_service">
+				<Preference
+					android:key="a11y_status"
+					android:title="@string/a11y_status" />
+				<CheckBoxPreference
+					android:key="a11yRootAutoEnable"
+					android:title="@string/a11y_root_auto"
+					android:summary="@string/a11y_root_auto_sum"
+					android:defaultValue="false" />
+			</PreferenceCategory>
+
+			<PreferenceCategory android:title="@string/bt_cat">
+				<CheckBoxPreference
+					android:key="btLaunchEnabled"
+					android:title="@string/bt_enabled"
+					android:summary="@string/bt_enabled_sum"
+					android:defaultValue="false" />
+				<Preference
+					android:key="btLaunchTarget"
+					android:title="@string/bt_target" />
+				<com.pijulius.xposedteyes.IntPickerPreference
+					android:key="btLaunchDelaySeconds"
+					android:title="@string/bt_delay"
+					android:defaultValue="3" />
+				<ListPreference
+					android:key="btConflictPolicy"
+					android:title="@string/bt_conflict"
+					android:entries="@array/bt_conflict_entries"
+					android:entryValues="@array/bt_conflict_values"
+					android:defaultValue="STARTUP_FIRST" />
+				<CheckBoxPreference
+					android:key="btLaunchStartupOnDisconnect"
+					android:title="@string/bt_on_disconnect"
+					android:summary="@string/bt_on_disconnect_sum"
+					android:defaultValue="false" />
+				<Preference
+					android:key="bt_last"
+					android:title="@string/startup_last"
+					android:selectable="false" />
+			</PreferenceCategory>
+
+			<PreferenceCategory android:title="@string/startup_cat_reset">
+				<Preference
+					android:key="startup_restore_defaults"
+					android:title="@string/restore_defaults"
+					android:summary="@string/startup_restore_defaults_sum" />
+			</PreferenceCategory>
+		</PreferenceScreen>
+
+		<!-- CarPlay display -->
+		<PreferenceScreen
+			android:key="screen_carplay"
+			android:title="@string/screen_carplay"
+			android:summary="@string/screen_carplay_sum">
+			<Preference
+				android:key="carplay_status"
+				android:title="@string/support_status"
+				android:summary="@string/carplay_status_sum"
+				android:selectable="false" />
+			<Preference
+				android:title="@string/carplay_controls"
+				android:summary="@string/carplay_controls_sum"
+				android:enabled="false" />
+			<Preference
+				android:title="@string/carplay_aa_note"
+				android:summary="@string/carplay_aa_note_sum"
+				android:selectable="false" />
+			<CheckBoxPreference
+				android:key="diagCarlinkVideo"
+				android:title="@string/diag_carlink_video"
+				android:summary="@string/diag_carlink_video_sum"
+				android:defaultValue="false" />
+		</PreferenceScreen>
+
+		<!-- Bluetooth call microphone -->
+		<PreferenceScreen
+			android:key="screen_btmic"
+			android:title="@string/screen_btmic"
+			android:summary="@string/screen_btmic_sum">
+			<Preference
+				android:key="btmic_status"
+				android:title="@string/support_status"
+				android:summary="@string/btmic_status_sum"
+				android:selectable="false" />
+			<Preference
+				android:title="@string/btmic_controls"
+				android:summary="@string/btmic_controls_sum"
+				android:enabled="false" />
+			<Preference
+				android:key="btmic_diagnose"
+				android:title="@string/btmic_diagnose"
+				android:summary="@string/btmic_diagnose_sum" />
+			<CheckBoxPreference
+				android:key="diagAudioPath"
+				android:title="@string/diag_audio_path"
+				android:summary="@string/diag_audio_path_sum"
+				android:defaultValue="false" />
+		</PreferenceScreen>
+
+		<!-- Advanced / diagnostics -->
+		<PreferenceScreen
+			android:key="screen_advanced"
+			android:title="@string/screen_advanced"
+			android:summary="@string/screen_advanced_sum">
+			<CheckBoxPreference
+				android:key="newFeaturesDisabled"
+				android:title="@string/new_features_disabled"
+				android:summary="@string/new_features_disabled_sum"
+				android:defaultValue="false" />
+			<Preference
+				android:key="compat_status"
+				android:title="@string/compat_status"
+				android:summary="@string/compat_status_sum" />
+			<PreferenceCategory android:title="@string/log_cat">
+				<Preference
+					android:key="log_view"
+					android:title="@string/log_view" />
+				<Preference
+					android:key="log_clear"
+					android:title="@string/log_clear" />
+			</PreferenceCategory>
+			<PreferenceCategory android:title="@string/backup_cat">
+				<Preference
+					android:key="settings_export"
+					android:title="@string/settings_export"
+					android:summary="@string/settings_export_sum" />
+				<Preference
+					android:key="settings_import"
+					android:title="@string/settings_import"
+					android:summary="@string/settings_import_sum" />
+				<Preference
+					android:key="all_restore_defaults"
+					android:title="@string/all_restore_defaults"
+					android:summary="@string/all_restore_defaults_sum" />
+			</PreferenceCategory>
+		</PreferenceScreen>
+	</PreferenceCategory>
+
+	<PreferenceCategory
 		android:title="@string/pref_teyes">
 
 		<CheckBoxPreference 
@@ -178,19 +405,7 @@
 	<PreferenceCategory
 		android:title="@string/pref_launcher">
 
-		<CheckBoxPreference 
-			android:name="@string/pref_launch_on_startup"
-			android:summary="@string/pref_launch_on_startup_sum"
-			android:defaultValue="false"
-			android:title="@string/pref_launch_on_startup"
-			android:key="launchOnStartup" />
 
-		<CheckBoxPreference 
-			android:name="@string/pref_launch_on_bluetooth"
-			android:summary="@string/pref_launch_on_bluetooth_sum"
-			android:defaultValue="false"
-			android:title="@string/pref_launch_on_bluetooth"
-			android:key="launchOnBluetooth" />
 
 		<EditTextPreference
 			android:name="@string/pref_music_app"
@@ -213,12 +428,6 @@
 			android:title="@string/pref_videos_app"
 			android:key="launcherVideosApp" />
 
-		<EditTextPreference
-			android:name="@string/pref_bluetooth_app"
-			android:summary="@string/pref_bluetooth_app_sum"
-			android:defaultValue="com.syu.carlink"
-			android:title="@string/pref_bluetooth_app"
-			android:key="launcherBluetoothApp" />
 
 		<EditTextPreference
 			android:name="@string/pref_mini_desktop_dpi"
