@@ -7,7 +7,8 @@
 | 시작 앱 (단일 앱, 부팅/ACC, 지연·재시도·중복 방지, 홈 화면일 때만) | IMPLEMENTED | NOT_TESTED |
 | BT 연결 시 실행, 시작 실행과의 충돌 정책 | IMPLEMENTED | NOT_TESTED |
 | 앱 선택기 | IMPLEMENTED | NOT_TESTED (에뮬레이터 UI 확인만) |
-| CarPlay 해상도·DPI | 해당 없음 — 기존 Android Auto 설정은 CarPlay 에 적용되지 않음 | — |
+| CarPlay UI 크기 (CarLink 2.22–2.25, 물리 크기 보고값 조정) | IMPLEMENTED | NOT_TESTED |
+| 기존 Android Auto 해상도·DPI | CarPlay 에는 적용되지 않음 | — |
 | CarLink 영상 진단 로그 (읽기 전용) | IMPLEMENTED | NOT_TESTED |
 | BT 마이크 이득 제어 | BLOCKED (경로 미확인) | — |
 | BT 마이크 경로 진단 화면·오디오 경로 진단 로그 (읽기 전용) | IMPLEMENTED | NOT_TESTED |

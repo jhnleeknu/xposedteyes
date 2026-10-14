@@ -71,4 +71,23 @@
         <item>BLUETOOTH_FIRST</item>
         <item>LAST_EVENT</item>
     </string-array>
+
+    <string-array name="carplay_ui_scale_entries">
+        <item>@string/carplay_ui_70</item>
+        <item>@string/carplay_ui_80</item>
+        <item>@string/carplay_ui_90</item>
+        <item>@string/carplay_ui_100</item>
+        <item>@string/carplay_ui_110</item>
+        <item>@string/carplay_ui_125</item>
+        <item>@string/carplay_ui_150</item>
+    </string-array>
+    <string-array name="carplay_ui_scale_values" translatable="false">
+        <item>70</item>
+        <item>80</item>
+        <item>90</item>
+        <item>100</item>
+        <item>110</item>
+        <item>125</item>
+        <item>150</item>
+    </string-array>
 </resources>

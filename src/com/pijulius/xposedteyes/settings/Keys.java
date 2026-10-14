@@ -24,6 +24,9 @@ public final class Keys {
 	public static final String BT_LAUNCH_DELAY_S = "btLaunchDelaySeconds";
 	public static final String BT_CONFLICT_POLICY = "btConflictPolicy";
 
+	// CarPlay UI size in percent of CarLink's default (string, ListPreference)
+	public static final String CARPLAY_UI_SCALE = "carplayUiScale";
+
 	// Read-only diagnostics hooks (installed only when enabled, at process start)
 	public static final String DIAG_CARLINK_VIDEO = "diagCarlinkVideo";
 	public static final String DIAG_AUDIO_PATH = "diagAudioPath";

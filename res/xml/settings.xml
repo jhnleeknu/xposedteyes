@@ -259,6 +259,13 @@
 			android:title="@string/pref_carlink_dpi"
 			android:key="carlinkDPI" />
 
+		<ListPreference
+			android:key="carplayUiScale"
+			android:title="@string/carplay_ui_scale"
+			android:entries="@array/carplay_ui_scale_entries"
+			android:entryValues="@array/carplay_ui_scale_values"
+			android:defaultValue="100" />
+
 		<CheckBoxPreference
 			android:key="diagCarlinkVideo"
 			android:title="@string/diag_carlink_video"

@@ -305,6 +305,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 		setSummary(Keys.STARTUP_RETRY_COUNT, listEntry(Keys.STARTUP_RETRY_COUNT));
 		setSummary(Keys.STARTUP_FOREGROUND_POLICY, listEntry(Keys.STARTUP_FOREGROUND_POLICY));
 		setSummary(Keys.BT_CONFLICT_POLICY, listEntry(Keys.BT_CONFLICT_POLICY));
+		setSummary(Keys.CARPLAY_UI_SCALE, getString(R.string.carplay_ui_scale_sum, listEntry(Keys.CARPLAY_UI_SCALE)));
 		setSummary(Keys.STARTUP_DELAY_S, seconds(s.delayMs));
 		setSummary(Keys.STARTUP_RETRY_DELAY_S, seconds(s.retryDelayMs));
 		setSummary(Keys.BT_LAUNCH_DELAY_S, seconds(s.btDelayMs));

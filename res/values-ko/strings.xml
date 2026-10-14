@@ -148,4 +148,13 @@
 	<plurals name="seconds_long">
 		<item quantity="other">%d초</item>
 	</plurals>
+	<string name="carplay_ui_scale">CarPlay UI 크기</string>
+	<string name="carplay_ui_scale_sum">%1$s. 다음 CarPlay 연결부터 적용됩니다.</string>
+	<string name="carplay_ui_70" formatted="false">70% (작게)</string>
+	<string name="carplay_ui_80" formatted="false">80% (작게)</string>
+	<string name="carplay_ui_90" formatted="false">90% (작게)</string>
+	<string name="carplay_ui_100" formatted="false">100% (기본값)</string>
+	<string name="carplay_ui_110" formatted="false">110% (크게)</string>
+	<string name="carplay_ui_125" formatted="false">125% (크게)</string>
+	<string name="carplay_ui_150" formatted="false">150% (크게)</string>
 </resources>

@@ -46,7 +46,9 @@ import de.robv.android.xposed.callbacks.XC_InitPackageResources.InitPackageResou
 import de.robv.android.xposed.callbacks.XC_LayoutInflated;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
+import com.pijulius.xposedteyes.carplay.CarplayScale;
 import com.pijulius.xposedteyes.diag.DiagHooks;
+import com.pijulius.xposedteyes.settings.Keys;
 import com.pijulius.xposedteyes.startup.SystemUiStartupHook;
 
 public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHookLoadPackage, IXposedHookZygoteInit {
@@ -272,6 +274,8 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 		}
 
 		if (lpparam.packageName.equals("com.syu.carlink")) {
+			hookCarplayUiScale(lpparam, settings);
+
 			final Class<?> hookClassSelf = XposedHelpers.findClass(
 					"com.syu.carlink.auto.AutoFragment", lpparam.classLoader);
 
@@ -1009,6 +1013,36 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 		if (dividerWidth > 0) {
 			XResources.setSystemWideReplacement("android", "dimen", "docked_stack_divider_thickness", new XResources.DimensionReplacement(dividerWidth, TypedValue.COMPLEX_UNIT_DIP));
 			XResources.setSystemWideReplacement("android", "dimen", "docked_stack_divider_insets", new XResources.DimensionReplacement(dividerInsetPosition, TypedValue.COMPLEX_UNIT_DIP));
+		}
+	}
+
+	/**
+	 * CarPlay UI size: CarLink 2.22 - 2.25 send the CarPlay screen description
+	 * through f.a.k(218, int[11], String[]); see CarplayScale and
+	 * docs/research/carplay.md. Any other CarLink version is left alone.
+	 */
+	private void hookCarplayUiScale(LoadPackageParam lpparam, final XSharedPreferences settings) {
+		try {
+			XposedHelpers.findAndHookMethod("f.a", lpparam.classLoader, "k",
+				int.class, int[].class, String[].class, new XC_MethodHook() {
+				@Override
+				protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+					if ((Integer)param.args[0] != CarplayScale.COMMAND_SCREEN_INFO)
+						return;
+
+					settings.reload();
+					int percent = CarplayScale.parsePercent(
+						settings.getString(Keys.CARPLAY_UI_SCALE, String.valueOf(CarplayScale.DEFAULT_PERCENT)));
+					int[] params = (int[])param.args[1];
+					String before = params == null || params.length < 8 ? "?" : params[6] + "x" + params[7];
+
+					if (CarplayScale.apply(CarplayScale.COMMAND_SCREEN_INFO, params, percent))
+						XposedBridge.log("XposedTeyes carplay: UI " + percent + "%, physical mm " + before +
+							" -> " + params[6] + "x" + params[7]);
+				}
+			});
+		} catch (Throwable t) {
+			XposedBridge.log("XposedTeyes carplay: UI size not supported in this CarLink version: " + t);
 		}
 	}
 

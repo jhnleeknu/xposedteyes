@@ -153,4 +153,13 @@
 		<item quantity="one">%d second</item>
 		<item quantity="other">%d seconds</item>
 	</plurals>
+	<string name="carplay_ui_scale">CarPlay UI size</string>
+	<string name="carplay_ui_scale_sum">%1$s. Applies when CarPlay connects next time.</string>
+	<string name="carplay_ui_70" formatted="false">70% (smaller)</string>
+	<string name="carplay_ui_80" formatted="false">80% (smaller)</string>
+	<string name="carplay_ui_90" formatted="false">90% (smaller)</string>
+	<string name="carplay_ui_100" formatted="false">100% (default)</string>
+	<string name="carplay_ui_110" formatted="false">110% (larger)</string>
+	<string name="carplay_ui_125" formatted="false">125% (larger)</string>
+	<string name="carplay_ui_150" formatted="false">150% (larger)</string>
 </resources>
