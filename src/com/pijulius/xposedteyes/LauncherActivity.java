@@ -20,13 +20,22 @@ public class LauncherActivity extends Activity {
 		super.onCreate(bundle);
 
 		if ("AccessibilityService".equals(getIntent().getAction())) {
-			SettingsActivity.activateAccessibilityService();
+			// Kept for callers of 3.0; root activation now preserves the
+			// enabled service list and never blocks the main thread.
+			if (!AccessibilityHelper.isEnabled(this)) {
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						AccessibilityHelper.enableViaRoot();
+					}
+				}).start();
+			}
 
 			finish();
 			return;
 		}
 
-		SharedPreferences preferences = getSharedPreferences(getPackageName()+"_preferences", Context.MODE_PRIVATE);
+		SharedPreferences preferences = Prefs.get(this);
 
 		musicApp = preferences.getString("launcherMusicApp", "");
 		navigationApp = preferences.getString("launcherNavigationApp", "");

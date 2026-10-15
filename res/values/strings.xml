@@ -5,6 +5,7 @@
 	<string name="app_name_settings">Xposed Teyes Settings</string>
 	<string name="app_description">Xposed Teyes Headunit</string>
 	<string name="app_not_found">App not found</string>
+	<string name="pref_default">Default</string>
 
 	<string name="pref_teyes">Teyes</string>
 	<string name="pref_resizable_splitscreen">Resizable Split Screen</string>
@@ -22,7 +23,7 @@
 	<string name="pref_left_screen_position">Left Screen Position</string>
 	<string name="pref_left_screen_position_sum">If checked the smaller screen will be on Right instead of Left</string>
 	<string name="pref_force_systemui">Force SystemUI</string>
-	<string name="pref_force_systemui_sum">Will try to force SystemUI to never dissapear.</string>
+	<string name="pref_force_systemui_sum">Will try to force SystemUI to never disappear.</string>
 	<string name="pref_use_ad_blocking">Use Ad Blocking</string>
 	<string name="pref_use_ad_blocking_sum">Try to prevent ads from showing up in applications.</string>
 
@@ -46,29 +47,23 @@
 
 	<string name="pref_carlink">CarLink</string>
 	<string name="pref_carlink_resolution">Video Resolution</string>
-	<string name="pref_carlink_resolution_sum">Prefered video resolution for Android Auto.</string>
+	<string name="pref_carlink_resolution_sum">Preferred video resolution for Android Auto.</string>
 	<string name="pref_carlink_resolution_width_margin">Width Margin</string>
 	<string name="pref_carlink_resolution_width_margin_sum">Margin for the width of the video resolution.</string>
 	<string name="pref_carlink_resolution_height_margin">Height Margin</string>
 	<string name="pref_carlink_resolution_height_margin_sum">Margin for the height of the video resolution.</string>
-	<string name="pref_carlink_dpi">Custom DPI</string>
-	<string name="pref_carlink_dpi_sum">Set custom DPI for changing Android Auto layout.</string>
+	<string name="pref_carlink_dpi">Android Auto DPI</string>
+	<string name="pref_carlink_dpi_sum">Custom DPI for the Android Auto layout only. Does not affect CarPlay.</string>
 	<string name="pref_carlink_keep_systemui">Keep SystemUI</string>
 	<string name="pref_carlink_keep_systemui_sum">Will not hide systemui on Android Auto.</string>
 
-	<string name="pref_launcher">Launcher</string>
-	<string name="pref_launch_on_startup">Launch Music &amp; Nav on Startup</string>
-	<string name="pref_launch_on_startup_sum">Launch the Music and Navigation application automatically in splitscreen.</string>
-	<string name="pref_launch_on_bluetooth">Launch App on Bluetooth Connected</string>
-	<string name="pref_launch_on_bluetooth_sum">Launch for e.g. Android Auto automatically when Bluetooth is connected.</string>
+	<string name="pref_launcher">Split Screen Shortcuts</string>
 	<string name="pref_music_app">Music App</string>
 	<string name="pref_music_app_sum">Music application to launch in Split Screen on Left.</string>
 	<string name="pref_navigation_app">Navigation App</string>
 	<string name="pref_navigation_app_sum">Navigation application to launch in Split Screen on Right/Left</string>
 	<string name="pref_videos_app">Videos App</string>
 	<string name="pref_videos_app_sum">Videos application to launch in Split Screen on Right</string>
-	<string name="pref_bluetooth_app">Bluetooth App</string>
-	<string name="pref_bluetooth_app_sum">Application to launch when Bluetooth is connected, for e.g. com.syu.carlink</string>
 	<string name="pref_mini_desktop_dpi">Mini Desktop DPI</string>
 	<string name="pref_mini_desktop_dpi_sum">DPI for the Mini Desktop Launcher.</string>
 
@@ -77,10 +72,6 @@
 	<string name="launcher_description">You can use this to automatically launch defined applications
 	    in split screen on boot. Please define the apps in the settings for this to work.</string>
 
-	<string name="activate_launcher_service">Activate Launcher Services</string>
-	<string name="activate_launcher_service_sum">* Only needed if you want to launch applications in split screen 
-		mode automatically. If you use FYTStarter you can activate service there otherwise please give root
-		access to this app so it can active the service automatially by itself.</string>
 
 	<string name="launcher_musicandnav">Music &amp; Nav</string>
 	<string name="launcher_navandvideos">Nav &amp; Videos</string>
@@ -91,4 +82,105 @@
 	<string name="toast_app_not_found">Application not found. Please set Music, Navigation and Videos applications 
 		correctly in settings.</string>
 
+	<!-- 3.1: settings centred extensions -->
+	<string name="seconds_short">%1$ds</string>
+	<string name="state_on">On</string>
+	<string name="state_off">Off</string>
+	<string name="state_no_report">No report yet</string>
+
+
+	<string name="screen_startup">Startup apps</string>
+	<string name="screen_startup_sum">Launch apps after boot, ACC ON or Bluetooth connection</string>
+	<string name="startup_last">Last result</string>
+	<string name="startup_launch_now">Launch now</string>
+	<string name="startup_launch_now_sum">Launches the selected app(s) once. Does not affect automatic launches.</string>
+	<string name="startup_cat_auto">Automatic launch</string>
+	<string name="startup_enabled">Auto launch</string>
+	<string name="startup_enabled_sum">Applies from the next matching event. Turning it off cancels a pending launch.</string>
+	<string name="startup_trigger">When</string>
+	<string name="startup_trigger_cold">Full boot only</string>
+	<string name="startup_trigger_acc">ACC ON / wake up from sleep</string>
+	<string name="startup_trigger_both">Both</string>
+	<string name="startup_primary">App</string>
+	<string name="startup_delay">Delay</string>
+	<string name="startup_retry_count">Retries on failure</string>
+	<string name="startup_retry_0">No retry</string>
+	<string name="startup_retry_1">1 retry</string>
+	<string name="startup_retry_2">2 retries</string>
+	<string name="startup_retry_3">3 retries</string>
+	<string name="startup_retry_delay">Retry interval</string>
+	<string name="startup_foreground_policy">When another app is in front</string>
+	<string name="startup_foreground_always">Bring the selected app to the front</string>
+	<string name="startup_foreground_home">Only launch while the home screen is shown</string>
+	<string name="a11y_status">Accessibility service (split screen shortcuts)</string>
+	<string name="a11y_on">Enabled. The Music &amp; Nav / Nav &amp; Videos shortcuts can open split screen.</string>
+	<string name="a11y_off">Disabled. Needed only for the split screen shortcuts. Tap to enable.</string>
+	<string name="a11y_dialog_message">The split screen shortcuts need the XposedTeyes accessibility service. Enable it in the system accessibility settings (recommended), or with root. The root option keeps all other enabled accessibility services.</string>
+	<string name="a11y_open_settings">Open settings</string>
+	<string name="a11y_root">Use root</string>
+	<string name="bt_cat">Launch on Bluetooth connection</string>
+	<string name="bt_enabled">Launch on Bluetooth connection</string>
+	<string name="bt_enabled_sum">Launch an app when a phone connects. Disconnecting cancels a pending launch.</string>
+	<string name="bt_target">Bluetooth app</string>
+	<string name="bt_delay">Bluetooth delay</string>
+	<string name="bt_conflict">If startup and Bluetooth launches coincide</string>
+	<string name="bt_conflict_startup">Startup app wins</string>
+	<string name="bt_conflict_bt">Bluetooth app wins</string>
+	<string name="bt_conflict_last">Latest event wins</string>
+	<string name="app_not_selected">Not selected</string>
+	<string name="app_not_launchable">Cannot be launched (removed or disabled)</string>
+	<string name="app_not_launchable_named">Cannot be launched: %1$s</string>
+
+	<string name="app_picker_title">Choose app</string>
+	<string name="app_picker_search">Search apps</string>
+	<string name="app_picker_clear">Clear</string>
+	<string name="app_picker_empty">No apps found</string>
+
+	<string name="diag_carlink_video">CarLink video diagnostics log</string>
+	<string name="diag_carlink_video_sum">Read-only: logs the decoder format (size, codec) and display metrics of CarLink to the LSPosed log. Takes effect after CarLink restarts.</string>
+
+	<string name="screen_btmic">Bluetooth call microphone</string>
+	<string name="screen_btmic_sum">Diagnostics only. No gain or voice processing is changed.</string>
+	<string name="btmic_diagnose">Path diagnostics (read only)</string>
+	<string name="btmic_diagnose_sum">Shows candidate properties and the audio routing state. Records nothing, changes nothing.</string>
+	<string name="btmic_diag_header">Read-only snapshot. Values shown here are NOT known to affect the call microphone.</string>
+	<string name="btmic_diag_footer">Run this once idle and once during a Bluetooth call to compare. A value being readable or writable does not prove any effect.</string>
+	<string name="btmic_unreadable">(not readable / not set)</string>
+	<string name="diag_audio_path">Audio path diagnostics log</string>
+	<string name="diag_audio_path_sum">Read-only: logs capture sessions, audio parameters and mic related property writes of the Teyes BT/CarLink/system apps to the LSPosed log. No audio is recorded. Takes effect after those apps restart.</string>
+
+	<plurals name="seconds_long">
+		<item quantity="one">%d second</item>
+		<item quantity="other">%d seconds</item>
+	</plurals>
+	<string name="carplay_ui_scale">CarPlay UI size</string>
+	<string name="carplay_ui_scale_sum">%1$s. Applies when CarPlay connects next time.</string>
+	<string name="carplay_ui_70" formatted="false">70% (smaller)</string>
+	<string name="carplay_ui_80" formatted="false">80% (smaller)</string>
+	<string name="carplay_ui_90" formatted="false">90% (smaller)</string>
+	<string name="carplay_ui_100" formatted="false">100% (default)</string>
+	<string name="carplay_ui_110" formatted="false">110% (larger)</string>
+	<string name="carplay_ui_125" formatted="false">125% (larger)</string>
+	<string name="carplay_ui_150" formatted="false">150% (larger)</string>
+	<string name="screen_carplay">CarPlay</string>
+	<string name="screen_carplay_sum">UI size, call microphone (CarLink 2.22 – 2.25)</string>
+	<string name="carplay_cat_screen">Screen</string>
+	<string name="carplay_cat_mic">Call microphone (CarPlay calls only, root required)</string>
+	<string name="carplay_mic_current">Current values</string>
+	<string name="carplay_mic_current_sum">Mic volume %1$s, noise suppression %2$s (%3$s). Applies from the next CarPlay call.</string>
+	<string name="carplay_mic_gain">Microphone volume</string>
+	<string name="carplay_mic_m2">2 steps lower</string>
+	<string name="carplay_mic_m1">1 step lower</string>
+	<string name="carplay_mic_default">Default</string>
+	<string name="carplay_mic_p1">1 step higher</string>
+	<string name="carplay_mic_p2">2 steps higher</string>
+	<string name="carplay_mic_p3">3 steps higher</string>
+	<string name="carplay_denoise">Noise suppression</string>
+	<string name="carplay_denoise_on">On (default)</string>
+	<string name="carplay_denoise_off">Off</string>
+	<string name="carplay_mic_reset">Restore CarLink defaults</string>
+	<string name="carplay_mic_reset_sum">Microphone volume and noise suppression back to the CarLink defaults</string>
+	<string name="carplay_mic_applying">Applying with root…</string>
+	<string name="carplay_mic_applied">Applied. Takes effect from the next CarPlay call.</string>
+	<string name="carplay_mic_failed">Could not apply (root denied or failed). Nothing was changed.</string>
 </resources>

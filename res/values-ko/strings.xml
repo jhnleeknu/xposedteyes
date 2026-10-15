@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string name="app_name">Xposed Teyes</string>
+	<string name="app_name_settings">Xposed Teyes 설정</string>
+	<string name="app_description">Xposed Teyes 헤드유닛</string>
+	<string name="app_not_found">앱을 찾을 수 없음</string>
+	<string name="pref_default">기본값</string>
+
+	<string name="pref_teyes">Teyes</string>
+	<string name="pref_resizable_splitscreen">분할화면 크기 조절</string>
+	<string name="pref_resizable_splitscreen_sum">Android Framework와 SystemUI 모두에 모듈을 활성화해야 합니다</string>
+	<string name="pref_dont_exit_splitscreen">분할화면 유지</string>
+	<string name="pref_dont_exit_splitscreen_sum">홈 키를 눌러도 분할화면을 유지합니다.</string>
+	<string name="pref_hide_divider">구분선 숨기기</string>
+	<string name="pref_hide_divider_sum">분할화면 구분선을 표시하거나 숨깁니다</string>
+	<string name="pref_divider_width">구분선 너비</string>
+	<string name="pref_divider_width_sum">분할화면 두 앱 사이 간격 (0 = 기본값).</string>
+	<string name="pref_divider_inset_position">구분선 안쪽 위치</string>
+	<string name="pref_divider_inset_position_sum">구분선 너비 기준 안쪽 위치.</string>
+	<string name="pref_screen_ratio">화면 비율</string>
+	<string name="pref_screen_ratio_sum">화면을 나눌 비율</string>
+	<string name="pref_left_screen_position">왼쪽 화면 위치</string>
+	<string name="pref_left_screen_position_sum">선택하면 작은 화면이 왼쪽 대신 오른쪽에 표시됩니다</string>
+	<string name="pref_force_systemui">SystemUI 강제 표시</string>
+	<string name="pref_force_systemui_sum">SystemUI가 사라지지 않도록 시도합니다.</string>
+	<string name="pref_use_ad_blocking">광고 차단 사용</string>
+	<string name="pref_use_ad_blocking_sum">앱에 광고가 표시되지 않도록 시도합니다.</string>
+
+	<string name="pref_camera">카메라</string>
+	<string name="pref_camera_width">미리보기 너비</string>
+	<string name="pref_camera_width_sum">카메라 미리보기 이미지 너비.</string>
+	<string name="pref_camera_height">미리보기 높이</string>
+	<string name="pref_camera_height_sum">카메라 미리보기 이미지 높이.</string>
+	<string name="pref_camera_x">미리보기 X 위치</string>
+	<string name="pref_camera_x_sum">카메라 미리보기 이미지의 X 위치.</string>
+	<string name="pref_camera_y">미리보기 Y 위치</string>
+	<string name="pref_camera_y_sum">카메라 미리보기 이미지의 Y 위치.</string>
+	<string name="pref_camera_warning">경고 표시</string>
+	<string name="pref_camera_warning_sum">카메라 미리보기에 경고 문구를 표시합니다.</string>
+	<string name="pref_camera_enhance">미리보기 개선</string>
+	<string name="pref_camera_enhance_sum">카메라 미리보기에 안티앨리어싱·디더링을 적용합니다.</string>
+	<string name="pref_camera_round">둥근 모서리</string>
+	<string name="pref_camera_round_sum">미리보기 이미지에 둥근 모서리를 사용합니다.</string>
+	<string name="pref_camera_keep_systemui">SystemUI 유지</string>
+	<string name="pref_camera_keep_systemui_sum">후방카메라 화면에서 SystemUI를 숨기지 않습니다.</string>
+
+	<string name="pref_carlink">CarLink</string>
+	<string name="pref_carlink_resolution">영상 해상도</string>
+	<string name="pref_carlink_resolution_sum">Android Auto 선호 영상 해상도.</string>
+	<string name="pref_carlink_resolution_width_margin">너비 여백</string>
+	<string name="pref_carlink_resolution_width_margin_sum">영상 해상도 너비 여백.</string>
+	<string name="pref_carlink_resolution_height_margin">높이 여백</string>
+	<string name="pref_carlink_resolution_height_margin_sum">영상 해상도 높이 여백.</string>
+	<string name="pref_carlink_dpi">Android Auto DPI</string>
+	<string name="pref_carlink_dpi_sum">Android Auto 레이아웃 전용 DPI입니다. CarPlay에는 적용되지 않습니다.</string>
+	<string name="pref_carlink_keep_systemui">SystemUI 유지</string>
+	<string name="pref_carlink_keep_systemui_sum">Android Auto 화면에서 SystemUI를 숨기지 않습니다.</string>
+
+	<string name="pref_launcher">분할화면 바로가기</string>
+	<string name="pref_music_app">음악 앱</string>
+	<string name="pref_music_app_sum">분할화면 왼쪽에 실행할 음악 앱.</string>
+	<string name="pref_navigation_app">내비게이션 앱</string>
+	<string name="pref_navigation_app_sum">분할화면 오른쪽/왼쪽에 실행할 내비게이션 앱</string>
+	<string name="pref_videos_app">동영상 앱</string>
+	<string name="pref_videos_app_sum">분할화면 오른쪽에 실행할 동영상 앱</string>
+	<string name="pref_mini_desktop_dpi">Mini Desktop DPI</string>
+	<string name="pref_mini_desktop_dpi_sum">Mini Desktop 런처의 DPI.</string>
+
+	<string name="settings">설정</string>
+	<string name="accessibility_description">앱을 분할화면으로 실행하는 데 사용됩니다</string>
+	<string name="launcher_description">지정한 앱을 분할화면으로 실행합니다. 설정에서 앱을 먼저 지정하세요.</string>
+
+	<string name="launcher_musicandnav">음악 + 내비</string>
+	<string name="launcher_navandvideos">내비 + 동영상</string>
+
+	<string name="toast_accessibility_service_request">서비스 활성화에는 루트 권한이 필요합니다. 권한을 허용하세요.</string>
+	<string name="toast_accessibility_service_failed">활성화 실패.</string>
+	<string name="toast_accessibility_service_succeeded">활성화 성공.</string>
+	<string name="toast_app_not_found">앱을 찾을 수 없습니다. 설정에서 음악·내비게이션·동영상 앱을 올바르게 지정하세요.</string>
+
+	<string name="seconds_short">%1$d초</string>
+	<string name="state_on">켜짐</string>
+	<string name="state_off">꺼짐</string>
+	<string name="state_no_report">아직 보고 없음</string>
+
+
+	<string name="screen_startup">시작 앱 관리</string>
+	<string name="screen_startup_sum">부팅·ACC ON·블루투스 연결 후 앱 자동 실행</string>
+	<string name="startup_last">최근 실행 결과</string>
+	<string name="startup_launch_now">지금 실행</string>
+	<string name="startup_launch_now_sum">선택한 앱을 한 번 실행합니다. 자동 실행에는 영향을 주지 않습니다.</string>
+	<string name="startup_cat_auto">자동 실행</string>
+	<string name="startup_enabled">자동 실행</string>
+	<string name="startup_enabled_sum">다음 해당 이벤트부터 적용됩니다. 끄면 대기 중인 실행이 즉시 취소됩니다.</string>
+	<string name="startup_trigger">실행 시점</string>
+	<string name="startup_trigger_cold">완전 부팅만</string>
+	<string name="startup_trigger_acc">ACC ON · 절전 복귀</string>
+	<string name="startup_trigger_both">둘 다</string>
+	<string name="startup_primary">시작 앱</string>
+	<string name="startup_delay">실행 지연</string>
+	<string name="startup_retry_count">실패 재시도 횟수</string>
+	<string name="startup_retry_0">재시도 안 함</string>
+	<string name="startup_retry_1">1회</string>
+	<string name="startup_retry_2">2회</string>
+	<string name="startup_retry_3">3회</string>
+	<string name="startup_retry_delay">재시도 간격</string>
+	<string name="startup_foreground_policy">다른 앱이 전면일 때</string>
+	<string name="startup_foreground_always">지정 앱을 전면 실행</string>
+	<string name="startup_foreground_home">홈 화면일 때만 실행</string>
+	<string name="a11y_status">접근성 서비스 (분할화면 바로가기용)</string>
+	<string name="a11y_on">활성. 음악+내비 / 내비+동영상 바로가기로 분할화면을 열 수 있습니다.</string>
+	<string name="a11y_off">비활성. 분할화면 바로가기에만 필요합니다. 눌러서 활성화.</string>
+	<string name="a11y_dialog_message">분할화면 바로가기에는 XposedTeyes 접근성 서비스가 필요합니다. 시스템 접근성 설정에서 켜는 방법을 권장합니다. 루트를 사용할 수도 있으며, 이 경우 이미 켜져 있는 다른 접근성 서비스는 그대로 유지됩니다.</string>
+	<string name="a11y_open_settings">설정 열기</string>
+	<string name="a11y_root">루트 사용</string>
+	<string name="bt_cat">블루투스 연결 시 실행</string>
+	<string name="bt_enabled">블루투스 연결 시 앱 실행</string>
+	<string name="bt_enabled_sum">휴대폰이 연결되면 앱을 실행합니다. 연결이 끊기면 대기 중인 실행이 취소됩니다.</string>
+	<string name="bt_target">블루투스 연결 앱</string>
+	<string name="bt_delay">블루투스 실행 지연</string>
+	<string name="bt_conflict">시작 실행과 블루투스 실행이 겹칠 때</string>
+	<string name="bt_conflict_startup">시작 정책 우선</string>
+	<string name="bt_conflict_bt">블루투스 정책 우선</string>
+	<string name="bt_conflict_last">마지막 이벤트 우선</string>
+	<string name="app_not_selected">미선택</string>
+	<string name="app_not_launchable">실행 불가 (삭제 또는 비활성화됨)</string>
+	<string name="app_not_launchable_named">실행 불가: %1$s</string>
+
+	<string name="app_picker_title">앱 선택</string>
+	<string name="app_picker_search">앱 검색</string>
+	<string name="app_picker_clear">선택 해제</string>
+	<string name="app_picker_empty">앱이 없습니다</string>
+
+	<string name="diag_carlink_video">CarLink 영상 진단 로그</string>
+	<string name="diag_carlink_video_sum">읽기 전용: CarLink의 디코더 형식(크기·코덱)과 화면 정보를 LSPosed 로그에 기록합니다. CarLink 재시작 후 적용됩니다.</string>
+
+	<string name="screen_btmic">BT 통화 마이크</string>
+	<string name="screen_btmic_sum">진단 전용. 이득·음성 처리는 변경하지 않습니다.</string>
+	<string name="btmic_diagnose">경로 진단 (읽기 전용)</string>
+	<string name="btmic_diagnose_sum">후보 속성과 오디오 경로 상태를 표시합니다. 녹음하거나 변경하지 않습니다.</string>
+	<string name="btmic_diag_header">읽기 전용 스냅샷. 여기 표시된 값이 통화 마이크에 영향을 준다는 것은 확인되지 않았습니다.</string>
+	<string name="btmic_diag_footer">대기 상태와 블루투스 통화 중에 각각 실행해 비교하세요. 값을 읽거나 쓸 수 있다는 사실만으로 효과가 입증되지 않습니다.</string>
+	<string name="btmic_unreadable">(읽을 수 없음 / 설정 안 됨)</string>
+	<string name="diag_audio_path">오디오 경로 진단 로그</string>
+	<string name="diag_audio_path_sum">읽기 전용: Teyes BT/CarLink/시스템 앱의 캡처 세션·오디오 파라미터·마이크 관련 속성 쓰기를 LSPosed 로그에 기록합니다. 음성은 녹음하지 않습니다. 해당 앱 재시작 후 적용됩니다.</string>
+
+	<plurals name="seconds_long">
+		<item quantity="other">%d초</item>
+	</plurals>
+	<string name="carplay_ui_scale">CarPlay UI 크기</string>
+	<string name="carplay_ui_scale_sum">%1$s. 다음 CarPlay 연결부터 적용됩니다.</string>
+	<string name="carplay_ui_70" formatted="false">70% (작게)</string>
+	<string name="carplay_ui_80" formatted="false">80% (작게)</string>
+	<string name="carplay_ui_90" formatted="false">90% (작게)</string>
+	<string name="carplay_ui_100" formatted="false">100% (기본값)</string>
+	<string name="carplay_ui_110" formatted="false">110% (크게)</string>
+	<string name="carplay_ui_125" formatted="false">125% (크게)</string>
+	<string name="carplay_ui_150" formatted="false">150% (크게)</string>
+	<string name="screen_carplay">CarPlay</string>
+	<string name="screen_carplay_sum">UI 크기, 통화 마이크 (CarLink 2.22 – 2.25)</string>
+	<string name="carplay_cat_screen">화면</string>
+	<string name="carplay_cat_mic">통화 마이크 (CarPlay 통화 전용, 루트 필요)</string>
+	<string name="carplay_mic_current">현재 값</string>
+	<string name="carplay_mic_current_sum">마이크 음량 %1$s, 잡음 제거 %2$s (%3$s). 다음 CarPlay 통화부터 적용됩니다.</string>
+	<string name="carplay_mic_gain">마이크 음량</string>
+	<string name="carplay_mic_m2">2단계 작게</string>
+	<string name="carplay_mic_m1">1단계 작게</string>
+	<string name="carplay_mic_default">기본값</string>
+	<string name="carplay_mic_p1">1단계 크게</string>
+	<string name="carplay_mic_p2">2단계 크게</string>
+	<string name="carplay_mic_p3">3단계 크게</string>
+	<string name="carplay_denoise">잡음 제거</string>
+	<string name="carplay_denoise_on">켜짐 (기본값)</string>
+	<string name="carplay_denoise_off">꺼짐</string>
+	<string name="carplay_mic_reset">CarLink 기본값으로 되돌리기</string>
+	<string name="carplay_mic_reset_sum">마이크 음량과 잡음 제거를 CarLink 기본값으로</string>
+	<string name="carplay_mic_applying">루트로 적용 중…</string>
+	<string name="carplay_mic_applied">적용했습니다. 다음 CarPlay 통화부터 반영됩니다.</string>
+	<string name="carplay_mic_failed">적용하지 못했습니다 (루트 거부 또는 실패). 아무것도 바뀌지 않았습니다.</string>
+</resources>

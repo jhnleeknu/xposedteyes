@@ -4,9 +4,22 @@
     android:versionCode="30"
     android:versionName="3.0" >
 
-    <uses-sdk
-        android:minSdkVersion="28"
-        android:targetSdkVersion="28" />
+    <!-- minSdk/targetSdk are set in build.gradle (28/28, unchanged). -->
+
+    <!-- Guards the "settings changed" broadcast to SystemUI: only apps signed
+         with the same key as this module can send it. -->
+    <permission
+        android:name="com.pijulius.xposedteyes.permission.CONTROL"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="com.pijulius.xposedteyes.permission.CONTROL" />
+
+    <!-- Android 11+ package visibility: only launchable apps, for the app picker. -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+    </queries>
 
     <application
         android:allowBackup="true"
@@ -28,6 +41,7 @@
 
         <activity
             android:name="com.pijulius.xposedteyes.SettingsActivity"
+            android:exported="true"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -43,6 +57,7 @@
 
         <activity
             android:name="com.pijulius.xposedteyes.MusicNavigationActivity"
+            android:exported="true"
             android:theme="@android:style/Theme.NoDisplay"
             android:label="@string/launcher_musicandnav"
             android:icon="@drawable/logo_musicnavigation"
@@ -57,6 +72,7 @@
 
         <activity
             android:name="com.pijulius.xposedteyes.NavigationVideosActivity"
+            android:exported="true"
             android:theme="@android:style/Theme.NoDisplay"
             android:label="@string/launcher_navandvideos"
             android:icon="@drawable/logo_navigationvideos"
@@ -69,8 +85,24 @@
                  android:resource="@xml/shortcuts" /> 
         </activity>
 
+        <activity
+            android:name="com.pijulius.xposedteyes.AppPickerActivity"
+            android:exported="false"
+            android:label="@string/app_picker_title" />
+
+        <!-- Status reports from the SystemUI hook (startup app manager). -->
+        <receiver
+            android:name="com.pijulius.xposedteyes.StatusReceiver"
+            android:exported="true"
+            android:permission="android.permission.STATUS_BAR_SERVICE">
+            <intent-filter>
+                <action android:name="com.pijulius.xposedteyes.STARTUP_STATUS" />
+            </intent-filter>
+        </receiver>
+
         <service
                 android:name="com.pijulius.xposedteyes.LauncherService"
+                android:exported="true"
                 android:label="@string/app_name"
                 android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>

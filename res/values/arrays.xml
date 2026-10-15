@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="pref_carlink_resolutions">
-        <item>Default</item>
+        <item>@string/pref_default</item>
         <item>800x480</item>
         <item>1280x720</item>
         <item>1920x1080</item>
@@ -13,7 +13,7 @@
         <item>2160x3840</item>
     </string-array>
 
-    <string-array name="pref_carlink_resolution_values">
+    <string-array name="pref_carlink_resolution_values" translatable="false">
         <item></item>
         <item>800x480</item>
         <item>1280x720</item>
@@ -24,5 +24,96 @@
         <item>1080x1920</item>
         <item>1440x2560</item>
         <item>2160x3840</item>
+    </string-array>
+
+    <string-array name="startup_trigger_entries">
+        <item>@string/startup_trigger_cold</item>
+        <item>@string/startup_trigger_acc</item>
+        <item>@string/startup_trigger_both</item>
+    </string-array>
+    <string-array name="startup_trigger_values" translatable="false">
+        <item>COLD_BOOT</item>
+        <item>ACC_RESUME</item>
+        <item>BOTH</item>
+    </string-array>
+
+
+    <string-array name="startup_retry_count_entries">
+        <item>@string/startup_retry_0</item>
+        <item>@string/startup_retry_1</item>
+        <item>@string/startup_retry_2</item>
+        <item>@string/startup_retry_3</item>
+    </string-array>
+    <string-array name="startup_retry_count_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="startup_foreground_entries">
+        <item>@string/startup_foreground_always</item>
+        <item>@string/startup_foreground_home</item>
+    </string-array>
+    <string-array name="startup_foreground_values" translatable="false">
+        <item>ALWAYS</item>
+        <item>HOME_ONLY</item>
+    </string-array>
+
+
+    <string-array name="bt_conflict_entries">
+        <item>@string/bt_conflict_startup</item>
+        <item>@string/bt_conflict_bt</item>
+        <item>@string/bt_conflict_last</item>
+    </string-array>
+    <string-array name="bt_conflict_values" translatable="false">
+        <item>STARTUP_FIRST</item>
+        <item>BLUETOOTH_FIRST</item>
+        <item>LAST_EVENT</item>
+    </string-array>
+
+    <string-array name="carplay_ui_scale_entries">
+        <item>@string/carplay_ui_70</item>
+        <item>@string/carplay_ui_80</item>
+        <item>@string/carplay_ui_90</item>
+        <item>@string/carplay_ui_100</item>
+        <item>@string/carplay_ui_110</item>
+        <item>@string/carplay_ui_125</item>
+        <item>@string/carplay_ui_150</item>
+    </string-array>
+    <string-array name="carplay_ui_scale_values" translatable="false">
+        <item>70</item>
+        <item>80</item>
+        <item>90</item>
+        <item>100</item>
+        <item>110</item>
+        <item>125</item>
+        <item>150</item>
+    </string-array>
+
+    <string-array name="carplay_mic_gain_entries">
+        <item>@string/carplay_mic_m2</item>
+        <item>@string/carplay_mic_m1</item>
+        <item>@string/carplay_mic_default</item>
+        <item>@string/carplay_mic_p1</item>
+        <item>@string/carplay_mic_p2</item>
+        <item>@string/carplay_mic_p3</item>
+    </string-array>
+    <string-array name="carplay_mic_gain_values" translatable="false">
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+    </string-array>
+
+    <string-array name="carplay_denoise_entries">
+        <item>@string/carplay_denoise_on</item>
+        <item>@string/carplay_denoise_off</item>
+    </string-array>
+    <string-array name="carplay_denoise_values" translatable="false">
+        <item>1</item>
+        <item>0</item>
     </string-array>
 </resources>

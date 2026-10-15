@@ -2,6 +2,140 @@
 <PreferenceScreen
 	xmlns:android="http://schemas.android.com/apk/res/android">
 
+	<!-- Startup app -->
+	<PreferenceScreen
+		android:key="screen_startup"
+		android:title="@string/screen_startup"
+		android:summary="@string/screen_startup_sum">
+
+		<PreferenceCategory android:title="@string/startup_cat_auto">
+			<Preference
+				android:key="startup_last"
+				android:title="@string/startup_last"
+				android:selectable="false" />
+			<CheckBoxPreference
+				android:key="startupEnabled"
+				android:title="@string/startup_enabled"
+				android:summary="@string/startup_enabled_sum"
+				android:defaultValue="false" />
+			<ListPreference
+				android:key="startupTrigger"
+				android:title="@string/startup_trigger"
+				android:entries="@array/startup_trigger_entries"
+				android:entryValues="@array/startup_trigger_values"
+				android:defaultValue="COLD_BOOT" />
+			<Preference
+				android:key="startupPrimary"
+				android:title="@string/startup_primary" />
+			<com.pijulius.xposedteyes.IntPickerPreference
+				android:key="startupDelaySeconds"
+				android:title="@string/startup_delay"
+				android:defaultValue="5" />
+			<ListPreference
+				android:key="startupRetryCount"
+				android:title="@string/startup_retry_count"
+				android:entries="@array/startup_retry_count_entries"
+				android:entryValues="@array/startup_retry_count_values"
+				android:defaultValue="1" />
+			<com.pijulius.xposedteyes.IntPickerPreference
+				android:key="startupRetryDelaySeconds"
+				android:title="@string/startup_retry_delay"
+				android:defaultValue="5" />
+			<ListPreference
+				android:key="startupForegroundPolicy"
+				android:title="@string/startup_foreground_policy"
+				android:entries="@array/startup_foreground_entries"
+				android:entryValues="@array/startup_foreground_values"
+				android:defaultValue="ALWAYS" />
+			<Preference
+				android:key="startup_launch_now"
+				android:title="@string/startup_launch_now"
+				android:summary="@string/startup_launch_now_sum" />
+		</PreferenceCategory>
+
+		<PreferenceCategory android:title="@string/bt_cat">
+			<Preference
+				android:key="bt_last"
+				android:title="@string/startup_last"
+				android:selectable="false" />
+			<CheckBoxPreference
+				android:key="btLaunchEnabled"
+				android:title="@string/bt_enabled"
+				android:summary="@string/bt_enabled_sum"
+				android:defaultValue="false" />
+			<Preference
+				android:key="btLaunchTarget"
+				android:title="@string/bt_target" />
+			<com.pijulius.xposedteyes.IntPickerPreference
+				android:key="btLaunchDelaySeconds"
+				android:title="@string/bt_delay"
+				android:defaultValue="3" />
+			<ListPreference
+				android:key="btConflictPolicy"
+				android:title="@string/bt_conflict"
+				android:entries="@array/bt_conflict_entries"
+				android:entryValues="@array/bt_conflict_values"
+				android:defaultValue="STARTUP_FIRST" />
+		</PreferenceCategory>
+	</PreferenceScreen>
+
+	<!-- CarPlay (CarLink 2.22 - 2.25) -->
+	<PreferenceScreen
+		android:key="screen_carplay"
+		android:title="@string/screen_carplay"
+		android:summary="@string/screen_carplay_sum">
+
+		<PreferenceCategory android:title="@string/carplay_cat_screen">
+			<ListPreference
+				android:key="carplayUiScale"
+				android:title="@string/carplay_ui_scale"
+				android:entries="@array/carplay_ui_scale_entries"
+				android:entryValues="@array/carplay_ui_scale_values"
+				android:defaultValue="100" />
+		</PreferenceCategory>
+
+		<PreferenceCategory android:title="@string/carplay_cat_mic">
+			<Preference
+				android:key="carplay_mic_current"
+				android:title="@string/carplay_mic_current"
+				android:selectable="false" />
+			<ListPreference
+				android:key="carplayMicGain"
+				android:title="@string/carplay_mic_gain"
+				android:entries="@array/carplay_mic_gain_entries"
+				android:entryValues="@array/carplay_mic_gain_values"
+				android:defaultValue="5"
+				android:persistent="false" />
+			<ListPreference
+				android:key="carplayDenoise"
+				android:title="@string/carplay_denoise"
+				android:entries="@array/carplay_denoise_entries"
+				android:entryValues="@array/carplay_denoise_values"
+				android:defaultValue="1"
+				android:persistent="false" />
+			<Preference
+				android:key="carplay_mic_reset"
+				android:title="@string/carplay_mic_reset"
+				android:summary="@string/carplay_mic_reset_sum" />
+		</PreferenceCategory>
+	</PreferenceScreen>
+
+	<!-- Bluetooth call microphone (analysis only) -->
+	<PreferenceScreen
+		android:key="screen_btmic"
+		android:title="@string/screen_btmic"
+		android:summary="@string/screen_btmic_sum">
+		<Preference
+			android:key="btmic_diagnose"
+			android:title="@string/btmic_diagnose"
+			android:summary="@string/btmic_diagnose_sum" />
+		<CheckBoxPreference
+			android:key="diagAudioPath"
+			android:title="@string/diag_audio_path"
+			android:summary="@string/diag_audio_path_sum"
+			android:defaultValue="false" />
+	</PreferenceScreen>
+
 	<PreferenceCategory
 		android:title="@string/pref_teyes">
 
@@ -167,6 +301,12 @@
 			android:key="carlinkDPI" />
 
 		<CheckBoxPreference
+			android:key="diagCarlinkVideo"
+			android:title="@string/diag_carlink_video"
+			android:summary="@string/diag_carlink_video_sum"
+			android:defaultValue="false" />
+
+		<CheckBoxPreference
 			android:name="@string/pref_carlink_keep_systemui"
 			android:summary="@string/pref_carlink_keep_systemui_sum"
 			android:defaultValue="true"
@@ -178,19 +318,7 @@
 	<PreferenceCategory
 		android:title="@string/pref_launcher">
 
-		<CheckBoxPreference 
-			android:name="@string/pref_launch_on_startup"
-			android:summary="@string/pref_launch_on_startup_sum"
-			android:defaultValue="false"
-			android:title="@string/pref_launch_on_startup"
-			android:key="launchOnStartup" />
 
-		<CheckBoxPreference 
-			android:name="@string/pref_launch_on_bluetooth"
-			android:summary="@string/pref_launch_on_bluetooth_sum"
-			android:defaultValue="false"
-			android:title="@string/pref_launch_on_bluetooth"
-			android:key="launchOnBluetooth" />
 
 		<EditTextPreference
 			android:name="@string/pref_music_app"
@@ -213,12 +341,6 @@
 			android:title="@string/pref_videos_app"
 			android:key="launcherVideosApp" />
 
-		<EditTextPreference
-			android:name="@string/pref_bluetooth_app"
-			android:summary="@string/pref_bluetooth_app_sum"
-			android:defaultValue="com.syu.carlink"
-			android:title="@string/pref_bluetooth_app"
-			android:key="launcherBluetoothApp" />
 
 		<EditTextPreference
 			android:name="@string/pref_mini_desktop_dpi"
@@ -226,6 +348,10 @@
 			android:defaultValue="500"
 			android:title="@string/pref_mini_desktop_dpi"
 			android:key="miniDesktopDPI" />
+
+		<Preference
+			android:key="a11y_status"
+			android:title="@string/a11y_status" />
 
 	</PreferenceCategory>
 

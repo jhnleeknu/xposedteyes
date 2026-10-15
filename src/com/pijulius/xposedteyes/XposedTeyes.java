@@ -46,13 +46,16 @@ import de.robv.android.xposed.callbacks.XC_InitPackageResources.InitPackageResou
 import de.robv.android.xposed.callbacks.XC_LayoutInflated;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
+import com.pijulius.xposedteyes.carplay.CarplayScale;
+import com.pijulius.xposedteyes.diag.DiagHooks;
+import com.pijulius.xposedteyes.settings.Keys;
+import com.pijulius.xposedteyes.startup.SystemUiStartupHook;
+
 public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHookLoadPackage, IXposedHookZygoteInit {
 	private static String modulePath = null;
 	private static Object carlinkLogoFragment = null;
-	private static boolean startupLaunched = false;
 	private static boolean audialsNowPlaying = false;
-	private static boolean connectedBluetooth = false;
-	private static Context contextBluetooth = null;
+	private static int lastBluetoothState = Integer.MIN_VALUE;
 
 	private static final float[] negativeColorMatrix = {
 		-1.0f,     0,     0,    0, 255, // red
@@ -78,7 +81,7 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 	@Override
 	public void initZygote(StartupParam startupParam) throws Throwable {
 		modulePath = startupParam.modulePath;
-		XposedBridge.log(getClass().getName()+" v3.40");
+		XposedBridge.log(getClass().getName()+" v3.41");
 	}
 
 	@Override
@@ -122,6 +125,9 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 				}
 			});
 		}
+
+		// Opt-in, read-only analysis hooks (CarPlay video / BT microphone path).
+		DiagHooks.install(lpparam, settings);
 
 		if (lpparam.packageName.equals("com.pijulius.xposedteyes")) {
 			final Class<?> hookClassSelf = XposedHelpers.findClass(
@@ -268,6 +274,8 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 		}
 
 		if (lpparam.packageName.equals("com.syu.carlink")) {
+			hookCarplayUiScale(lpparam, settings);
+
 			final Class<?> hookClassSelf = XposedHelpers.findClass(
 					"com.syu.carlink.auto.AutoFragment", lpparam.classLoader);
 
@@ -574,66 +582,16 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 			final Class<?> hookSystemUIApp = XposedHelpers.findClass(
 					"com.android.systemui.SystemUIApplication", lpparam.classLoader);
 
+			// Startup app manager (boot / ACC / Bluetooth auto launch). The
+			// settings are re-read on every event, see SystemUiStartupHook.
 			XposedBridge.hookAllMethods(hookSystemUIApp, "onCreate", new XC_MethodHook() {
 				@Override
 				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-					final Application application = (Application)param.thisObject;
-					final Handler handler = new android.os.Handler();
-
-					final Intent launcherIntent = new Intent();
-					launcherIntent.setClassName(
-						"com.pijulius.xposedteyes", "com.pijulius.xposedteyes.LauncherActivity");
-					launcherIntent.setAction("AccessibilityService");
-					launcherIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-					launcherIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-					final Runnable runnable = new Runnable() {
-							@Override
-							public void run() {
-								if (connectedBluetooth)
-									return;
-
-								final Intent activityIntent = new Intent();
-								activityIntent.setClassName(
-									"com.pijulius.xposedteyes", "com.pijulius.xposedteyes.MusicNavigationActivity");
-								activityIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-								activityIntent.setFlags(
-									Intent.FLAG_ACTIVITY_NEW_TASK |
-									Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-
-								application.startActivity(activityIntent);
-							}
-						};
-
-					IntentFilter intentFilter = new IntentFilter(Intent.ACTION_BOOT_COMPLETED);
-					intentFilter.addAction("com.fyt.boot.ACCON"); //ACCOFF
-					intentFilter.addAction("com.glsx.boot.ACCON"); //ACCOFF
-					intentFilter.addAction("com.fyt.boot.ACCOFF"); //ACCOFF
-					intentFilter.addAction("com.glsx.boot.ACCOFF"); //ACCOFF
-
-					application.registerReceiver(new BroadcastReceiver() {
-						@Override
-						public void onReceive(Context context, Intent intent) {
-							String action = intent.getAction();
-
-							if (action == null || action.isEmpty())
-								return;
-
-							if (action.contains(".ACCON") && !startupLaunched) {
-								startupLaunched = true;
-								application.startActivity(launcherIntent);
-
-								if (settings.getBoolean("launchOnStartup", false)) {
-									handler.removeCallbacks(runnable);
-									handler.postDelayed(runnable, 1000);
-								}
-
-							} else if (action.contains(".ACCOFF")) {
-								startupLaunched = false;
-								connectedBluetooth = false;
-							}
-						}
-					}, intentFilter);
+					try {
+						SystemUiStartupHook.install((Application)param.thisObject);
+					} catch (Throwable t) {
+						XposedBridge.log("XposedTeyes startup: install failed: " + t);
+					}
 				}
 			});
 
@@ -676,83 +634,37 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 				});
 			}
 
-			if (settings.getBoolean("launchOnBluetooth", true)) {
+			// Bluetooth connection state for the Bluetooth launch option. Always
+			// installed (cheap, SystemUI only) so the option can be switched
+			// without a reboot; decisions are made with the current settings.
+			try {
 				final Class<?> hookClassBluetooth = XposedHelpers.findClass(
 						"com.syu.view.BluetoothControl", lpparam.classLoader);
-
-				XposedBridge.hookAllConstructors(hookClassBluetooth, new XC_MethodHook() {
-					@Override
-					protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-						contextBluetooth = (Context)param.args[0];
-					}
-				});
 
 				XposedBridge.hookAllMethods(hookClassBluetooth, "updata", new XC_MethodHook() {
 					@Override
 					protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-						int state = (int)param.args[0];
-						final Handler handler = (Handler)XposedHelpers.getObjectField(param.thisObject, "setVisib_Bluetooth");
-						XposedBridge.log("BluetoothControl updata: " + String.valueOf(state) + " context: " + String.valueOf(contextBluetooth));
-
-						if (contextBluetooth == null ||
-							(state == 2 && connectedBluetooth) ||
-							(state != 2 && !connectedBluetooth))
-						{
+						if (param.args.length == 0 || !(param.args[0] instanceof Integer))
 							return;
+
+						// 2 = connected, 0 = disconnected. Other codes (e.g. during
+						// calls) are not treated as a disconnect, so nothing is
+						// launched over an ongoing call. Codes are logged for
+						// device verification (docs/COMPATIBILITY.md).
+						int state = (Integer)param.args[0];
+						if (state != lastBluetoothState) {
+							lastBluetoothState = state;
+							XposedBridge.log("XposedTeyes startup: BluetoothControl state " + state);
 						}
 
-						connectedBluetooth = (state == 2);
-
-						if (connectedBluetooth) {
-							Intent bluetoothIntent = contextBluetooth.getPackageManager().getLaunchIntentForPackage(
-									settings.getString("launcherBluetoothApp", ""));
-
-							if (bluetoothIntent == null)
-								return;
-
-							bluetoothIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-							bluetoothIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-							final Runnable runnable = new Runnable() {
-								@Override
-								public void run() {
-									if (!connectedBluetooth)
-										return;
-
-									contextBluetooth.startActivity(bluetoothIntent);
-								}
-							};
-
-							handler.removeCallbacks(runnable);
-							handler.postDelayed(runnable, 3000);
-							return;
-						}
-
-						if (!settings.getBoolean("launchOnStartup", false))
-							return;
-
-						final Intent activityIntent = new Intent();
-						activityIntent.setClassName(
-							"com.pijulius.xposedteyes", "com.pijulius.xposedteyes.MusicNavigationActivity");
-						activityIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-						activityIntent.setFlags(
-							Intent.FLAG_ACTIVITY_NEW_TASK |
-							Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-
-						final Runnable runnable = new Runnable() {
-							@Override
-							public void run() {
-								if (connectedBluetooth)
-									return;
-
-								contextBluetooth.startActivity(activityIntent);
-							}
-						};
-
-						handler.removeCallbacks(runnable);
-						handler.postDelayed(runnable, 3000);
+						if (state == 2)
+							SystemUiStartupHook.onBluetoothState(true);
+						else if (state == 0)
+							SystemUiStartupHook.onBluetoothState(false);
 					}
 				});
+			} catch (Throwable t) {
+				XposedBridge.log("XposedTeyes startup: BluetoothControl not found, Bluetooth launch unavailable: " + t);
 			}
 		}
 
@@ -1101,6 +1013,36 @@ public class XposedTeyes implements IXposedHookInitPackageResources, IXposedHook
 		if (dividerWidth > 0) {
 			XResources.setSystemWideReplacement("android", "dimen", "docked_stack_divider_thickness", new XResources.DimensionReplacement(dividerWidth, TypedValue.COMPLEX_UNIT_DIP));
 			XResources.setSystemWideReplacement("android", "dimen", "docked_stack_divider_insets", new XResources.DimensionReplacement(dividerInsetPosition, TypedValue.COMPLEX_UNIT_DIP));
+		}
+	}
+
+	/**
+	 * CarPlay UI size: CarLink 2.22 - 2.25 send the CarPlay screen description
+	 * through f.a.k(218, int[11], String[]); see CarplayScale and
+	 * docs/research/carplay.md. Any other CarLink version is left alone.
+	 */
+	private void hookCarplayUiScale(LoadPackageParam lpparam, final XSharedPreferences settings) {
+		try {
+			XposedHelpers.findAndHookMethod("f.a", lpparam.classLoader, "k",
+				int.class, int[].class, String[].class, new XC_MethodHook() {
+				@Override
+				protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+					if ((Integer)param.args[0] != CarplayScale.COMMAND_SCREEN_INFO)
+						return;
+
+					settings.reload();
+					int percent = CarplayScale.parsePercent(
+						settings.getString(Keys.CARPLAY_UI_SCALE, String.valueOf(CarplayScale.DEFAULT_PERCENT)));
+					int[] params = (int[])param.args[1];
+					String before = params == null || params.length < 8 ? "?" : params[6] + "x" + params[7];
+
+					if (CarplayScale.apply(CarplayScale.COMMAND_SCREEN_INFO, params, percent))
+						XposedBridge.log("XposedTeyes carplay: UI " + percent + "%, physical mm " + before +
+							" -> " + params[6] + "x" + params[7]);
+				}
+			});
+		} catch (Throwable t) {
+			XposedBridge.log("XposedTeyes carplay: UI size not supported in this CarLink version: " + t);
 		}
 	}
 
